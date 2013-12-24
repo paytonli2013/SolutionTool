@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SourceAnalyzer Name="Orc Folder Rules">
+  <Description>
+    Check the folder structure within a repository.
+  </Description>
+  <Properties>
+    <CollectionProperty Name="FolderList" Aggregate="True" FriendlyName="Folder List" 
+      Description="The list of folders that must exist." />
+  </Properties>
+  <Rules>
+    <Rule Name="FoldersMustExist" CheckId="CR1000">
+      <Context>Folders must exist: {0}</Context>
+      <Description>Folders must exist.</Description>
+    </Rule>
+  </Rules>
+  <AnalyzerSettings>
+    <CollectionProperty Name="FolderList">
+      <Value>./src</Value>
+      <Value>./output</Value>
+      <Value>./doc</Value>
+      <Value>./deployment</Value>
+    </CollectionProperty>
+  </AnalyzerSettings>
+</SourceAnalyzer>

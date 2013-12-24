@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{824550EC-8F91-488F-85DF-33AA3325311D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3571D4CE-059F-4A22-A24A-F6B5106C65D3}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orc.SolutionTool</RootNamespace>
-    <AssemblyName>slntool</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>Orc.StyleCop.CSharp.Rules</RootNamespace>
+    <AssemblyName>Orc.StyleCop.CSharp.Rules</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,34 +30,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine">
-      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
+    <Reference Include="StyleCop">
+      <HintPath>C:\Program Files (x86)\StyleCop 4.7\StyleCop.dll</HintPath>
+    </Reference>
+    <Reference Include="StyleCop.CSharp">
+      <HintPath>C:\Program Files (x86)\StyleCop 4.7\StyleCop.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectoryExistedRule.cs" />
-    <Compile Include="ExamContext.cs" />
-    <Compile Include="ExamResult.cs" />
-    <Compile Include="FileStructureRule.cs" />
-    <Compile Include="FileStructureRuleEnum.cs" />
-    <Compile Include="FileStructureRuleExamContext.cs" />
-    <Compile Include="IRule.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="Program.cs" />
+    <None Include="InstanceVariablesUnderscorePrefix.cs" />
+    <None Include="AvoidUsingAInClassNames.cs" />
+    <Compile Include="FoldersMustExist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RuleBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="AvoidUsingAInClassNames.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InstanceVariablesUnderscorePrefix.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FoldersMustExist.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rem xcopy /y "$(TargetPath)" "c:\Program Files (x86)\StyleCop 4.7\"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

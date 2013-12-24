@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SourceAnalyzer Name="My Custom Rule">
+  <Description>
+    Custom rule for demo purposes.
+  </Description>
+  <Rules>
+    <Rule Name="InstanceVariablesUnderscorePrefix" CheckId="CR0002">
+      <Context>Instance variables should be prefixed by underscore.</Context>
+      <Description>Instance variables are easier to distinguish when prefixed with an underscore.</Description>
+    </Rule>
+  </Rules>
+</SourceAnalyzer>

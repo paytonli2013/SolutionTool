@@ -1,0 +1,1324 @@
+4.7.47.0 (40bf9122e707)
+=======================
+Remove BVT run from officialBuild until I can get it working again
+Integrate VS2013 support - thank you csdahlberg - great work
+Require ReSharper 8.0.2000.2660 as the version for 8.0
+Upgrade main solution to build with VS2013
+Upgrade to latest ReSharper 8.0 build
+Check for dictionary folders relative to the project location
+Fix for when settings file have been merged and the location is null
+Update to start 4.7.47.0 dev
+Update Release History
+
+
+4.7.46.0 (b36be9bdbffc)
+=======================
+Add 'Exclude from StyleCop' to the context menu on each menu item.
+Add ViolationsAsErrors to the Settings file. Defaults to False. If True then StyleCop violations are added as Errors and not Warnings to the IDE task window.
+Update to latest ReSharper 8.0
+Add TODO on allowing to throw Warning or Error in the IDE
+Fix to not insert a new line before a comment if it already has one
+Update docs
+Styling fixes
+Make CodeLocation a struct to reduce allocated memory on analysis.
+Move the suppression quickfix lower down the list of quick fixes
+Change CodePoint to be a struct. Reducing memory for large analysis.
+Changing the SkipAnaysis method to use a SourceCode instance and not a CodeDocument
+If we're not analyzing designer files (or any other files) then don't parse them at all. This should dramatically reduce the memory required on solutions with lots of designer files.
+Correct spelling mistake
+Fix for 7435 - if relative dictionary path the check relative to current settings file
+Update version to 4.7.46.0
+Update release history
+
+
+4.7.45.0 (b8852db981ee)
+=======================
+Styling fixes
+Remove snk file from wrong folder
+Update installer to Support ReSharper 8
+Fixes for ReSharper 8 support
+Add first draft of R#8 support
+Fix assembly title
+Update to latest 7.1 build
+Start of 4.7.45
+Update release history
+
+
+4.7.44.0 (9ae441069ae9)
+=======================
+Start of 4.7.44.0 dev
+Update the build of ReSharper 7.1 we are compatible with
+Update release history
+Upgrade 7.1 to latest 7.1.1 build of 7.1.1000.900
+Styling fixes.
+Styling and layout fixes for ReSharper 7.1
+Styling and layout fixes for ReSharper 7.1
+Start of 4.7.43.0 dev
+Update release history
+
+
+4.7.42.0 (8b3831e38d66)
+=======================
+Update the version of ReSharper 7.1 we support to 7.1.25.234
+Styling fixes.
+Styling fixes.
+Update environment check for ReSharper 7.1
+Update dependencies to latest ReSharper 7.1. Remove settings no longer available in this build.
+Start of 4.7.42 dev
+Fix for 7425. Allow regex to match full path names and not just file names.
+Update revision history
+
+
+4.7.41.0 (e5e1f6f8a482)
+=======================
+Ensure we skip all the stylecop assemblies that don't contain rules and parsers.
+Styling fixes.
+Only demand access to HKLM for StyleCop on Windows platforms.
+Add support for editing dictionary folders in the settings editor
+Only load a spelling service on Windows
+Fix for 7422 - If the dictionary paths contain relative paths then make them relative to the current cs file. Add the cs files project location folder as a dictionary folder too.
+Don't call Path.GetFullPath with a relative path as it'll use the current working directory as the root.
+Move MakeAbsolutePath into Utils
+Styling fixes.
+Resize the sepping tab columns correctly.
+Don't allow spaces in the recognized or deprecated words lists add boxes
+Fix for 7421 - Resize the controls in the spellnig tab correctly.
+Rename VS2011 variables to VS2012
+Dont run InstallVSTemplates on DevEnv for VS2008 as we don't change them.
+Update docs.
+Add support for ReSharper 7.1 EAP
+If HKLM for StyleCop doesn't exist then return null.
+Start of 4.7.41.0 dev
+Update release history
+
+
+4.7.40.0 (87c6582db99e)
+=======================
+Styling fixes
+Ensure HKLM reg keys are only opened readonly for non-admin users
+Start of 4.7.40.0 dev
+Update release history
+
+
+4.7.39.0 (c2d0c89fa711)
+=======================
+Allow case sensitivity in the deprecated words and recognised words list
+Styleing fixes.
+Fix for documentation spelling checks inside nested xml nodes.
+Look for CustomDictionary.xml files in the folder of the cs file.
+Update the TabIndex in the spelling tab.
+Updating default deprecated words and their alternatives.
+Add support for specifying dictionary folders in the settings.StyleCop file. Like :
+Rename StyleCopViolationError to StyleCopHighlightingError and all associated types.
+Fix the BulbItem for spelling mistakes to replace matching words correctly.
+Fix the spelling parser for strings beginning with $$
+THREADING FIX: Make StyleCop execute analysis in proces and not create 2 threads. Use CountdownEvent when we move to .NET 4.
+Use the naming service for the Culture specified for the project. Pass the actual violation through to ReSharper.
+Enusre REgistry access code works for VS2008 addins.
+Rollback Registry changes to ensure VS2008 plugin loads correctly.
+Adding support for preferred alternative words for spelling. Adding deprecated word support into Settings.StyleCop file. Spelling is only checked if Office 2010 is installed. Allow editing of deprecated words and their alternatives in the Settings editor.
+Adding new resource strings
+Adding new resource strings.
+Adding BulbItem and Quick fixes for spelling errors.
+Moving StringExtensions to common area.
+Styling fixes.
+Styling fixes.
+Report all spelling errors found on a line.
+Start of 4.7.39.0 dev.
+Update release notes
+
+
+4.7.38.0 (95fce4403c3c)
+=======================
+Move Registry functions into common Utils class. Styling fixes.
+Dictionary updates
+Styling fixes.
+Styling fixes.
+Update Styleing.
+Styling fixes.
+Styling fixes.
+Styling fixes.
+Styling fixes.
+Updating docs.
+Update docs.
+Spelling fixes in our own source.
+Add solution specific spellnigs to our own Settings.StyleCop
+Deploy more up to date spelling checkers and dictionaries.
+Update our own StyleCop and dictionaries for analyzing our own build.
+Update the custom dictionaries.
+Update the spellchecker to work for 32 or 64 bit processes.
+Update latex parser.
+Update the latex parser for $$...$$
+Fix the latex parser to allow any char between $ and $
+Add a new tab to the settings editor to add/remove spelling words. Ignore words starting and ending with a '$'. Add support for our own recognized words in the settings file. If the spelling library can't load then dont analyse the spellings and fail gracefully.
+Fix for 7398. Insert the correct typename in the example for summary.
+Fix for 7396. Added new tests. All doc elements to end with <c> elements and not be reported for lack of whitespace or too short.
+Start of 4.7.38.0 dev
+Update release history.
+
+
+4.7.37.0 (32fceb667f4b)
+=======================
+Add docs for new SA1650 spelling rule.
+Fix for 7395. Dont remove parenthesis around await expressions.
+Insert a returns element into docs within a see element.
+Update our tools folder StyleCop dll's
+fix for 7392. Insert generic type docs for return types correctly.
+Fix for 7393. Allow documentation elements with attributes to end the string and still be valid.
+Make sure the MSBuild Task logs the warning id and type of exception. Unless the description field holds all this info VS cannot show the text in the Error List.
+Load custom dictionaries for multiple cultures. For a culture like en-GB; we load CustomDictionary.xml, then look for CustomDictionary.en-GB.xml and then CustomDictionary.en.xml
+Update standard shipping dictionaries.
+Element documentation spelling fixes.
+Reduce the standard dictionary
+Update our own devbuild StyleCop checks.
+Don't check spelling of xml documentation attributes are anything inside  <c> or <code> elements.
+Update Styling
+Styling update.
+Add timestamps for all the dependant files into the StyleCopResults.cache. Add a FileSystemWatcher to all custom dictionary files.
+Write out the full violation into the StyleCopResults.cache.
+Change a rules description text.
+Styling fixes.
+Styling fixes.
+NEW RULE: Check Spelling Of Element Documetation. Fix over 2000 spelling errors in our source code. Update the VS addin to show the rule violation in more detail. Add spelling checker to the deployment.
+Set our own Culture to en-US
+Documentation spelling fixes.
+First draft of the documentation spelling checker.
+Fix for 7325. Don't throw 1126 in goto statements.
+Fix for 7090. Add TargetsDir to registry during install.
+Fix for 7060. Sort usings after moving them inside namespace.
+Fix FxCop issues.
+Fix for 7389. Detect CpuCount on Unix/MAC
+Fix for 6788. Allow opening curly brackets for scope. Added new tests.
+Updating constants.Fix for 7167. Show version number of StyleCop in VS Help window.
+Only output StyleCop excluded files if there are any.
+Update our own build to use 4.7.36 and fix issues.
+Start of 4.7.37.0 dev
+Update revision history
+
+
+4.7.36.0 (508dbac00ffc)
+=======================
+Fix for 7344. Don't throw 1126 inside default expressions.
+Fix for 7371. Compare Namespace parts using the CurrentCulture and not InvariantCulture.
+Fix for 7386. Don't throw casing violations for filed names in languages that do not support case (like Chinese). Added new tests.
+fix for 7380. Catch Exception caused by CRM Toolkit.
+Update ReSharper 7.0 dependency to 7.0.1 (7.0.1098.2760)
+Fix for 7358. Use the RuleId in the call to MSBuild Logging.
+Fix for 7348. Update suggestion text for constructors.
+Fix for 7364. Don't throw 1126 for New Array Expressions.
+Fix for 7372. Throw 1126 inside catch blocks wasn't working. Add new tests.
+Fix for 7369. Await is allowed to be inside parenthesis. Add new tests.
+Fix tests
+Correct styling issues.
+Fix for 7373. Typeparam violations were not being thrown in all cases. Added new tests.
+Fix for 7361. Rule 1120 was logging against the root element and so Suppressions wouldn't work. Fixed and added tests.
+Updating de-DE resources - from Michael Diermeier - thank you.
+Change for 7368. Add the violation count into the Task outputs.
+Fix for 7383. Fix for memory leak in plugins.
+Update environment to detect ReSharper 7
+Fix for 7378. Null reference exception from command line run in message output.
+Update release history.
+
+
+4.7.35.0 (74e7de93767b)
+=======================
+Styling fixes.
+Fix for ReSharper 7 not inserting documentation headers correctly.
+Update to latest R#7.0 binaries
+Delay the Documetation analysis run until the 2nd pass in order to have collected all partial types.
+Start of 4.7.35 dev
+Update Release history
+
+
+4.7.34.0 (a6b0f1365ef2)
+=======================
+Update ReSharper 7.0 references to 7.0.83.281
+Fix for 7343. Inheritdoc was raising false positives for some partial classes. Added regression test data.
+Fix for 7351. Remove the correct blank lines for SA1512 on code cleanup.
+Fix for 7346. Insert documentation fully on cleanup and on bulb items.
+Ensure that the SuppressMessage bulbItem can calculate the correct element to insert at.
+Fix for 7352. Module level suppressmessages were not working.
+Spelling mistake.
+Add missing typenames to resource file.
+Spelling fixes.
+Remove obsolete files.
+Start of 4.7.34 dev
+Updating Release history.
+
+
+4.7.33.0 (f7cab7e6d990)
+=======================
+Updated docs for SA1103.
+Fix to not throw 1101 when is a nested interface. Added new tests.
+Fixes to install the ReSharper plugins back in the main directories for all users.
+Styling fixes.
+Styling fixes.
+7291. Create indexer documentation better. Port fixes for 7289 and 7223 to 7.0.0 plugin.
+Fix for 7289. Create interface documentation better.
+Fix for 7223. Better text for inserted property text.
+Ensure WebSites and other folders containing aspx.cs files get analysed.
+Add re-analyse Project option to context menus
+Start of 4.7.33.0 dev
+Update the release history doc.
+
+
+4.7.32.0 (303308ba69c3)
+=======================
+Ngen the StyleCop dll's during install.
+Update min version of R# 7.0 we support.
+Update to be compatible wit R#7.0.70
+Change the formatting of the Output Pane output to be more descriptive.
+Fix for 7326. Remove some false positives for unneccessary parenthesis. Add more tests.
+Correcting comment.
+Ensure SolutionItem folders are scanned for files to analyze.
+Fix for 7334 - missing method comments were not being automatically inserted.
+Added more checks for null to try and fix 7336. NullRef exception whne violation thrown.
+Fix for 7329. Check Justification text in assembly and module level attributes.
+Start of 4.7.32.0 dev
+Updating Release History
+
+
+4.7.31.0 (3270f0acaf3f)
+=======================
+Skip analysis of projects when we know we dont support analysis of them.
+Speed up the Task window refresh by 400% for solution analysis with lots of StyleCop issues by caching the calls to get the projectItem for each violation.
+Update docs presentation
+Update compiled docs
+Update ReSharper 7.0 plugin to detect whether summary text should have Setter text.
+Update all docs to have an example of a Rule Suppression in it.
+Fix for 7292 in ReSharper 6.1.1 and 7.0 plugin
+Update docs for Suppressions
+Fix for 7313. Only reformat element documentation if its been changed.
+Fix for 7310. Adding support for '@' inside constructor, clss name, and destructors. Adding new tests.
+Fix to treat any non tab character as a space.
+Adding new tests.
+Fix for 7311. Support any type of space characters in the sourcecode.
+Add more tracing code.
+Fix for 7315. Reset ReSharper Options was not resetting all the options correctly in all 5 ReSharper plugins.
+Start of 4.7.31.0 dev
+Add an automatic release notes generator tool
+
+
+4.7.30.0 (13529db81e22)
+=======================
+Setup the VSIX prject to detect whether you're debugging in VS2010 or VS2012 and use the correct SDK
+Add the VS2012.RC SDK targets and setup environment
+Upgrade to build 7.0.61.135 of ReSharper
+Start of 4.7.30 dev
+
+
+4.7.29.0 (691ee63e152a)
+=======================
+Rename file
+Update to add support for VS2012 RC and ReSharper 7.0.60.43
+Fix long term bug where if a non-enabled project was found for solution analysis then it always returned false.
+Spelling fix
+StyleCop fies for new rule SA1311
+NEW RULE - 1311 StaticReadonlyFieldsMustBeginWithUpperCaseLetter
+$.7.29 dev started with the check in before this one.
+Fix for 7306.
+
+
+4.7.28.0 (dab6370a143b)
+=======================
+Spelling mistake
+Fix for 7298. Added new tests.
+Fix for 7274
+FxCop fixes.
+Allow debugging in VS10 or VS11
+Updated docs.
+Any exceptions whilst attempting to figure out if the file is excluded we assume its not excluded.
+Refacturing this. and base. checks. All tests passing.
+Added new tests .Fixed for typeof() when checking for this.
+Add dll refs that ReSharper removed.
+Remove ununsed project references
+Fix for 7296
+Start of 4.7.28 dev
+
+
+4.7.27.0 (3b65c2497153)
+=======================
+Removing ununsed code
+Fix for 7295/ Added new tests.
+Fix for 7294. Added new tests.
+Add support for ReSharper 7.0 and VS11 beta
+Update rule text.
+Fix for 7287
+Fix for 7285.Adding new tests.
+Fix for 7207. Don't show invisible form. Update tests
+Fix for 7268. Don't throw this. issues is we're in a cast or new call. Added more tests.
+Start of 4.7.27.0
+
+
+4.7.26.0 (4c8f12ad2fd0)
+=======================
+Styling fixes
+Catch errors if the project items don't support excluded files like wixproj.
+Fix for linked files not getting checked for StyleCop exclusion
+Updating docs
+Update docs.
+New test data. Fix to allow nullable symbol after closing generic. Updated docs.
+Start of 4.7.26.0 dev
+
+
+4.7.25.0 (1100713af7cc)
+=======================
+Clear the task pane when a solution closes or opens.
+Make major improvements to the calculation of partial files for UI analysis.
+Correct the insertation text for private instance constructors.
+Check all partial types to see if any have a base class.
+FxCop fixes.
+Fix for 7267
+Fix for 7266
+Fix for 7253. Read the ExcludedFromStyleCop settings in a proj file when doing project/solution analysis.
+Remove unused code.
+Fix for 7265. ReferenceEquals does not require object prefix.
+Styling fixes.
+Fix for 7254
+Start of 4.7.25.0
+
+
+4.7.24.0 (08fa7f612a5a)
+=======================
+Fix for 7259
+Removing ununsed code.
+Updated docs.
+Lots of new test for updated this and base detection rules.
+NEW RULE 1126 - PrefixCallsCorrectly
+fix for 7129. Added new tests.
+Start of 4.7.24.0 dev
+
+
+4.7.23.0 (c1035d5fd01c)
+=======================
+fix for 7123. Add new tests.
+Reverting TargetFramework to 3.5. This is needed to work with VS2008. Adding my own Countdown class that works similar to
+Updating docs
+fix for 7256. Allow & in file headers.
+Styling fixes.
+fix for 7219
+Styling fixes.
+Allow Suppression on Enum Items
+Fix for 7114 and new tests
+Porting r#6.1.1 fix back to 5.1.3, 6.0.0 and 6.1.0
+Updating test data.
+Allow closing } to be followed by 'from'
+Multiple spaces in a single line comment are fine if the preceeding line is a single line comment.
+Start of 4.7.23.0 dev
+
+
+4.7.22.0 (c03c70899450)
+=======================
+Styling fixes
+Remove old binaries
+Styling fixes.
+Styling fixes
+SA1015 - And an open square bracket is ok too
+Start of 4.7.22 dev.
+
+
+4.7.21.0 (5525506e4086)
+=======================
+Styling fixes
+Styling fixes
+2 NEW RULES
+Fix to not use a delegate or enum for the typename of a file unless they are the only elements in the file.
+Cache the CPU reading value.
+Fix for major recursion error 7104
+Set threading back to cpucount.
+Updating styling
+Fix for 7227
+Big fix for 7065. Lots of new code to detect UTF-8 files even if they don't have the BOM markers.
+Remove the catch() and just return 1 for CPU count.
+Merge
+Using Path, Directory etc for file manipulation.
+Change the threading code to use CountdownEvent
+Updating documentation
+Removing old commented out code.
+Fix for 7247. Added new tests.
+Upgrade all dll to Framework 4.0
+Start of 4.7.21.0 dev
+
+
+4.7.20.0 (bf715d3a55be)
+=======================
+Fix for 7103
+Fix for 6989. Show exact location of violation. Update tests.
+Add support to tests for start,end line and column.
+Fix for 6991. Added new tests.
+Fix for 6994. New tests.
+Updating docs.
+Fix for 6995. New tests.
+Fix for 7011
+Fix for 7013
+Update and clarify some of the naming rules
+Update tests
+fix for 7014
+Allow only xml inside a summary element
+Styling fixes
+Adding isStatic to a field.
+Correcting versions to 4.7.20.0
+Updating docs.
+Styling fix
+Fix for 7057
+Fix for 7072
+Fix for 7073
+Fix for broken tests
+Fix for 7063
+Methods on iterfaces where not getting the right access modifier.
+Fix for 7008
+Fix for 7023
+Styling fixes.
+Fix for 7036
+Fix for 7050
+Updated docs binary
+Updating docs
+Fix auto re-ordering patterns
+Fix for 7236. Added new tests.
+Fix for pt-BR localised strings
+Start of 4.7.20.0 dev
+
+
+4.7.19.0 (50e86696e123)
+=======================
+Updating Docs
+Fix for 7165
+Fix for 7154.
+Fix for 7173.
+Update docs
+Fixes and new tests for 7187
+Update parser tests for 7196
+Fix for 7196.
+Fix for 7198 - Add option to insert TODO text into documentation comments
+Fix for 7199.
+Fix for 7195
+Fix for 7234.
+Add de-DE resources
+Adding de-DE resources
+Add de-DE resources
+Start of 4.7.19.0
+
+
+4.7.18.0 (fee0baa87dd0)
+=======================
+fix for 7166.
+Styling fix.
+Add new tests to allow Hungarian style prefixes containing numbers and letters.
+Fix for 7211 - Remove the trailing spaces from all the languages for Get/Set accessors.
+Fix for 7042 - Allow multiline copyright text.
+Allow any doc comment to end with an xml closing tag or a period mark '.'
+Merge
+Adding personal developer files for mpeck.
+Update some formatting.
+Fix from mpeck for 7210
+Consolidating Constants.
+Remove the regex codes from the language strings.
+Start of 4.7.18.0
+
+
+4.7.17.0 (73a36c9dfde2)
+=======================
+Fix a spelling mistake in the fr-FR text.
+Update the CodeStrings to be used to be R# addin for multiple languages.
+Start of 4.7.17.0
+
+
+4.7.16.0 (1de878b37a8f)
+=======================
+Adding ru-RU
+Read all the satellite assemblies to determine which languages we support. Deploy the 4 new languages we support.
+Add pl-PL and pt-BR
+Add pl-PL and pt-BR for documentation rules.
+Start of 4.7.16.0
+
+
+4.7.15.0 (1cbcf3329d3b)
+=======================
+Added fr-FR to the allowed cultures.
+Add a Culture as a global property in the Settings.StyleCop files. Defaults to en-US as it was before. Added en-GB resources.
+Use AssemblyFileVersion instead of AssemblyVersion for checking updates.
+Fix for 7142 - StyleCop.Targets Does Not Account For 64-Bit MSBuild
+Fix for 6753 and 7191. Settings Editor now supports SourceFileLists.
+Add R# option to switch off the checking of code style at startup. Fix for 7164 - save the code style options into the correct context.
+Start of 4.7.15.0
+
+
+4.7.14.0 (1ffe9ea16a7e)
+=======================
+Fixes for VS2008 not showing Inspection severity.
+
+
+4.7.13.0 (9fecf708b3a3)
+=======================
+Update version to 4.7.13.0
+Attempting to fix highlight registering bug with VS2008
+
+
+4.7.12.0 (65c5a78ce626)
+=======================
+Update version number to 4.7.12.0
+
+
+4.7.11.0 (e13c906bba9a)
+=======================
+Fix up lots of violations to indicate the row and column of the failure.
+Update the R#6.1.1 dependancies and required version numbers.
+Upgrade version to 4.7.11.0
+
+
+4.7.10.0 (0f9ec61dcabb)
+=======================
+Fixing bug where R# version detector was failing to hide overlaid controls
+Bug fix for unable to load stream data in R#5.1 and R# 6.0 plugins
+Update version number to 4.7.10.0
+
+
+4.7.9.0 (b32213b0a194)
+=======================
+Fix the installer to detect R#6.1 installed into VS11 correctly.
+Change for 7158.
+Fix for 7184.
+Fix for 7183. Added new tests.
+Update version number
+
+
+4.7.8.0 (a29119992c1f)
+=======================
+Removed some tracing code that was forcing debug builds to break under R#5.1 and VS2008.
+Fix for 7181
+Fix for 7169.
+Update version to 4.7.8.0
+
+
+4.7.7.0 (e06cd6443892)
+=======================
+Fix namespace and dll renaming changes.
+Correct the versions of R# we support. Dont' install R# plugin if R# hasnt been installed by the msi.
+Removed commented out code.
+Re-add support for R#6.1 RTM.
+Update version to 4.7.7.0
+
+
+4.7.6.0 (15cace27d8af)
+=======================
+Handle the lifetime of R# better for restting and checking options.
+Fix R# exception where duplicate keys were trying to be added to the highlight registering.
+Move MaxViolationCount into the settings file.
+Fix to ensure the naming policies are checked correctly and then reset.
+Update version number.
+
+
+4.7.5.0 (c9385bbc21dc)
+=======================
+Resources for R#6.0 plugin were not loading.
+dll naming had changed for R#5.1 dll support.
+Styleing fixes.
+Adding a new option to disable analysis as you type completely.
+Update to version 4.7.5.0
+
+
+4.7.4.0 (a2c3df6a8e0e)
+=======================
+Fix for 7105.
+Fix for 7124.
+Fix for 7086 for R#5.1 , R#6.0 and R#6.1 addins.
+Fix for 7068.
+Update version to 4.7.4.0
+
+
+4.7.3.0 (16d9809f574f)
+=======================
+Fixes to support multiple R# versions from the same dll.
+Updates to support multiple r# plugins
+Adding old plugins
+Plugin update
+Adding plugin for r# 5.1
+plugin updates
+Merge
+Merge
+Plugin updates
+Adding old plugins
+Ading the r# 6.0 plugin to the current assembly
+Adding the older R# 6.0 plugin to the current solution.
+
+
+4.7.2.0 (ec84902d68b5)
+=======================
+Rename the ReSharper dll to ReSharper61.dll. This is the first part of getting R#5, 6.0 and 6.1 support into the latest build.
+
+
+4.7.1.0 (09351930b738)
+=======================
+Fixes to actually store the stylecop options and retreive them in the new R# 6.1 model.
+Fix for 7080. Spacing around async ()
+Fix for discussion 272625.
+Fix for 7130. Ordering of BulbItems.
+
+
+4.7.0.0 (4b1e901b82ba)
+=======================
+Updating version number to 4.7 from 4.6
+Styling fixes.
+Version numbers fixes.
+Update to 4.7 for R#6.1 compatibility.
+
+
+4.6.3.0 (8ef35078cd96)
+=======================
+As StyleCopCore doesn't need implement IDisposable now remove anything using it.
+Update version to 4.6.3.0
+
+
+4.6.2.0 (fbf4aabef209)
+=======================
+Update tracing. Remove IDisposable for StyleCopCore. Remove old logger.
+Version to 4.6.2.0. Fixing memory and performance issues. Fixed inheritdoc issue. Added more tracing.
+
+
+4.6.1.0 (cf06b6e8fef9)
+=======================
+Update version to 4.6.1.0
+
+
+4.6.0.0 (ce136eac5587)
+=======================
+Styling fixes.
+Update some 4.5 to 4.6
+Fix the Options page and the CTRL E,F code cleanup.
+Fix version number on autoupdater to 4.6
+Fixes for R#6 from Remo Gloor. Thanks.
+Styling fixes.
+More R#6 fixes. Thanks Remo.
+More R#6 fixes.
+More R#6 fixes.
+Fixes for R#6. Down to 10 compile issues now.
+Update hgignore file
+First pass at migrating to R#6. 14 compile issues remaining.
+Update version number to 4.6
+Update version number to 4.6 in docs
+
+
+4.5.25.0 (7647bf3f1fdb)
+=======================
+Closing old branch
+Closing old branch
+Branch v4.5
+Added new await tests. Fixed await parsing errors.
+Fixes fur nuget to work with Debug or Release builds.
+Merge Nuget Package creation
+Set target to net35
+Create NuGet package
+Fix for 'await' contextual keyword. Added new tests.
+Update version to 4.5.25
+
+
+4.5.24.0 (d3f81788f9b8)
+=======================
+Fixes for async bugs 7038,7039,7040. Updated version. Added new tests. Thanks to Ron.
+
+
+4.5.23.0 (4885e2c64dd9)
+=======================
+Fixes for 7024 and 7031. Re-written the preprocessor parser completely. Added lots of new tests. Updated version to .23
+
+
+4.5.22.0 (b0c2baa73f31)
+=======================
+Fix for 7018. Leave using statement brackets unchanged.
+Fix for 7025. Default install of MSBuild component to on
+
+
+4.5.21.0 (ee6c1dba0d5f)
+=======================
+Update version to 4.5.22
+Updating version number.
+
+
+4.5.20.0 (800b4dfcd927)
+=======================
+Fix for 7026. Timeout on the webrequest is now 5 seconds.
+Fix for 7024. This will need a better fix in 5.0
+Fix for 7019. Added tests.
+Fix for 7020.
+Fix for 7018.
+Updating docs.
+Updating docs fix for 7010
+Update docs.
+Some fixes for the Type Layout reordering in R# plugin. Fixes 7005. This works around the problem that R# thinks that explicit interface implementations are private and orders them incorrectly.
+Fix for 7004.
+Fixed 7003.
+Fix for 7001.
+Updated docs.
+Fixed spellnig mistakes in docs.
+Fix for 6986. Added new tests.
+Fix for 6985.
+Make some changes for 6975. This allows for the fact that the insaller msi might store a date which when read back later converts to a date in the future.
+Fixes for 6982 and 6983. Added new tests. Updated version.
+
+
+4.5.19.0 (e5c99a911587)
+=======================
+Styling fixes.
+Fix for private instance fields to be required to start with lowercase letter.
+Merge 6934 fixes
+Avoided mess for line breaks in signalling output methods.
+Update tests.
+Update docs.
+Re-add SA1632 but disable by default.
+Update version. Demand Admin priv before install.
+
+
+4.5.18.0 (1ccfedae551b)
+=======================
+Version number update.
+
+
+4.5.17.0 (0286a5651035)
+=======================
+Update the installer to work with UAC enabled.
+Some code style options can only be checked when a solution is open. Wait for a solution to be open before showing the options page.
+Fix for unit tests.
+Fix for 6952. ObjectBasedEnvironment wasn't loading parent settings files at all.
+Fix for 6922. Added new tests.
+Update docs. SA1632 is no longer thrown.
+Remove global:: before comparing using namespaces. Added new tests.
+Styling fixes.
+Fix for 6966.
+Styling fix for 6967.
+Fix for 6972.
+Styling fixes.
+Update version. Prompt to reset VS settings. Parsedate correctly for international versions.
+
+
+4.5.16.0 (e079bed0036f)
+=======================
+Only remove dll's from the ReferencedAssemblies folder.
+Adding text file back to ensure folder is created.
+Fix verifybuild.
+Merge of Console Fixes
+Core object was not properly set up with DisplayUI property when started loading add-ins.
+Allow text inside comments to not start with a capital letter or end with a period if completely inside a code element. Fix for 6960 and 6961.
+Allow comment tokens to start with ReSharper suppression text. Fix for 6959.
+Fix for 6958. Added new tests. Updated version.
+
+
+4.5.15.0 (fb9e6061d489)
+=======================
+Fix to not allow 'A .' as a doc comment.
+fix for 6954. Updated tests. SA1632 now not thrown.
+Report more information for SA1649 if the typename in the header needs updating.
+Fix Installer build.
+Correcting spelling mistake.
+Ensure the StyleCop location box is visible on the ReSharper->StyleCop options dialog. Fix for 6951.
+Fix for 6948.
+Fixed 6946 and 6944.
+Ensure VS tempates are restored when we uninstall. Fix for 6942.
+
+
+4.5.14.0 (089ddcfa7759)
+=======================
+Fix for 6938. Reordering modifiers static should be after access modifiers. Then all others.
+Fix for 6935. Allow Constants from other types in field declarations.
+Fix for 6936. Check documentation header elements for empty values (remarks, example, permission, and exception). Added new tests.
+Fix for 6930,6931,6932,6933. Added new tests.
+Fix for 6929. Only throw SA1624 if required and don't throw SA1623 for the same thing.
+Fix for 6924. Added tests.
+Adding async and await tests.
+Adding support for the async and await keywords. Bug 6917.
+Remove the trace logging.
+Adding the first 3 StyleCop compliant VS2010 templates.
+Adding first draft of VisualStudio StyleCop compliant templates.
+Fix for 6913.
+Fix for 6921. Typo meant that some colon checks had never run. Added new tests. Note. Colons must always be followed by whitespace but never preceded by whitespace.
+Fixing issues with SA1507 not firing with multiple blank lines at start or end of file.
+Add StyleCop version number to title of settings window. Private instance fields should be lowerCamelCase.
+Add additional ReSharper dlls to the environment.
+Update version. Some options were not being saved/loaded. Updated regkeys used during install.Add InstallDate to the msi.
+
+
+4.5.13.0 (e743043ff33f)
+=======================
+Add an option to the StyleCop R# options page that resets all the code layout options to be StyleCop compliant.
+Styling fix.
+Update docs for SA1516. Bug 6906
+Fix for 6909. Partial methods throwing wrong error. Updated tests.
+Styling fixes.
+Fix for 6897. If closing paren ) is on a new line but preceeeded by a single line comment then its ok.
+Switch the ObjectBasedEnvironment to support linked files. Fixes 6907.
+Styling updates.
+Fix for 6910. Added new tests.
+Ensure lock() statements always have {}. Fix for 6904. Added new tests.
+Fix the codeLexer to include the #endif in a preprocessor thats evaluated to false. fixes 6905. Added tests.
+Fix for 6901.
+Another fix for 6797. Added more tests. Updated version.
+
+
+4.5.12.0 (be0fbf2ae3ad)
+=======================
+Fix for 6886. Added new tests.
+Fix for new test examples in 6668. Added new tests.
+Fix for 6885.
+Update version to 4.5.12
+
+
+4.5.11.0 (18d56a6214e3)
+=======================
+Updated icons for auto-update message boxes.
+Add support for <unstyled/> element in a file header forcing stylecop to stop analysis.
+Merge icon changes
+Tabs were reverted back to spaces in designer class.
+Updated icons, images and banners. Deleted some obsolete resources.
+Fix for 6887. Added tests.
+Fix for 6776. Added new tests.
+Fix for 6881.
+
+
+4.5.10.0 (a23dc580b618)
+=======================
+Set ARPINSTALLLOCATION during installation.
+Updating docs for 6872.
+Merge SettingsEditor changes
+Fixed several bugs related to the settings editor.
+Fix for 6878. allow Lambdas to by multiple line as any param.
+Fix for 6875. Fix for 6874.
+Fix for 6869. Support #elif and #else and nested #if too. Updated versions. Added new tests.
+
+
+4.5.9.0 (206c49ed3398)
+=======================
+Fix for 6871. Attempt to remove all old StyleCop.For.ReSharper dlls during install.
+
+
+4.5.8.0 (7f01d9513b88)
+=======================
+Merge
+Fix for bug 6687. Rule SA1125 is not raised for nested generic type declarations.
+AutoUpdater needs a reference to a StyleCopCore object on the constructor.
+Merge
+More accurate fix for #6843.
+Fix the F5 debugging again. Adjust the msi name.
+Fix for 6867. Installer updates to only install 1 copy of settingseditor and stylecop dll's.
+Fix for 1121 docs.
+Fix for 6865. Migrate the selected install features during an upgrade.
+Styling fixes.
+Fix for 6853.
+Set version number ready for next build.
+
+
+4.5.7.0 (4260317b1d64)
+=======================
+Ensure that regkey creation is in the CurrentUser hive. I'd inadvertantly set it to LocalMachine so it was only working is you ran VS as an admin.
+
+
+4.5.6.0 (5ff0a414e930)
+=======================
+Styling fixes.
+Styling fixes.
+Styling fixes and upgrade to latest 4.5 for our own build. Write auto update checks into registry from R# plugin options page.
+Updating docs.
+Fix for 6862. Suppressing all rules of a namespace is now working correctly.
+Styling fixes.
+Fix the Package failing to load because sometimes VS hasn't finished initializing and left its zombie state. It was very obvious on VS2008 and intermittant on VS2010.
+Update ico file. Fix for 6857
+Fix for 6852. Added new tests. Version updated.
+
+
+4.5.5.0 (94e1b589c443)
+=======================
+Fix for 6861 which had broken the VS2008 installer.
+
+
+4.5.4.0 (d5c9e71e0d8a)
+=======================
+Fix for 6854. Added new tests.
+Fix for 6859. Added new tests.
+Adding autoUpdater functionality to StyleCop. RegKeys added for config under HKLM\SOFTWARE\CodePlex\StyleCop.
+
+
+4.5.3.0 (36cbdf636e99)
+=======================
+Updating violation text to be more accurate.
+Fix for 6849. Added new tests.
+Fix to ensure during debug we locate the StyleCop asembly from our executing location.
+Remove warning from WixBuild. Switch on styling checks for ReSharper plugin.
+Last of the Styling fixes in StyleCop.ReSharper
+Fix for incorrect local path.
+Styling fixes.
+Over 1000 styling fixes in the StyleCop.Resharper dll. Took 45 secs using the StyleCop.ReSharper plugin and Code Cleanup.
+Updating version for next release
+
+
+4.5.2.0 (084a5e757987)
+=======================
+Fix for Settings files not being read since StyleCop dll names had changed.
+Remove references to MSBuild framework 2.0 versions.
+
+
+4.5.1.0 (71b9dbe3efb5)
+=======================
+Updting Installer to remove previous versions of StyleCop4.2 or greater.
+
+
+4.5.0.10 (be69da43398f)
+=======================
+Update hg ignore file.
+Continue build changes for StyleCop.ReSharper dll
+Adding StyleCop.ReSharper.dll.
+Fix for 6847.
+Change the default install location to be StyleCop <major.minor> removing <build.revision> from the path.
+Fix for 6845.
+Updating build number.
+
+
+4.5.0.9 (9ec8fb7725e2)
+=======================
+Styling fixes in our own source for 4.5.09 build. Update to latest StyleCop for our own internal build.
+Fix for 6778. Any external parsers were failing. Updated version number.
+
+
+4.5.0.8 (8fbcf331e6f3)
+=======================
+Fix for 6844. Period can be the first item on its line. Update tests.
+Updates for 6842. Making any event handlers threadsafe.
+Prepare the StyleCop msi as the correct filename
+Fix for 6841 for covariant and contravariant generics. Added new tests. Updated version.
+
+
+4.5.0.7 (e7a9b1448402)
+=======================
+Updating docs.
+Fix for 6841
+Fix for 6760.
+Updating build number for next release.
+
+
+4.5.0.6 (61d31d94e448)
+=======================
+Fix for 6843.
+Updating docs for rule 1649.
+Fix for 6676. Added new tests. Fixed for aspx files and nested types in partial classes. Changed for generics too.
+Fix for 6683. Added new tests. Updated version number.
+
+
+4.5.0.5 (66f57db1fe43)
+=======================
+Updated docs.
+Fix for 6776 and 6774. Added new tests.
+Fix for 6687. Added new tests.
+Fix for 6840. Added new tests.
+Updating version number for next build.
+
+
+4.5.0.4 (baeaf8ba6fb6)
+=======================
+Fixes for 6822,6823,6824,6825,6826,6827,6828,6829. Added lots of new tests.
+Added new rule SA1649:FileHeaderFileNameDocumentationMustMatchTypeName.
+Updating version for next release.
+
+
+4.5.0.3 (becc761dc3e3)
+=======================
+Fix for 6836. Added new tests.
+Completing merger of Tools folders.
+Continuing the update of scripts and tools.
+Remove old tools and scripts
+Fix for 6692. Added new tests.
+Fix for 6808. Allow single line indexers on interfaces.Added new tests.
+Fix for 6835. Added new tests.
+Updating version for next release.
+
+
+4.5.0.2 (f9a2ddb9522b)
+=======================
+Fix for 6833. All SuppressMessage attributes from old source to continue to work.
+Update next build number to 4.5.0.2
+
+
+4.5.0.1 (9280ea24846b)
+=======================
+Fix for 6814. Update docs.
+Updating 4.5 docs.
+Fix for 6831. Updating docs.
+Fix for 6764. Sort System namespace even if they start with global::
+Fix for 6817. Documentation text must be 10 characters long or at least 2 words.Added tests.
+Fix for 6781. Added tests.
+Further fix for 6773
+Fix for 6773. Better detection of SuppressMessage attributes. Added new tests.
+Fix for 6788. Lots of new tests.
+Fix for 6784. Added new tests too.
+Fix for 6745
+Adding more test cases.
+Fixes for 6774,6776 and 6796. Debug.Asserts, Debug.Fails and Justification on SuppressMessage checking for constants and/or null and string.Empty. Added new tests.
+Fix for 6821. Load old 4.3 settings files and convert the Parser and analyzer ids to the new ones automatically.
+Fix for 6738. AssemblyAttributes are now a type of CsElement under the root doc. Added new tests.
+Adding Project.AutoFix folder
+Fix for 6636. Updated tests to check for regression too.
+Now signs the msi if a cert is found.
+Version updated to 4.5.0.1
+
+
+4.5.0.0 (98026a649a3e)
+=======================
+Fix for 6778.
+Update Hg ignore file
+Fix for 6806.
+Fix for 6737. The parser was failing to process #elif directives correctly. Added new tests to avoid regression.
+Fix for 6725. Install now sets the reg keys for ALLUSERS.
+Fixing docs for bug #6712
+Fixing the ProjectEnumerator again. The previous attempt had broken the Solution level StyleCop menu entries for solutions where the first project didn't support StyleCop. It would always return the value instead of checking others projects.
+Test and style fixes.
+Fixed all tests.
+Styling fixes.
+Fix for 6705. Format the documentation xml to allow split xml tags.
+Fix for 6666. Included documentation should be loaded either as an absolute path or as a path relative to the project its in not the location of the codefile.
+Fix for 6668.
+Fix for 6700. Include node in documentation should support /* at the end of it.
+Fixing StyleCop issues in our source. Upgraded cmd line build to use altest 4.5.0.0 during build
+Fixing StyleCop 4.5 issues in our our source.
+Upgrade Wix project to VS2010.
+Fix for 6590.
+Ensure the paths are relative for building the VSIX
+Updating ignored filetypes and removing old files.
+Removing unneeded files
+Adding extra filetypes and direcrtory patterns to the hg.ignore file
+Adding a VSIXProject to enable F5 debugging in VS2010
+Fix 6751. Allow let and select to follow closing curly brackets.
+Fix bug in VS2008 installer.
+Fix for 6697.
+Add missing Sa1205.html docs.
+Adding missing doc for rule 1205.
+Fix for 6704. Allow Select statements in Linq expressions to follow on the next line after a closing curly cracket.
+Tidying up detection of base. or this. requirements.
+Fix for 6777. Updating the path filed after manipulating the local path variable.
+Fix for 6689. Removing the click once from the settings editor to allow editing of the StyleCop.settings file in the ProgramFiles folder.
+Fix for 6779.
+Fix for 6783.
+Adding testdata for 6716
+Added testdata for regression of bug 6718.
+Updated docs for new 4.5 rules. SA1125, SA1411, SA1517 and SA1518.
+Fixing up some of the company names on the merged test data.
+Merge
+Merge
+Merge
+Ensuring StyleCop passes on out own code
+An attempt to fix issue #6795.
+Fix for 6794 in CodeLexer
+Fix for 6711 - Linq queries causing syntax error on parsing.
+Have ObjectBasedEnviroment support a defaultsettings file location. It uses the location of the executing assembly.
+Updating latest docs to 4.5
+Resources in the Settings Designer and VSPackage hadn't had the company name changed.
+Fixing new company name.
+Update the PLk for 4.5 and changed product name.
+Fixing spelling mistake in docs for rule name.
+Fix for 6780 - typo in docs
+Fixing a broken test
+More branding updates
+First part of update to remove Microsoft branding
+
+
+4.4.1.2 (6deba80099fc)
+=======================
+Checking in
+
+
+4.4.1.1 (e0a70bbcae47)
+=======================
+Updated the fix for solution listener performance issue
+Merged
+Project Enabled Cache is now cleared upon invalidation via the ProjectItemsEventsClass ItemAdded/ItemRemoved/ItemRenamed events, instead of periodically.
+Added projectEnabledCache and it's usage in the SupportsStyleCop method: this fixes workitem/6662
+Merged
+Putting some commented out test cases back in.
+Manually detect the ending used by the file provided. Added tests to avoid regressions.
+Merged
+Added a complete set of constuctor summary documentation tests.
+Fix for nestedtypes constructor summary. Updated regEx and added new test cases. All tests passing and verifybuild confirms no errors.
+Merged
+Fix for disallowing String.Format in favour of string.Format
+Made the rule more robust and added more tests
+Merged
+Add new rule for UseShorthandForNullableTypes as SA1125. (DoNotUseVar was 1125 but it was commented out)
+Fixed spelling errors
+Merged
+Add new Maintainability rule called AttributeConstructorMustNotUseUnnecessaryParenthesis SA1411.
+Merged
+Adding 2 new layout rules for no blank lines at start or end of file.
+Ensure that the MemberAccess symbol is a dot, and not a pointer or qualified alias symbol.
+Merged
+Fixes for allowing an operatorsymbol for methodaccess (a dot) after a closing curly bracket.
+Allow the operatior symbol '.' to follow a closing curly bracket.
+Clean up fix for 6637
+Fixed bug 6734 by validating property node type.
+merged
+Fix the inheritdoc check.
+Add new test cases for default parameter = "". Fix checks for empty string to allow default parameters to be "".
+Merged
+Add section to targets file to allow additional way of excluding files.
+Fix issue in documentation which causes StyleCop to incorrectly require documentation for members based on their access modifier level. It should rather consider the actual access, taking parent access into account.
+
+
+4.4.1.0 (c25ceada0bba)
+=======================
+Fixed issue #6719.
+Merge
+Merge
+Merge
+Backed out changeset: fc9d0c28f875
+Merge
+Backed out changeset: 2d82e8e00e28
+Merge
+Backed out changeset: b47a24fad49d
+Merge
+Backed out changeset: 9e5d04225b67
+Merge
+Backed out changeset: ac670537f886
+Merge
+Backed out changeset: 2e908ce60e83
+Merge
+Backed out changeset: 02072645290f
+Merge
+Backed out changeset: a8811f057b20
+Merge
+Backed out changeset: f156c6fedfd1
+Merge
+Backed out changeset: de008c61af1e
+Merge
+Backed out changeset: 3368179f39e4
+Merge
+Backed out changeset: 7aac4da40d41
+Merge
+Backed out changeset: 69a1fdf1bd43
+Merge
+Backed out changeset: 98ef9f04d2b8
+Merge
+Backed out changeset: 335bd6f14316
+Merge
+Backed out changeset: 8d653f4f8bd2
+Merge
+Backed out changeset: d4d1ae2792b1
+Merge
+Backed out changeset: 137cc33cf172
+Merge
+Backed out changeset: f0881390b8fa
+Merge
+Backed out changeset: f418d1d71dd8
+Merge
+Backed out changeset: 55dc0a1325d4
+Merge
+Backed out changeset: c3cf07a94d91
+Backed out changeset: 8648aebdcd1a
+Created branch v5.0.0
+Incremental commit
+Split out new codemodel assembly and added test framework for it.
+Reorganized solution tree
+Implemented dynamic load and reset for all query clause types, plus some cleanup.
+Implemented dynamic load and reset for Tokens, Operators, and Preprocessors
+Implemented dynamic load and reset for all Statement types
+Converted ToArray to AsReadOnly
+Implemented dynamic load and reset for all Expression types.
+Implemented dynamic load and reset for all LexicalElement types.
+Removed unused files
+Created strongly typed classes for the four accessor types.
+Implemented dynamic load and reset for all element types
+Implemented dynamic load and reset for all basic codeunit types.
+Changes to the way the parent document is targeted by each codeunit.
+Moved FriendlyTypeText and FriendlyPluralTypeText to Element class.
+Removed hard-coded location and generated flag from lexicalelements containing child codeunits.
+File cleanup
+All Documentation tests passing (other than missing support for contravariance and coveriance)
+Naming test passes successfully!
+Cleaned up erroneous comments
+Cleaned up file names and removed obsolete files.
+New CsParser compiles without errors.
+Renamed csparser and analyzers with _old
+Commiting fix for bug 6643
+merged
+Adding test data for static constructors element ordering.
+Merged
+Fixing a couple of verifybuild.cmd breaks that existed.
+Make Settings and WritableSettings constructors public for advanced hosting scenarios
+Merged from v4.4.0
+Merged
+Fixed bug with merging SourceFileList settings between local settings file and parent settings file.
+new script for enlisting to a fork.
+Fixed issue with merging file lists
+
+
+4.4.0.12 (73a5eb50ad49)
+=======================
+Added a StyleCopObjectConsole and ObjectBasedEnvironment classes.
+Merging all the changes from version 4.4.0 RC into the default branch.
+Changed version to 4.4.0.12
+
+
+4.4.0.11 (482a16bbe4c0)
+=======================
+Added support for inline file lists within settings files, having their own overriding settings.
+Added new tests for generated code
+Adding generated file exclusions to settings file
+Add support for exclusions in settings files
+Fixed bug 6573: typeparams with out or in modifier not supported correctly
+merged
+Add option for building docs in verifybuild
+Fixing the <a> tags in the manual docs for the new way the auto docs are generated.
+merged
+Removed privates and internals from SDK docs
+Fix to ensure the code samples for CSharp get generated ensuring that parameters appear on method calls.
+Accepting after merge
+Correcting the expected test results violations.
+Allow element documentation to begin without a capital letter if it starts with a <c> or <paramref>. Add new test data for positive and negative tests.
+Accepting 6642 with some edits.
+Fix styleing errors in DocumentationRules.cs
+Use StringBuilder where appropriate for Extracting Generics from types. Update tests.
+Fixing the documentation for constructor checks for nested classes. RegEx's have been updated. New positive and negative constructor tests for std classes and generics too.
+Added additional rules for inheritdoc
+merge
+Add basic support for <inheritdoc> as an element header. Updated test data too.
+test file
+Added a comment to the test file
+Allow <code> elemnt in headers to have blank lines. Added test data and test cases too.
+Removing email link from SDK docs
+Adding email address for feedback. uses stylecop@microsoft.com. May need to be edited.
+Fixing renamed manual docs links (only 2 links were broken)
+Correcting spelling mistake in the directory tidy up of SDK docs build.
+Updated SDK docs
+Removing old version of builddocs.cmd from rules dir
+Commiting merge
+Fixing build issue with doc build
+Add the SDK docs build - BuildDocs.cmd now builds the rules.chm and then the sdk.chm. Have the solution generate xml docs files in builds. Switch languages to en-us rather than en-gb. Add the codeplex Sandcastle Help File Builder to the Tools. Add Sandcastle to the Tools.
+Updated the rules documentation for version 4.4.0
+Merging doc rule cleanup from AndyR
+All docs rules files have now been manually corrected.
+Layout rules are re-formatted. Only 1600's to do now.
+Category of rule was incorrect.
+Maintainability rules updated. Just Layout (1500's) and documentation (1600's) to go.
+Naming rules all updated.
+Ordering Rules all reformatted.
+Update and simplify the Readability rules. Other rules to follow.
+Moving std text into a ls file. Simplyfying the docs layout for ease of maintenance. All Spacing rules updated. Other rules to follow.
+Commiting merge from main
+Fix for issue 6669:
+Updating setup to pick up rules chm from new location
+Ensure the correct bin folder is created if not already there.
+Update to the doc gen.
+Adding new documentation build.
+Backed out changeset: fc3c966ba148
+Commit removing temp file
+removing mecurial test file created by Previous checkin
+submitting a test file
+Removing file
+Reverting product version to 4.4.0.9
+roject/Src/WixSetup/StyleCop.Wix.sln.cache
+Reverting version to 4.4.0.9
+Checking in version change and removing unneeded file
+Removing files which should not be in the enlistment
+Removing file which should not have been added to enlistment
+Removing cache files from enlistment
+Adding missing Docs bin directory
+Removing cache files from enlistment
+Adding missing Bin dirs from VS SDKs.
+Updating product version to 4.4.1.0 in the default branch.
+Created release branch for v4.4.0.
+Reverting version to 4.4.0.9
+Updating the product version to 4.1.0 in the default branch
+Initial source

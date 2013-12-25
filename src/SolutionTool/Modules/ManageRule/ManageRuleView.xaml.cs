@@ -12,14 +12,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SolutionTool
+namespace ManageRule
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ManageRuleView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ManageRuleView : UserControl
     {
-        public MainWindow()
+        public ManageRuleView()
         {
             InitializeComponent();
         }

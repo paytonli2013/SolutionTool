@@ -15,19 +15,19 @@ namespace Orc.SolutionTool
             set { _children = value; }
         }
 
-        public FileStructureRule(IEnumerable<FileStructureRule> children):this()
+        public FileStructureRule(IEnumerable<FileStructureRule> children) : this()
         {
             _children = children;
         }
 
-        public FileStructureRule():base()
+        public FileStructureRule() : base()
         { 
 
         }
 
         public override void Exam(ExamContext context, Action<ExamResult> onComplete)
         {
-            InnerExam(new FileStructureRuleExamContext(context,MakeCurrentDirectory()), onComplete);
+            this.InnerExam(new FileStructureRuleExamContext(context, MakeCurrentDirectory()), onComplete);
         }
 
         private string MakeCurrentDirectory()
@@ -39,7 +39,7 @@ namespace Orc.SolutionTool
 
         public override void Apply(ExamContext context, Action<ExamResult> onComplete)
         {
-            InnerApply(new FileStructureRuleExamContext(context,MakeCurrentDirectory()), onComplete);
+            InnerApply(new FileStructureRuleExamContext(context, MakeCurrentDirectory()), onComplete);
         }
 
         protected abstract void InnerApply(FileStructureRuleExamContext fileStructureRuleExamContext, Action<ExamResult> onComplete);

@@ -17,7 +17,7 @@ namespace Orc.SolutionTool
 
         ExamContext _context;
 
-        public FileStructureRuleExamContext(ExamContext context,string currentDirectory)
+        public FileStructureRuleExamContext(ExamContext context, string currentDirectory)
         {
             _context = context;
             _currentDirectory = currentDirectory;

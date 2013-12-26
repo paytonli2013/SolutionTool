@@ -1,11 +1,20 @@
 ﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using System.Text;
+using Orc.SolutionTool.Core.Rules;
 
 namespace Orc.SolutionTool.Core
 {
+    [DataContract]
+    [KnownType(typeof(CheckCsprojOutputPathRule))]
+    [KnownType(typeof(CheckWithInspectCodeRule))]
+    [KnownType(typeof(CheckWithStyleCopRule))]
+    [KnownType(typeof(FileMustExistsRule))]
+    [KnownType(typeof(FolderMustExistsRule))]
     public class Target : NotificationObject
     {
         private string _name;
+        [DataMember]
         public string Name
         {
             get
@@ -68,8 +77,10 @@ namespace Orc.SolutionTool.Core
             }
         }
 
+        [DataMember]
         public ObservableCollection<IRule> Rules { get; private set; }
 
+        [DataMember]
         public ObservableCollection<Target> Children { get; private set; }
 
         public Target(string name, Target parent)

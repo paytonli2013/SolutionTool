@@ -1,12 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Orc.SolutionTool.Core
 {
+    [DataContract]
     public class Repository : NotificationObject
     {
         private string _path;
+        [DataMember]
         public string Path
         {
             get
@@ -24,6 +27,7 @@ namespace Orc.SolutionTool.Core
         }
 
         private Target _target;
+        [DataMember]
         public Target Target
         {
             get

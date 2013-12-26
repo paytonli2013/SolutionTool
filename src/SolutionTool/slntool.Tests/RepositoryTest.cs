@@ -87,5 +87,20 @@ namespace slntool.Tests
                 TestContext.WriteLine(i.ToString());
             }
         }
+
+        [TestMethod]
+        public void TestSerializeAndDeserialize()
+        {
+            var repository = new Repository(@"..\");
+
+            repository.AddRule("./Debug", new FolderMustExistsRule());
+            repository.AddRule("./Debug/slntool.Tests.dll", new FileMustExistsRule());
+            repository.AddRule("./Temp", new FolderMustExistsRule());
+            repository.AddRule("./Temp/Temp.txt", new FileMustExistsRule());
+
+            var s = ServiceStack.Text.XmlSerializer.SerializeToString(repository);
+
+            TestContext.WriteLine(s);
+        }
     }
 }

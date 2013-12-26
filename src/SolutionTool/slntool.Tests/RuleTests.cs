@@ -10,6 +10,22 @@ namespace slntool.Tests
     {
         private TestContext testContextInstance;
 
+        /// <summary>
+        /// Gets or sets the test context which provides
+        /// information about and functionality for the current test run.
+        /// </summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
         [TestMethod]
         public void TestCheckCsprojOutputPathRule()
         {
@@ -22,7 +38,27 @@ namespace slntool.Tests
 
         private void action(Orc.SolutionTool.Core.ExamResult obj)
         {
+            testContextInstance.WriteLine(obj.ToString());
+        }
 
+        [TestMethod]
+        public void TestFolderMustExistsRule()
+        {
+            var repository = new Repository(@"..\");
+            var context = new Context(repository, repository.Target);
+            var rule = new FolderMustExistsRule();
+
+            rule.Exam(context, action);
+        }
+
+        [TestMethod]
+        public void TestFileMustExistsRule()
+        {
+            var repository = new Repository(@".\slntool.Tests.dll");
+            var context = new Context(repository, repository.Target);
+            var rule = new FileMustExistsRule();
+
+            rule.Exam(context, action);
         }
     }
 }

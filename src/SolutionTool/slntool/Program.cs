@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Orc.SolutionTool.Properties;
+using CommandLine;
+using Orc.SolutionTool.Core;
+using Orc.SolutionTool.Core.Rules;
 
 namespace Orc.SolutionTool
 {
@@ -24,109 +27,63 @@ namespace Orc.SolutionTool
             Debug.Listeners.Add(new ConsoleTraceListener());
 
             var options = new Options();
+            var parser = new Parser();
 
-            if (!CommandLine.Parser.Default.ParseArguments(args, options))
+            if (!Parser.Default.ParseArguments(args, options))
             {
                 return;
             }
 
-            CheckDirectories(options);
+            if (!string.IsNullOrWhiteSpace(options.InspectCodePath))
+            {
+                if (!File.Exists(options.InspectCodePath))
+                {
+                    Debug.WriteLine("Cannot find InspectCode.exe in path: " + options.InspectCodePath);
 
-            CheckFiles(options);
+                    return;
+                }
+            }
 
-            CheckBuildOutputPath(options);
+            Debug.WriteLine("Begin checking " + options.RepositoryPath);
 
-            CheckWithInspectCode(options);
+            var repository = new Repository(options.RepositoryPath);
+            var results = new List<Result>();
 
-            CheckWithStyleCop(options);
-        }
-
-        /// <summary>
-        /// Check if specified directoies exist. Directories are relative paths.
-        /// </summary>
-        /// <param name="options"></param>
-        private static void CheckDirectories(Options options)
-        {
             if (options.Directories != null)
             {
-                Debug.WriteLine("To check directories: ");
-                Debug.Indent();
-
                 foreach (var i in options.Directories)
                 {
-                    var dir = Path.Combine(options.RepositoryPath, i);
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Debug.WriteLine(string.Format("Directory not exists: {0}", i));
-                    }
+                    repository.AddRule(i, new FolderMustExistsRule());
                 }
-
-                Debug.Unindent();
             }
-        }
 
-        /// <summary>
-        /// Check if specified files exist. Files are relative paths.
-        /// </summary>
-        /// <param name="options"></param>
-        private static void CheckFiles(Options options)
-        {
             if (options.Files != null)
             {
-                Debug.WriteLine("To check files: ");
-                Debug.Indent();
-
                 foreach (var i in options.Files)
                 {
-                    var dir = Path.Combine(options.RepositoryPath, i);
-
-                    if (!File.Exists(dir))
-                    {
-                        Debug.WriteLine(string.Format("File not exists: {0}", i));
-                    }
+                    repository.AddRule(i, new FileMustExistsRule());
                 }
-
-                Debug.Unindent();
             }
-        }
 
-        /// <summary>
-        /// Check OutputPath of all *.csproj files in the specified reposotry.
-        /// </summary>
-        /// <param name="options"></param>
-        private static void CheckBuildOutputPath(Options options)
-        {
             if (options.CheckOutputBuildPath)
             {
-                Debug.WriteLine("To check OutputPath: ");
-                Debug.Indent();
-
-                var csprojs = Directory.GetFiles(options.RepositoryPath, "*.csproj", SearchOption.AllDirectories);
-                XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-                foreach (var i in csprojs)
-                {
-                    Debug.WriteLine(i);
-
-                    var doc = XDocument.Load(i);
-                    var eleAssemblyName = doc.Descendants(ns + "AssemblyName").First().Value;
-                    var eleTargetFrameworkVersion = doc.Descendants(ns + "TargetFrameworkVersion").First().Value;
-                    var eleOutputPaths = doc.Descendants(ns + "OutputPath").ToList();
-
-                    foreach (var j in eleOutputPaths)
-                    {
-                        Debug.Indent();
-
-                        Debug.WriteLine(string.Format("{0} --> {1}/{2}/.NET{3}",
-                            j.Value, "./output", "TBD", eleTargetFrameworkVersion));
-
-                        Debug.Unindent();
-                    }
-                }
-
-                Debug.Unindent();
+                repository.AddRule(".", new CheckCsprojOutputPathRule());
             }
+
+            repository.Exam(x => results.Add(x), true);
+
+            foreach (var i in results)
+            {
+                Debug.WriteLine(i);
+            }
+
+            //CheckWithInspectCode(options);
+
+            //CheckWithStyleCop(options);
+
+            Console.WriteLine("Checking is done. ");
+
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -140,7 +97,7 @@ namespace Orc.SolutionTool
         {
             Debug.WriteLine("To check with InspectCode");
 
-            var exePath = Settings.Default.InspectCodeExe;
+            var exePath = "InspectCode.exe";
 
             if (!File.Exists(exePath))
             {
@@ -159,7 +116,7 @@ namespace Orc.SolutionTool
             foreach (var sln in slns)
             {
                 var uri1 = new Uri(sln);
-                var uri2 = uri.MakeRelativeUri(uri1);                
+                var uri2 = uri.MakeRelativeUri(uri1);
 
                 var cmdLine = string.Format(@"/caches-home=""{0}"" /o=""{1}"" ""{2}""",
                     cachesHome, output, sln);

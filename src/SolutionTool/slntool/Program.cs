@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Orc.SolutionTool.Properties;
 
 namespace Orc.SolutionTool
 {
@@ -19,7 +21,7 @@ namespace Orc.SolutionTool
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Trace.Listeners.Add(new ConsoleTraceListener());
+            Debug.Listeners.Add(new ConsoleTraceListener());
 
             var options = new Options();
 
@@ -33,6 +35,10 @@ namespace Orc.SolutionTool
             CheckFiles(options);
 
             CheckBuildOutputPath(options);
+
+            CheckWithInspectCode(options);
+
+            CheckWithStyleCop(options);
         }
 
         /// <summary>
@@ -43,8 +49,8 @@ namespace Orc.SolutionTool
         {
             if (options.Directories != null)
             {
-                Trace.WriteLine("To check directories: ");
-                Trace.Indent();
+                Debug.WriteLine("To check directories: ");
+                Debug.Indent();
 
                 foreach (var i in options.Directories)
                 {
@@ -52,11 +58,11 @@ namespace Orc.SolutionTool
 
                     if (!Directory.Exists(dir))
                     {
-                        Trace.WriteLine(string.Format("Directory not exists: {0}", i));
+                        Debug.WriteLine(string.Format("Directory not exists: {0}", i));
                     }
                 }
 
-                Trace.Unindent();
+                Debug.Unindent();
             }
         }
 
@@ -68,8 +74,8 @@ namespace Orc.SolutionTool
         {
             if (options.Files != null)
             {
-                Trace.WriteLine("To check files: ");
-                Trace.Indent();
+                Debug.WriteLine("To check files: ");
+                Debug.Indent();
 
                 foreach (var i in options.Files)
                 {
@@ -77,11 +83,11 @@ namespace Orc.SolutionTool
 
                     if (!File.Exists(dir))
                     {
-                        Trace.WriteLine(string.Format("File not exists: {0}", i));
+                        Debug.WriteLine(string.Format("File not exists: {0}", i));
                     }
                 }
 
-                Trace.Unindent();
+                Debug.Unindent();
             }
         }
 
@@ -93,15 +99,15 @@ namespace Orc.SolutionTool
         {
             if (options.CheckOutputBuildPath)
             {
-                Trace.WriteLine("To check OutputPath: ");
-                Trace.Indent();
+                Debug.WriteLine("To check OutputPath: ");
+                Debug.Indent();
 
                 var csprojs = Directory.GetFiles(options.RepositoryPath, "*.csproj", SearchOption.AllDirectories);
                 XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
 
                 foreach (var i in csprojs)
                 {
-                    Trace.WriteLine(i);
+                    Debug.WriteLine(i);
 
                     var doc = XDocument.Load(i);
                     var eleAssemblyName = doc.Descendants(ns + "AssemblyName").First().Value;
@@ -110,17 +116,120 @@ namespace Orc.SolutionTool
 
                     foreach (var j in eleOutputPaths)
                     {
-                        Trace.Indent();
+                        Debug.Indent();
 
-                        Trace.WriteLine(string.Format("{0} --> {1}/{2}/.NET{3}",
+                        Debug.WriteLine(string.Format("{0} --> {1}/{2}/.NET{3}",
                             j.Value, "./output", "TBD", eleTargetFrameworkVersion));
 
-                        Trace.Unindent();
+                        Debug.Unindent();
                     }
                 }
 
-                Trace.Unindent();
+                Debug.Unindent();
             }
+        }
+
+        /// <summary>
+        /// To check solution with InspectCode.
+        /// </summary>
+        /// <example>
+        /// InspectCode.exe /caches-home="C:\Temp\DFCache" /o="report.xml" "C:\src\MySolution.sln"
+        /// </example>
+        /// <param name="options"></param>
+        private static void CheckWithInspectCode(Options options)
+        {
+            Debug.WriteLine("To check with InspectCode");
+
+            var exePath = Settings.Default.InspectCodeExe;
+
+            if (!File.Exists(exePath))
+            {
+                Debug.WriteLine("Need to specify path of InspectCode.exe");
+
+                return;
+            }
+
+            var cachesHome = @"..\Reports\InspectCode_Cache";
+            var output = @"..\Reports\InspectCode_Report.xml";
+            var slns = Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
+            var uri = new Uri(options.RepositoryPath);
+
+            Debug.Indent();
+
+            foreach (var sln in slns)
+            {
+                var uri1 = new Uri(sln);
+                var uri2 = uri.MakeRelativeUri(uri1);                
+
+                var cmdLine = string.Format(@"/caches-home=""{0}"" /o=""{1}"" ""{2}""",
+                    cachesHome, output, sln);
+
+                Debug.WriteLine(exePath + " " + cmdLine);
+
+                var proc = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = cmdLine,
+                        WorkingDirectory = options.RepositoryPath,
+                        ////CreateNoWindow = true,
+                        //WindowStyle = ProcessWindowStyle.Hidden,
+                        //RedirectStandardInput = true,
+                        ////RedirectStandardError = true,
+                        //RedirectStandardOutput = true,
+                        //UseShellExecute = false,
+                    },
+                };
+
+                proc.ErrorDataReceived += OnErrorDataReceived;
+                proc.OutputDataReceived += OnOutputDataReceived;
+
+                proc.Start();
+                proc.WaitForExit();
+            }
+
+            Debug.Unindent();
+        }
+
+        static void OnErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Debug.WriteLine("Error Received: " + e.Data);
+        }
+
+        static void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Debug.WriteLine("Data Received: " + e.Data);
+        }
+
+        /// <summary>
+        /// To check solution with StyleCop.
+        /// </summary>
+        /// <param name="options"></param>
+        private static void CheckWithStyleCop(Options options)
+        {
+            Debug.WriteLine("To check with StyleCop");
+
+            //var exePath = @"f:\_E_\jb-cl\StyleCop.exe";
+            //var output = @"..\Reports\InspectCode_Report.xml";
+            //var cachesHome = @"..\Reports\InspectCode_Cache\";
+            //var slns = Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
+            //var uri = new Uri(options.RepositoryPath);
+
+            //Debug.Indent();
+
+            //foreach (var sln in slns)
+            //{
+            //    var uri1 = new Uri(sln);
+            //    var uri2 = uri.MakeRelativeUri(uri1);
+
+            //    var cmdLine = string.Format(@"""{0}""",
+            //        uri2.ToString());
+
+            //    Debug.WriteLine(exePath + " " + cmdLine);
+            //}
+
+            //Debug.Unindent();
         }
     }
 }

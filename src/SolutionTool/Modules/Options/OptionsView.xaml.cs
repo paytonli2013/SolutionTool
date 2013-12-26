@@ -1,5 +1,4 @@
-﻿using Microsoft.Practices.Prism.Regions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,19 +12,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ManageRule
+namespace Options
 {
     /// <summary>
-    /// Interaction logic for ManageRuleMenuItemView.xaml
+    /// Interaction logic for OptionsView.xaml
     /// </summary>
-    [ViewSortHint("01")]
-    public partial class ManageRuleMenuItemView : UserControl
+    public partial class OptionsView : UserControl
     {
-        public ManageRuleMenuItemView(ManageRuleMenuItemViewmodel viewmodel)
+        public OptionsView()
         {
             InitializeComponent();
-            viewmodel.View = this;
-            DataContext = viewmodel;
         }
     }
 }

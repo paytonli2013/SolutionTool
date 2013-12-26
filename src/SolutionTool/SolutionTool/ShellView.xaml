@@ -8,29 +8,30 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="28"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="TitleBar">
-            
+        <Grid x:Name="TitleBar" VerticalAlignment="Stretch" Background="{StaticResource TitleBar.Backround}">
+            <Image Source="{StaticResource SolutionToolIconImageSource}" HorizontalAlignment="Left" Width="200" Height="40"/>
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" d:DesignWidth="100">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" VerticalAlignment="Stretch" Background="Gold">
-               <ItemsControl cal:RegionManager.RegionName="LeftMenuRegion"></ItemsControl>  
+            <Border MinWidth="100" Grid.Column="0" VerticalAlignment="Stretch" Background="{StaticResource LeftMenuPanel.Backround}">
+                <ListBox Background="Transparent" cal:RegionManager.RegionName="LeftMenuRegion" ItemContainerStyle="{StaticResource ListBoxItemStyle}"></ListBox>
             </Border>
-           
+
             <ContentControl Grid.Column="2" cal:RegionManager.RegionName="ContentRegion"/>
             <GridSplitter Grid.Column="1" />
         </Grid>
-        <Border x:Name="StatusBar">
+        <Border x:Name="StatusBar" Grid.Row="2" Background="{DynamicResource StatusBar.Backround}">
             <StackPanel Orientation="Horizontal">
-                <Image /><TextBlock Text="{Binding StatusMessage,Mode=OneWay}"/>
+                <Image />
+                <TextBlock Text="{Binding StatusMessage,Mode=OneWay}"/>
             </StackPanel>
         </Border>
     </Grid>

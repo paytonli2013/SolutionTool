@@ -13,17 +13,18 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ManageRule
+namespace Options
 {
     /// <summary>
-    /// Interaction logic for ManageRuleMenuItemView.xaml
+    /// Interaction logic for OptionsMenuItemView.xaml
     /// </summary>
-    [ViewSortHint("01")]
-    public partial class ManageRuleMenuItemView : UserControl
+    [ViewSortHint("90")]
+    public partial class OptionsMenuItemView : UserControl
     {
-        public ManageRuleMenuItemView(ManageRuleMenuItemViewmodel viewmodel)
+        public OptionsMenuItemView(OptionsMenuItemViewmodel viewmodel)
         {
             InitializeComponent();
+
             viewmodel.View = this;
             DataContext = viewmodel;
         }

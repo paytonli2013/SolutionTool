@@ -13,6 +13,7 @@ namespace Orc.SolutionTool.Mvvm
         public MenuItemViewmodelBase(IRegionManager regionManager, IShellService shellService):base(shellService)
         {
             _regionManager = regionManager;
+            RegionName = "ContentRegion";
         }
 
         public void Navigate(string region, string view, Action<bool, Exception> onComplete)
@@ -89,18 +90,54 @@ namespace Orc.SolutionTool.Mvvm
             }
         }
 
-        bool _isAvtive;
+        bool _isActive;
         public bool IsActive
         {
             get
             {
-                return _isAvtive;
+                return _isActive;
             }
             set
             {
-                _isAvtive = value;
+                _isActive = value;
                 RaisePropertyChanged("IsActive");
+                OnMenuActived(_isActive);
                 FireIsActiveChanged();
+            }
+        }
+
+        string _viewName;
+
+        public string ViewName
+        {
+            get { return _viewName; }
+            protected set
+            {
+                _viewName = value;
+                RaisePropertyChanged("ViewName");
+            }
+        }
+
+        string _regionName;
+
+        public string RegionName
+        {
+            get { return _regionName; }
+            protected set { _regionName = value; }
+        }
+
+
+        protected virtual void OnMenuActived(bool isActive)
+        {
+            if (isActive)
+            {
+                Navigate(RegionName,"\\"+ ViewName, (isSuccess, error) =>
+                {
+                    if (!isSuccess && error != null)
+                    {
+                        ShowMessage(error);
+                    }
+                });
             }
         }
 

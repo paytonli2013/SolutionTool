@@ -7,23 +7,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ManageRule
+namespace Options
 {
-    public class ManageRuleMenuItemViewmodel : MenuItemViewmodelBase
+    public class OptionsMenuItemViewmodel : MenuItemViewmodelBase
     {
-        
-        public DelegateCommand NavigateToManageRule { get { return new DelegateCommand(ExecuteNavigateToManageRule, CanExecuteNavigateToManageRule); } }
+        public DelegateCommand NavigateToOptions { get { return new DelegateCommand(ExecuteNavigateToOptions, CanExecuteNavigateToOptions); } }
 
-        public ManageRuleMenuItemViewmodel(IRegionManager regionManager, IShellService shellService)
-            : base(regionManager, shellService)
+        public OptionsMenuItemViewmodel(IRegionManager regionManager, IShellService shellService)
+            : base(regionManager,shellService)
         {
-            ViewName = "ManageRule";
+            ViewName = "Options";
         }
 
         public override void OnNavigatedFrom(Microsoft.Practices.Prism.Regions.NavigationContext navigationContext)
         {
             //base.OnNavigatedFrom(navigationContext);
-            Navigate("ContentRegion", "ManageRule", (isSuccess, error) =>
+            Navigate("ContentRegion", "Options", (isSuccess, error) =>
             {
                 if (!isSuccess && error != null)
                 {
@@ -33,14 +32,14 @@ namespace ManageRule
         }
 
 
-        private bool CanExecuteNavigateToManageRule()
+        private bool CanExecuteNavigateToOptions()
         {
             return true;
         }
 
-        private void ExecuteNavigateToManageRule()
+        private void ExecuteNavigateToOptions()
         {
-            Navigate("ContentRegion", "\\ManageRule", (isSuccess, error) =>
+            Navigate("ContentRegion", "\\Options", (isSuccess, error) =>
             {
                 if (!isSuccess && error != null)
                 {

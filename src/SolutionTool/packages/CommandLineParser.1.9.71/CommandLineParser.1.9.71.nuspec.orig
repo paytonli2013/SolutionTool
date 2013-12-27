@@ -13,7 +13,10 @@
     <description>The Command Line Parser Library offers to CLR applications a clean and concise API for manipulating command line arguments and related tasks.</description>
     <releaseNotes />
     <copyright>Copyright (c) 2005 - 2013 Giacomo Stelluti Scala</copyright>
+<<<<<<< HEAD
+=======
     <language />
+>>>>>>> 60878f62d0631a875776a114e72776292c3ef59b
     <tags>command line argument option parser parsing library syntax shell</tags>
   </metadata>
 </package>

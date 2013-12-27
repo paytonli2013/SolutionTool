@@ -1,7 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using CommandLine;
+using Orc.SolutionTool.Core;
+using Orc.SolutionTool.Core.Rules;
 
 namespace Orc.SolutionTool
 {
@@ -19,108 +24,169 @@ namespace Orc.SolutionTool
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Trace.Listeners.Add(new ConsoleTraceListener());
+            Debug.Listeners.Add(new ConsoleTraceListener());
 
             var options = new Options();
+            var parser = new Parser();
 
-            if (!CommandLine.Parser.Default.ParseArguments(args, options))
+            if (!Parser.Default.ParseArguments(args, options))
             {
                 return;
             }
 
-            CheckDirectories(options);
+            if (!string.IsNullOrWhiteSpace(options.InspectCodePath))
+            {
+                if (!File.Exists(options.InspectCodePath))
+                {
+                    Debug.WriteLine("Cannot find InspectCode.exe in path: " + options.InspectCodePath);
 
-            CheckFiles(options);
+                    return;
+                }
+            }
 
-            CheckBuildOutputPath(options);
-        }
+            Debug.WriteLine("Begin checking " + options.RepositoryPath);
 
-        /// <summary>
-        /// Check if specified directoies exist. Directories are relative paths.
-        /// </summary>
-        /// <param name="options"></param>
-        private static void CheckDirectories(Options options)
-        {
+            var repository = new Repository(options.RepositoryPath);
+            var results = new List<Result>();
+
             if (options.Directories != null)
             {
-                Trace.WriteLine("To check directories: ");
-                Trace.Indent();
-
                 foreach (var i in options.Directories)
                 {
-                    var dir = Path.Combine(options.RepositoryPath, i);
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Trace.WriteLine(string.Format("Directory not exists: {0}", i));
-                    }
+                    repository.AddRule(i, new FolderMustExistsRule());
                 }
-
-                Trace.Unindent();
             }
-        }
 
-        /// <summary>
-        /// Check if specified files exist. Files are relative paths.
-        /// </summary>
-        /// <param name="options"></param>
-        private static void CheckFiles(Options options)
-        {
             if (options.Files != null)
             {
-                Trace.WriteLine("To check files: ");
-                Trace.Indent();
-
                 foreach (var i in options.Files)
                 {
-                    var dir = Path.Combine(options.RepositoryPath, i);
-
-                    if (!File.Exists(dir))
-                    {
-                        Trace.WriteLine(string.Format("File not exists: {0}", i));
-                    }
+                    repository.AddRule(i, new FileMustExistsRule());
                 }
-
-                Trace.Unindent();
             }
+
+            if (options.CheckOutputBuildPath)
+            {
+                repository.AddRule(".", new CheckCsprojOutputPathRule());
+            }
+
+            repository.Exam(x => results.Add(x), true);
+
+            foreach (var i in results)
+            {
+                Debug.WriteLine(i);
+            }
+
+            //CheckWithInspectCode(options);
+
+            //CheckWithStyleCop(options);
+
+            Console.WriteLine("Checking is done. ");
+
+            Console.ReadKey();
         }
 
         /// <summary>
-        /// Check OutputPath of all *.csproj files in the specified reposotry.
+        /// To check solution with InspectCode.
+        /// </summary>
+        /// <example>
+        /// InspectCode.exe /caches-home="C:\Temp\DFCache" /o="report.xml" "C:\src\MySolution.sln"
+        /// </example>
+        /// <param name="options"></param>
+        private static void CheckWithInspectCode(Options options)
+        {
+            Debug.WriteLine("To check with InspectCode");
+
+            var exePath = "InspectCode.exe";
+
+            if (!File.Exists(exePath))
+            {
+                Debug.WriteLine("Need to specify path of InspectCode.exe");
+
+                return;
+            }
+
+            var cachesHome = @"..\Reports\InspectCode_Cache";
+            var output = @"..\Reports\InspectCode_Report.xml";
+            var slns = Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
+            var uri = new Uri(options.RepositoryPath);
+
+            Debug.Indent();
+
+            foreach (var sln in slns)
+            {
+                var uri1 = new Uri(sln);
+                var uri2 = uri.MakeRelativeUri(uri1);
+
+                var cmdLine = string.Format(@"/caches-home=""{0}"" /o=""{1}"" ""{2}""",
+                    cachesHome, output, sln);
+
+                Debug.WriteLine(exePath + " " + cmdLine);
+
+                var proc = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = cmdLine,
+                        WorkingDirectory = options.RepositoryPath,
+                        ////CreateNoWindow = true,
+                        //WindowStyle = ProcessWindowStyle.Hidden,
+                        //RedirectStandardInput = true,
+                        ////RedirectStandardError = true,
+                        //RedirectStandardOutput = true,
+                        //UseShellExecute = false,
+                    },
+                };
+
+                proc.ErrorDataReceived += OnErrorDataReceived;
+                proc.OutputDataReceived += OnOutputDataReceived;
+
+                proc.Start();
+                proc.WaitForExit();
+            }
+
+            Debug.Unindent();
+        }
+
+        static void OnErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Debug.WriteLine("Error Received: " + e.Data);
+        }
+
+        static void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Debug.WriteLine("Data Received: " + e.Data);
+        }
+
+        /// <summary>
+        /// To check solution with StyleCop.
         /// </summary>
         /// <param name="options"></param>
-        private static void CheckBuildOutputPath(Options options)
+        private static void CheckWithStyleCop(Options options)
         {
-            if (options.CheckOutputBuildPath)
-            {
-                Trace.WriteLine("To check OutputPath: ");
-                Trace.Indent();
+            Debug.WriteLine("To check with StyleCop");
 
-                var csprojs = Directory.GetFiles(options.RepositoryPath, "*.csproj", SearchOption.AllDirectories);
-                XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+            //var exePath = @"f:\_E_\jb-cl\StyleCop.exe";
+            //var output = @"..\Reports\InspectCode_Report.xml";
+            //var cachesHome = @"..\Reports\InspectCode_Cache\";
+            //var slns = Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
+            //var uri = new Uri(options.RepositoryPath);
 
-                foreach (var i in csprojs)
-                {
-                    Trace.WriteLine(i);
+            //Debug.Indent();
 
-                    var doc = XDocument.Load(i);
-                    var eleAssemblyName = doc.Descendants(ns + "AssemblyName").First().Value;
-                    var eleTargetFrameworkVersion = doc.Descendants(ns + "TargetFrameworkVersion").First().Value;
-                    var eleOutputPaths = doc.Descendants(ns + "OutputPath").ToList();
+            //foreach (var sln in slns)
+            //{
+            //    var uri1 = new Uri(sln);
+            //    var uri2 = uri.MakeRelativeUri(uri1);
 
-                    foreach (var j in eleOutputPaths)
-                    {
-                        Trace.Indent();
+            //    var cmdLine = string.Format(@"""{0}""",
+            //        uri2.ToString());
 
-                        Trace.WriteLine(string.Format("{0} --> {1}/{2}/.NET{3}",
-                            j.Value, "./output", "TBD", eleTargetFrameworkVersion));
+            //    Debug.WriteLine(exePath + " " + cmdLine);
+            //}
 
-                        Trace.Unindent();
-                    }
-                }
-
-                Trace.Unindent();
-            }
+            //Debug.Unindent();
         }
     }
 }

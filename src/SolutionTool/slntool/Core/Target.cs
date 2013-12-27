@@ -1,0 +1,95 @@
+﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using System.Text;
+using Orc.SolutionTool.Core.Rules;
+
+namespace Orc.SolutionTool.Core
+{
+    [DataContract]
+    [KnownType(typeof(CheckCsprojOutputPathRule))]
+    [KnownType(typeof(CheckWithInspectCodeRule))]
+    [KnownType(typeof(CheckWithStyleCopRule))]
+    [KnownType(typeof(FileMustExistsRule))]
+    [KnownType(typeof(FolderMustExistsRule))]
+    public class Target : NotificationObject
+    {
+        private string _name;
+        [DataMember]
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            private set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    RaisePropertyChanged(() => Name);
+                }
+            }
+        }
+
+        private Target _parent;
+        public Target Parent
+        {
+            get
+            {
+                return _parent;
+            }
+            private set
+            {
+                if (_parent != value)
+                {
+                    _parent = value;
+                    RaisePropertyChanged(() => Parent);
+                }
+            }
+        }
+
+        public string Path
+        {
+            get
+            {
+                var p = Parent;
+
+                if (p == null)
+                {
+                    return ".";
+                }
+
+                var sb = new StringBuilder(Name);
+
+                while (p.Parent != null)
+                {
+                    sb.Insert(0, "\\");
+                    sb.Insert(0, p.Name);
+
+                    p = p.Parent;
+                }
+
+                sb.Insert(0, ".\\");
+
+                var s = sb.ToString();
+
+                return s;
+            }
+        }
+
+        [DataMember]
+        public ObservableCollection<IRule> Rules { get; private set; }
+
+        [DataMember]
+        public ObservableCollection<Target> Children { get; private set; }
+
+        public Target(string name, Target parent)
+        {
+            Name = name;
+            Parent = parent;
+
+            Rules = new ObservableCollection<IRule>();
+            Children = new ObservableCollection<Target>();
+        }
+    }
+}

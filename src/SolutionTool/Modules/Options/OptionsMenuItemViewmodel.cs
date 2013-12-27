@@ -11,42 +11,10 @@ namespace Options
 {
     public class OptionsMenuItemViewmodel : MenuItemViewmodelBase
     {
-        public DelegateCommand NavigateToOptions { get { return new DelegateCommand(ExecuteNavigateToOptions, CanExecuteNavigateToOptions); } }
-
         public OptionsMenuItemViewmodel(IRegionManager regionManager, IShellService shellService)
             : base(regionManager,shellService)
         {
             ViewName = "Options";
-        }
-
-        public override void OnNavigatedFrom(Microsoft.Practices.Prism.Regions.NavigationContext navigationContext)
-        {
-            //base.OnNavigatedFrom(navigationContext);
-            Navigate("ContentRegion", "Options", (isSuccess, error) =>
-            {
-                if (!isSuccess && error != null)
-                {
-                    ShowMessage(error);
-                }
-            });
-        }
-
-
-        private bool CanExecuteNavigateToOptions()
-        {
-            return true;
-        }
-
-        private void ExecuteNavigateToOptions()
-        {
-            Navigate("ContentRegion", "\\Options", (isSuccess, error) =>
-            {
-                if (!isSuccess && error != null)
-                {
-                    ShowMessage(error);
-                }
-            });
-            //throw new NotImplementedException();
         }
     }
 }

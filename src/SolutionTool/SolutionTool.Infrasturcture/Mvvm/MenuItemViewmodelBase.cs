@@ -126,7 +126,6 @@ namespace Orc.SolutionTool.Mvvm
             protected set { _regionName = value; }
         }
 
-
         protected virtual void OnMenuActived(bool isActive)
         {
             if (isActive)

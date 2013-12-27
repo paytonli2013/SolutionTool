@@ -56,6 +56,19 @@
     <Compile Include="IMessageService.cs" />
     <Compile Include="IShellService.cs" />
     <Compile Include="IStatusBar.cs" />
+    <Compile Include="Model\Directory.cs" />
+    <Compile Include="Model\DirectoryExistedRule.cs" />
+    <Compile Include="Model\ExamContext.cs" />
+    <Compile Include="Model\ExamResult.cs" />
+    <Compile Include="Model\FileStructureRule.cs" />
+    <Compile Include="Model\FileStructureRuleEnum.cs" />
+    <Compile Include="Model\FileStructureRuleExamContext.cs" />
+    <Compile Include="Model\IProjectManager.cs" />
+    <Compile Include="Model\IRule.cs" />
+    <Compile Include="Model\IRuleManager.cs" />
+    <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\ProjectManager.cs" />
+    <Compile Include="Model\RuleBase.cs" />
     <Compile Include="Mvvm\IMenuViewmodel.cs" />
     <Compile Include="Mvvm\IViewModel.cs" />
     <Compile Include="Mvvm\MenuItemViewmodelBase.cs" />
@@ -65,7 +78,6 @@
     <Compile Include="ShellService.cs" />
     <Compile Include="StatusCatgory.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -40,7 +40,9 @@ namespace Orc.SolutionTool
         {
             base.ConfigureContainer();
 
-            Container.RegisterType<IShellService, ShellService>();
+            Container.RegisterType<IShellService, ShellService>(new ContainerControlledLifetimeManager());
+
+            Container.RegisterType<IProjectManager, ProjectManager>(new ContainerControlledLifetimeManager());
         }
 
         protected override IModuleCatalog CreateModuleCatalog()

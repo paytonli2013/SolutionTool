@@ -30,6 +30,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionTool.Infrasturcture
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Options", "Modules\Options\Options.csproj", "{9D61ED08-5ED6-490F-9FA1-28BFB1A05EE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageTemplate", "Modules\ManageTemplate\ManageTemplate.csproj", "{FD713F2B-E732-4862-9932-F127A95DB0C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionChecker", "Modules\SolutionChecker\SolutionChecker.csproj", "{268BCA0E-BE03-4043-9347-46A7D91A2215}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +64,14 @@ Global
 		{9D61ED08-5ED6-490F-9FA1-28BFB1A05EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D61ED08-5ED6-490F-9FA1-28BFB1A05EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D61ED08-5ED6-490F-9FA1-28BFB1A05EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD713F2B-E732-4862-9932-F127A95DB0C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD713F2B-E732-4862-9932-F127A95DB0C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD713F2B-E732-4862-9932-F127A95DB0C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD713F2B-E732-4862-9932-F127A95DB0C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{268BCA0E-BE03-4043-9347-46A7D91A2215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{268BCA0E-BE03-4043-9347-46A7D91A2215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{268BCA0E-BE03-4043-9347-46A7D91A2215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{268BCA0E-BE03-4043-9347-46A7D91A2215}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +79,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{50EB8974-4573-4AAB-A2B2-98243B8A472C} = {A049C8B0-3899-4C07-B333-6985247F1FE1}
 		{9D61ED08-5ED6-490F-9FA1-28BFB1A05EE0} = {A049C8B0-3899-4C07-B333-6985247F1FE1}
+		{FD713F2B-E732-4862-9932-F127A95DB0C1} = {A049C8B0-3899-4C07-B333-6985247F1FE1}
+		{268BCA0E-BE03-4043-9347-46A7D91A2215} = {A049C8B0-3899-4C07-B333-6985247F1FE1}
 	EndGlobalSection
 EndGlobal

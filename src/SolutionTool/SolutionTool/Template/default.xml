@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<dir name="root">
+  <dir name="src"></dir>
+  <dir name="output"></dir>
+  <dir name="doc"></dir>
+  <dir name="deployment"></dir>
+  <files>
+    <file name="Readme.md"/>
+  </files>
+</dir>

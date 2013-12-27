@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ManageRule
+namespace ManageTemplate
 {
-    public class ManageRuleMenuItemViewmodel : MenuItemViewmodelBase
+    public class ManageTemplateMenuItemViewmodel : MenuItemViewmodelBase
     {
-        public ManageRuleMenuItemViewmodel(IRegionManager regionManager, IShellService shellService)
+        public ManageTemplateMenuItemViewmodel(IRegionManager regionManager, IShellService shellService)
             : base(regionManager, shellService)
         {
-            ViewName = "ManageRule";
+            ViewName = "ManageTemplate";
         }
     }
 }

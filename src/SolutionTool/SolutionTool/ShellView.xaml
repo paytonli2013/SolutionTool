@@ -8,9 +8,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="28"/>
+            <RowDefinition Height="24"/>
         </Grid.RowDefinitions>
         <Grid x:Name="TitleBar" VerticalAlignment="Stretch" Background="{StaticResource TitleBar.Backround}">
             <Image Source="{StaticResource SolutionToolIconImageSource}" HorizontalAlignment="Left" Width="200" Height="40"/>
@@ -22,16 +22,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Border MinWidth="100" Grid.Column="0" VerticalAlignment="Stretch" Background="{StaticResource LeftMenuPanel.Backround}">
-                <ListBox Background="Transparent" cal:RegionManager.RegionName="LeftMenuRegion" ItemContainerStyle="{StaticResource ListBoxItemStyle}"></ListBox>
+                <ListBox BorderThickness="0" Background="Transparent" cal:RegionManager.RegionName="LeftMenuRegion" ItemContainerStyle="{StaticResource ListBoxItemStyle}"></ListBox>
             </Border>
 
             <ContentControl Grid.Column="2" cal:RegionManager.RegionName="ContentRegion"/>
             <GridSplitter Grid.Column="1" />
         </Grid>
         <Border x:Name="StatusBar" Grid.Row="2" Background="{DynamicResource StatusBar.Backround}">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="6,2">
                 <Image />
-                <TextBlock Text="{Binding StatusMessage,Mode=OneWay}"/>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Text="{Binding StatusMessage,Mode=OneWay}"/>
             </StackPanel>
         </Border>
     </Grid>

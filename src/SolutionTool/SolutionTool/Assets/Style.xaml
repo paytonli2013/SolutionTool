@@ -1,14 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=mscorlib">
-    
+
     <BitmapImage UriSource="../Assets/SolutionToolIcon.png" x:Key="SolutionToolIconImageSource"/>
 
     <LinearGradientBrush x:Key="TitleBar.Backround" EndPoint="0.5,1" StartPoint="0.5,0">
-        <GradientStop Color="#FFCBCBE2"/>
-        <GradientStop Color="White" Offset="0.5"/>
+        <GradientStop Color="#FFD7D7E8" Offset="0.007"/>
+        <GradientStop Color="White" Offset="0.646"/>
+        <GradientStop Color="#FFEBEBF3" Offset="1"/>
+        <GradientStop Color="White" Offset="0.989"/>
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="StatusBar.Backround" Color="#FF2E2E5B"/>
-    <SolidColorBrush x:Key="LeftMenuPanel.Backround" Color="#FFEAEEF1"/>
+    <SolidColorBrush x:Key="StatusBar.Backround" Color="#FF1E1E36"/>
+    <SolidColorBrush x:Key="LeftMenuPanel.Backround" Color="#FFF1F5F7"/>
 
     <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
     <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFF5F5E6"/>
@@ -54,7 +56,7 @@
         </Setter>
     </Style>
 
-    
+
     <!--ListBoxItemStyle-->
     <SolidColorBrush x:Key="Item.Normal.Foreground" Color="#FF434353"/>
     <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#FF555581"/>

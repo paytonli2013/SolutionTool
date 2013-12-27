@@ -1,4 +1,5 @@
-﻿using Orc.SolutionTool.Mvvm;
+﻿using Microsoft.Practices.Prism.Regions;
+using Orc.SolutionTool.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,10 @@ namespace Orc.SolutionTool
 {
     public class ShellViewmodel : NotificationObject, IViewModel, IMessageService
     {
-        public ShellViewmodel()
+        IRegionManager _regionManager;
+        public ShellViewmodel(IRegionManager regionManager)
         {
-
+            _regionManager = regionManager;
         }
 
         StatusCatgory _statusCatgory;
@@ -38,7 +40,7 @@ namespace Orc.SolutionTool
 
         public void PostStatusMessage(StatusCatgory catgory, string message)
         {
-
+            StatusMessage = message;
         }
 
         object _view;
@@ -58,6 +60,18 @@ namespace Orc.SolutionTool
         public void Show(string message)
         {
             throw new NotImplementedException();
+        }
+
+        internal void Avtive(int p)
+        {
+            var region = _regionManager.Regions["LeftMenuRegion"];
+            var view = region.Views.FirstOrDefault();
+
+            if (view != null)
+            {
+                region.Activate(view);
+            }
+            //throw new NotImplementedException();
         }
     }
 }

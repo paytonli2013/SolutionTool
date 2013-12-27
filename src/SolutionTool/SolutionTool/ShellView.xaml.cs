@@ -26,6 +26,25 @@ namespace Orc.SolutionTool
             _viewmodel = viewmodel;
             viewmodel.View = this;
             DataContext = viewmodel;
+
+            Loaded += ShellView_Loaded;
+        }
+
+        void ShellView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var dispatcher = this.Dispatcher;
+            if (dispatcher != null)
+            {
+                dispatcher.BeginInvoke(new Action(() => 
+                {
+                    _viewmodel.Avtive(0);
+                }));
+            }
+            else
+                _viewmodel.Avtive(0);
+
+            _viewmodel.PostStatusMessage(StatusCatgory.None,"Ready");
+            //throw new NotImplementedException();
         }
 
         public void PostStatusMessage(StatusCatgory catgory, string message)

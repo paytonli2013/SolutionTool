@@ -94,6 +94,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Assets\Style.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="OptionsMenuItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

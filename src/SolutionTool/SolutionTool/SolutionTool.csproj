@@ -122,9 +122,7 @@
       <Name>SolutionTool.Infrasturcture</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RunLog\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Modules\SolutionChecker.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -135,6 +133,7 @@
     <Content Include="Rule\ruleset_default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="RunLog\runlog.xml" />
     <Content Include="Template\default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

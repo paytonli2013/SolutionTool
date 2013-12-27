@@ -12,12 +12,16 @@ namespace SolutionChecker
     public class SolutionCheckerViewmodel : ViewmodelBase
     {
         IProjectManager _projectManager;
-        public SolutionCheckerViewmodel(IShellService shellService, IProjectManager projectManager)
+        IRuleRunner _ruleRunner;
+        public SolutionCheckerViewmodel(IShellService shellService, IProjectManager projectManager, IRuleRunner ruleRunner)
             : base(shellService)
         {
             _projectManager = projectManager;
+            _ruleRunner = ruleRunner;
 
             _projectManager.LoadProejcts(OnLoaded);
+
+            _ruleRunner.LoadRunLog(OnLogLoaded);
         }
 
         ObservableCollection<Project> _projects;
@@ -32,15 +36,39 @@ namespace SolutionChecker
             }
         }
 
+        ObservableCollection<RunLogItem> _recentRun;
+
+        public ObservableCollection<RunLogItem> RecentRun
+        {
+            get { return _recentRun; }
+            set
+            {
+                _recentRun = value;
+                RaisePropertyChanged("RecentRun");
+            }
+        }
+
         public void OnLoaded(IEnumerable<Project> projects, Exception error)
         {
             if (error != null)
-            { 
+            {
 
             }
             else
             {
                 Projects = new ObservableCollection<Project>(projects);
+            }
+        }
+
+        public void OnLogLoaded(IEnumerable<RunLogItem> log, Exception error)
+        {
+            if (error != null)
+            {
+
+            }
+            else if (log != null)
+            {
+                RecentRun = new ObservableCollection<RunLogItem>(log);
             }
         }
     }

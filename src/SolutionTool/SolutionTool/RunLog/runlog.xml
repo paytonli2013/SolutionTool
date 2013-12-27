@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<runlog>
+  <run project="demo" rules="4" start="2013.12.27 16:18:20.000" end="2013.12.27 16:18:22.000" result="passed" summary="passed" report="demo_20131227161820000.html"/>
+</runlog>

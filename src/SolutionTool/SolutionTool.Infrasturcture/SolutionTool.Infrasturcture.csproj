@@ -66,9 +66,13 @@
     <Compile Include="Model\IProjectManager.cs" />
     <Compile Include="Model\IRule.cs" />
     <Compile Include="Model\IRuleManager.cs" />
+    <Compile Include="Model\IRuleRunner.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\ProjectManager.cs" />
     <Compile Include="Model\RuleBase.cs" />
+    <Compile Include="Model\RuleRunner.cs" />
+    <Compile Include="Model\RunLogEventArgs.cs" />
+    <Compile Include="Model\RunLogItem.cs" />
     <Compile Include="Mvvm\IMenuViewmodel.cs" />
     <Compile Include="Mvvm\IViewModel.cs" />
     <Compile Include="Mvvm\MenuItemViewmodelBase.cs" />

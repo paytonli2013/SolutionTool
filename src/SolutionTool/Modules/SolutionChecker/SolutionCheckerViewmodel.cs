@@ -19,7 +19,7 @@ namespace SolutionChecker
             _projectManager = projectManager;
             _ruleRunner = ruleRunner;
 
-            _projectManager.LoadProejcts(OnLoaded);
+            _projectManager.LoadProjects(OnLoaded);
 
             _ruleRunner.LoadRunLog(OnLogLoaded);
         }

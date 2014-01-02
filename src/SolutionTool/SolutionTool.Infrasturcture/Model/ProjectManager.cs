@@ -42,6 +42,8 @@ namespace Orc.SolutionTool
                     RuleSetPath = attrRuleSet == null ? null : attrRuleSet.Value,
                     TargetPath = attrTarget == null ? null : attrTarget.Value,
                 };
+
+                list.Add(prj);
             }
 
             return list;

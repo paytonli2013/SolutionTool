@@ -139,10 +139,12 @@
     <None Include="Projects\demo_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Rules\ruleset_default.xml">
+    <None Include="Rules\ruleset_default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="RunLog\runlog.xml" />
+    </None>
+    <None Include="Logs\log.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Template\default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

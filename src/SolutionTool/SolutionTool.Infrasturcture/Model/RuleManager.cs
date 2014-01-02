@@ -1,67 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
-namespace Orc.SolutionTool.Model
+namespace Orc.SolutionTool
 {
     public class RuleManager : IRuleManager
     {
-        private Dictionary<string, List<IRule>> _ruleCache = new Dictionary<string, List<IRule>>();
+        private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Rules\");
+
+        System.IO.FileSystemWatcher _fsw = new System.IO.FileSystemWatcher(_dir, "*.xml");
+
+        public RuleManager()
+        {
+            _fsw.Changed += _fsw_Changed;
+
+            LoadRules();
+        }
+
+        Dictionary<string, IEnumerable<IRule>> _ruleSets = new Dictionary<string, IEnumerable<IRule>>();
+        public Dictionary<string, IEnumerable<IRule>> RuleSets
+        {
+            get
+            {
+                return _ruleSets;
+            }
+        }
 
         public void Persist(IEnumerable<IRule> ruleSet, Action<bool, Exception> onComplete)
         {
             throw new NotImplementedException();
         }
 
-        public void Load(string ruleSet, Action<IEnumerable<IRule>, Exception> onComplete)
+        void _fsw_Changed(object sender, System.IO.FileSystemEventArgs e)
         {
-            var xe = null as Exception;
-            var rules = null as IEnumerable<IRule>;
+            LoadRules(e.FullPath);
+        }
 
-            if (!_ruleCache.ContainsKey(ruleSet))
+        void LoadRules(string name = null)
+        {
+            _fsw.EnableRaisingEvents = false;
+
+            var files = null as string[];
+
+            if (name == null)
             {
-                var cd = Environment.CurrentDirectory;
-                var dir = System.IO.Path.Combine(cd, @".\Rules\");
+                files = System.IO.Directory.GetFiles(_dir, "*.xml");
+            }
+            else if (System.IO.File.Exists(name))
+            {
+                files = new string[] { name, };
+            }
 
-                if (!System.IO.Directory.Exists(dir))
+            if (files == null)
+            {
+                return;
+            }
+
+            foreach (var i in files)
+            {
+                var fi = new System.IO.FileInfo(i);
+
+                if (_ruleSets.ContainsKey(fi.Name))
                 {
-                    xe = new Exception("Rules directory does not exists. ");
+                    _ruleSets.Remove(fi.Name);
+                }
 
-                    if (onComplete != null)
-                    {
-                        onComplete(rules, xe);
+                var rules = new List<IRule>();
 
-                        return;
-                    }
+                _ruleSets.Add(fi.Name, rules);
 
-                    var pattern = ruleSet + ".xml";
-                    var file = System.IO.Directory.GetFiles(dir, pattern).FirstOrDefault();
+                var xdoc = XDocument.Load(fi.FullName);
 
-                    if (file == null)
-                    {
-                        xe = new Exception("Ruleset [" + pattern + "] does not exists. ");
-
-                        if (onComplete != null)
-                        {
-                            onComplete(rules, xe);
-
-                            return;
-                        }
-                    }
-
-                    var xdoc = XDocument.Load(file);
-
-                    foreach (var i in xdoc.Root.Elements())
-                    {
-
-                    }
+                foreach (var j in xdoc.Root.Elements())
+                {
+                    // TODO:
+                    rules.Add(new DirectoryExistedRule { });
                 }
             }
 
-            rules = _ruleCache[ruleSet];
-
+            _fsw.EnableRaisingEvents = true;
         }
     }
 }

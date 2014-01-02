@@ -17,6 +17,8 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Orc.SolutionTool.Mvvm
 {
@@ -67,18 +69,51 @@ namespace Orc.SolutionTool.Mvvm
             }
         }
 
-        ///// <summary>
-        ///// Raises this object's PropertyChanged event.
-        ///// </summary>
-        ///// <typeparam name="T">The type of the property that has a new value</typeparam>
-        ///// <param name="propertyExpression">A Lambda expression representing the property that has a new value.</param>
-        //[SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate", Justification = "Method used to raise an event")]
-        //[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Cannot change the signature")]
-        //protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpression)
-        //{
-        //    var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-        //    this.RaisePropertyChanged(propertyName);
-        //}
+
+        /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// </summary>
+        /// <typeparam name="T">The type of the property that has a new value</typeparam>
+        /// <param name="propertyExpression">A Lambda expression representing the property that has a new value.</param>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "Method used to raise an event")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Cannot change the signature")]
+        protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpression)
+        {
+            var propertyName = ExtractPropertyName(propertyExpression);
+
+            this.RaisePropertyChanged(propertyName);
+        }
+
+        // Methods
+        private static string ExtractPropertyName<T>(Expression<Func<T>> propertyExpression)
+        {
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException("propertyExpression");
+            }
+
+            MemberExpression body = propertyExpression.Body as MemberExpression;
+
+            if (body == null)
+            {
+                throw new ArgumentException("propertyExpression");
+            }
+
+            PropertyInfo member = body.Member as PropertyInfo;
+
+            if (member == null)
+            {
+                throw new ArgumentException("propertyExpression");
+            }
+
+            if (member.GetGetMethod(true).IsStatic)
+            {
+                throw new ArgumentException("propertyExpression");
+            }
+
+            return body.Member.Name;
+        }
     }
 }
 

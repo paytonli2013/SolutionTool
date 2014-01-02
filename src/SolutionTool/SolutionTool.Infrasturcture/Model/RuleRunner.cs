@@ -8,6 +8,8 @@ namespace Orc.SolutionTool
 {
     public class RuleRunner : IRuleRunner
     {
+        private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Logs\");
+        
         public void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete)
         {
             var list = BuildLogs();
@@ -18,16 +20,14 @@ namespace Orc.SolutionTool
 
         public void ClearLog(Action<Exception> onComplete)
         {
-            var cd = Environment.CurrentDirectory;
-            var dir = System.IO.Path.Combine(cd, @".\Logs\");
             var xe = null as Exception;
 
-            if (!System.IO.Directory.Exists(dir))
+            if (!System.IO.Directory.Exists(_dir))
             {
                 return;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(dir))
+            foreach (var i in System.IO.Directory.GetFiles(_dir))
             {
                 try
                 {
@@ -49,15 +49,12 @@ namespace Orc.SolutionTool
         {
             List<RunLogItem> list = new List<RunLogItem>();
 
-            var cd = Environment.CurrentDirectory;
-            var dir = System.IO.Path.Combine(cd, @".\Logs\");
-
-            if (!System.IO.Directory.Exists(dir))
+            if (!System.IO.Directory.Exists(_dir))
             {
                 return list;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(dir, "*.xml"))
+            foreach (var i in System.IO.Directory.GetFiles(_dir, "*.xml"))
             {
                 var xdoc = XDocument.Load(i);
 

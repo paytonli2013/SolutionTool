@@ -33,17 +33,18 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Margin="2" FontSize="18" Text="Rules"/>
-            <ListBox Grid.Row="1" MinWidth="160" BorderThickness="0,1,0,0" ItemsSource="{Binding Rules}" Background="Transparent"/>
+            <ListBox Grid.Row="1" MinWidth="160" BorderThickness="0,1,0,0" Background="Transparent" 
+                ItemsSource="{Binding RuleSetNames}" SelectedValue="{Binding SelectedRuleSetName}" />
         </Grid>
         <Rectangle Visibility="Hidden" Width="1" Grid.Row="1" Margin="0,20" Grid.Column="1" Fill="#FFABADB3"/>
         <Grid Margin="12,20" Grid.Column="2" Grid.Row="1" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="1"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Margin="2" FontSize="18" Text="Details"/>
-            <Rectangle Height="1" Grid.Row="1" Margin="0" Fill="#FFABADB3"/>
+            <ListBox Grid.Row="1" MinWidth="160" BorderThickness="0,1,0,0" Background="Transparent" 
+                ItemsSource="{Binding SelectedRuleSet}" />
         </Grid>
     </Grid>
 </UserControl>

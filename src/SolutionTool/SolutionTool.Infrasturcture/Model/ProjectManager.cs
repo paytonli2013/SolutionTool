@@ -1,14 +1,14 @@
-﻿using Orc.SolutionTool.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Linq;
+using Orc.SolutionTool.Model;
 
 namespace Orc.SolutionTool
 {
     public class ProjectManager : IProjectManager
     {
+        private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Projects\");
+
         public void LoadProjects(Action<IEnumerable<Project>, Exception> onComplete)
         {
             //throw new NotImplementedException();
@@ -22,15 +22,12 @@ namespace Orc.SolutionTool
         {
             List<Project> list = new List<Project>();
 
-            var cd = Environment.CurrentDirectory;
-            var dir = System.IO.Path.Combine(cd, @".\Projects\");
-
-            if (!System.IO.Directory.Exists(dir))
+            if (!System.IO.Directory.Exists(_dir))
             {
                 return list;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(dir, "*.xml"))
+            foreach (var i in System.IO.Directory.GetFiles(_dir, "*.xml"))
             {
                 var xdoc = XDocument.Load(i);
                 var attrName = xdoc.Root.Attribute("name");

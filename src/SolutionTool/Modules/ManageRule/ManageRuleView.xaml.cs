@@ -19,9 +19,12 @@ namespace ManageRule
     /// </summary>
     public partial class ManageRuleView : UserControl
     {
-        public ManageRuleView()
+        public ManageRuleView(ManageRuleViewmodel viewmodel)
         {
             InitializeComponent();
+
+            viewmodel.View = this;
+            DataContext = viewmodel;
         }
     }
 }

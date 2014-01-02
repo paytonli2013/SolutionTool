@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ruleset>
+  <filestructure template="default" />
+  <outputpath path="output/{active_solution}/" />
+</ruleset>

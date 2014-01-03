@@ -134,9 +134,6 @@
       <Name>SolutionTool.Infrasturcture</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <DesignData Include="SampleData\ManageTemplateViewmodelSampleData.xaml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(TargetPath)" "$(SolutionDir)SolutionTool\Modules\"</PostBuildEvent>

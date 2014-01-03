@@ -173,9 +173,9 @@
     <None Include="Rules\ruleset3.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Template\default.xml">
+    <None Include="Templates\default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Resource Include="Assets\SolutionToolIcon.png" />
     <Content Include="Modules\ManageRule.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

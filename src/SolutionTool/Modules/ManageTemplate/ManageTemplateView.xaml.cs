@@ -19,9 +19,12 @@ namespace ManageTemplate
     /// </summary>
     public partial class ManageTemplateView : UserControl
     {
-        public ManageTemplateView()
+        public ManageTemplateView(ManageTemplateViewmodel viewmodel)
         {
             InitializeComponent();
+
+            viewmodel.View = this;
+            this.DataContext = viewmodel;
         }
     }
 }

@@ -1,26 +1,52 @@
-﻿<UserControl x:Class="ManageTemplate.ManageTemplateView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="20">
+﻿<UserControl x:Class="ManageTemplate.ManageTemplateView" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:orc="http://schemas.orc.com/2014/xaml/presentation" 
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="800" 
+    d:DataContext="{d:DesignData /SampleData/ManageTemplateViewmodelSampleData.xaml}">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Manage Template" FontWeight="Bold"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-        	<TextBlock Text="Template: " />
-        	<ComboBox MinWidth="180" IsEditable="True" />
+
+        <!--<TextBlock Text="{Binding ViewName}" FontWeight="Bold"/>-->
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5">
+            <TextBlock Text="Template: " HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <ComboBox MinWidth="180" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding TemplateFiles}" />
         </StackPanel>
-        <TreeView Grid.Row="2"/>
+
+        <TreeView Grid.Row="2" ItemsSource="{Binding Repository.Target.Children}" 
+            ItemTemplate="{DynamicResource DataTemplate1}" >
+        	<TreeView.Resources>
+                <HierarchicalDataTemplate x:Key="DataTemplate1" 
+                    ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Path=Name}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+
+        <GridSplitter Grid.Row="2" Grid.Column="1"  
+            HorizontalAlignment="Center" VerticalAlignment="Stretch" 
+            ShowsPreview="True" Width="5" />
+
+        <xctk:PropertyGrid Grid.Row="2" Grid.Column="2"/>
+
         <StackPanel Grid.Row="3" Orientation="Horizontal">
-        	<Button Content="Save" Margin="0,5" />
-        	<Button Content="Cancel" Margin="5" />
+            <Button Content="Save" Margin="0,5" />
+            <Button Content="Cancel" Margin="5" />
         </StackPanel>
     </Grid>
 </UserControl>

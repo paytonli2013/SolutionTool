@@ -19,6 +19,59 @@ namespace Orc.SolutionTool.Model
 
         public IList<File> Files { get; set; }
 
+#if DEBUG
+        public static Directory Sample
+        {
+            get
+            {
+                var dir = new Directory
+                {
+                    Name = "Root",
+                    SubDirectories = new List<Directory>
+                    {                 
+                        new Directory
+                        {
+                            Name = "src",
+                            Files = new List<File>
+                            {
+                                new File { Name = "class1.cs", },
+                                new File { Name = "class2.cs", },
+                                new File { Name = "class3.cs", },
+                            },
+                        },
+                        new Directory
+                        {
+                            Name = "output",
+                            SubDirectories = new List<Directory>
+                            {
+                                new Directory
+                                {
+                                    Name = "debug",
+                                    Files = new List<File>
+                                    {
+                                        new File { Name = "app.exe", },
+                                        new File { Name = "app.pdb", },
+                                        new File { Name = "app.xml", },
+                                    },
+                                },
+                            },
+                            Files = new List<File>
+                            {
+                
+                            },
+                        },
+                    },
+                    Files = new List<File>
+                    {
+                        new File { Name = "readme.md", },
+                    },
+                };
+
+                return dir;
+            }
+        } 
+#endif
+
         #region IXmlSerializable members.
 
         public System.Xml.Schema.XmlSchema GetSchema()

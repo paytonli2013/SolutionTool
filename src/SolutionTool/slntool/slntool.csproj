@@ -44,17 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\Repository.cs" />
-    <Compile Include="Core\Rules\CheckWithInspectCodeRule.cs" />
-    <Compile Include="Core\Rules\CheckWithStyleCopRule.cs" />
-    <Compile Include="Core\Rules\CheckCsprojOutputPathRule.cs" />
-    <Compile Include="Core\Target.cs" />
-    <Compile Include="Core\NotificationObject.cs" />
-    <Compile Include="Core\Result.cs" />
-    <Compile Include="Core\Rules\Rule.cs" />
-    <Compile Include="Core\Rules\FileMustExistsRule.cs" />
-    <Compile Include="Core\Rules\FolderMustExistsRule.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,7 +51,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SolutionTool.Infrasturcture\SolutionTool.Infrasturcture.csproj">
+      <Project>{386162ce-50d2-4472-b41c-f518749610be}</Project>
+      <Name>SolutionTool.Infrasturcture</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

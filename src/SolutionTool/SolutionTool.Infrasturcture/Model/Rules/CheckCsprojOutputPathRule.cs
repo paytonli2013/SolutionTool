@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace Orc.SolutionTool.Core.Rules
+namespace Orc.SolutionTool.Model.Rules
 {
     public class CheckCsprojOutputPathRule : Rule
     {
@@ -17,7 +17,7 @@ namespace Orc.SolutionTool.Core.Rules
         public override void Exam(Context context, Action<ExamResult> action)
         {
             var result = new ExamResult();
-            var csprojs = Directory.GetFiles(context.Repository.Path, "*.csproj", SearchOption.AllDirectories);
+            var csprojs = System.IO.Directory.GetFiles(context.Repository.Path, "*.csproj", SearchOption.AllDirectories);
             var ns = (XNamespace)"http://schemas.microsoft.com/developer/msbuild/2003";
             var format = "./output/{0}/.NET{1}/";
             var re = new Regex(@"(?<c>\w+)\|(?<p>\w+)");

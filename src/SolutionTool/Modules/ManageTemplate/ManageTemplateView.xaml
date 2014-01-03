@@ -8,9 +8,19 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Manage Template" FontWeight="Bold"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        	<TextBlock Text="Template: " />
+        	<ComboBox MinWidth="180" IsEditable="True" />
+        </StackPanel>
+        <TreeView Grid.Row="2"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+        	<Button Content="Save" Margin="0,5" />
+        	<Button Content="Cancel" Margin="5" />
+        </StackPanel>
     </Grid>
 </UserControl>

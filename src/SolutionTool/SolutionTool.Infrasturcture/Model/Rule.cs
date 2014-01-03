@@ -1,6 +1,7 @@
 ﻿using System;
+using Orc.SolutionTool.Mvvm;
 
-namespace Orc.SolutionTool.Core.Rules
+namespace Orc.SolutionTool.Model
 {
     public abstract class Rule : NotificationObject
     {

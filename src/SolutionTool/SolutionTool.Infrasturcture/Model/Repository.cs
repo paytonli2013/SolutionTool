@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using Orc.SolutionTool.Core.Rules;
+using Orc.SolutionTool.Mvvm;
 
-namespace Orc.SolutionTool.Core
+namespace Orc.SolutionTool.Model
 {
     [XmlRoot("repository")]
     public class Repository : NotificationObject
@@ -224,9 +224,9 @@ namespace Orc.SolutionTool.Core
 
         private static void UpdateChildren(Target target, string path)
         {
-            if (Directory.Exists(path))
+            if (System.IO.Directory.Exists(path))
             {
-                foreach (var i in Directory.GetDirectories(path))
+                foreach (var i in System.IO.Directory.GetDirectories(path))
                 {
                     var name = new DirectoryInfo(i).Name;
                     var child = new Target(name, target);
@@ -236,7 +236,7 @@ namespace Orc.SolutionTool.Core
                     UpdateChildren(child, i);
                 }
 
-                foreach (var i in Directory.GetFiles(path))
+                foreach (var i in System.IO.Directory.GetFiles(path))
                 {
                     var name = new FileInfo(i).Name;
                     var child = new Target(name, target);

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Orc.SolutionTool.Core;
-using Orc.SolutionTool.Core.Rules;
+using Orc.SolutionTool.Model;
+using Orc.SolutionTool.Model.Rules;
 
 namespace slntool.Tests
 {
@@ -35,7 +35,7 @@ namespace slntool.Tests
             rule.Exam(context, action);
         }
 
-        private void action(Orc.SolutionTool.Core.ExamResult obj)
+        private void action(Orc.SolutionTool.Model.ExamResult obj)
         {
             testContextInstance.WriteLine(obj.ToString());
         }

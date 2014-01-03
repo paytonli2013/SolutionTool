@@ -74,11 +74,11 @@ namespace Orc.SolutionTool
                     var attrResult = run.Attribute("result");
                     var attrSummary = run.Attribute("summary");
                     var attrReport = run.Attribute("report");
-                    var result = Result.Fail;
+                    var status = ActionStatus.None;
 
                     if (attrResult != null)
                     {
-                        Enum.TryParse<Result>(attrResult.Value, out result);
+                        Enum.TryParse<ActionStatus>(attrResult.Value, out status);
                     }
 
                     var prj = new RunLogItem
@@ -87,7 +87,7 @@ namespace Orc.SolutionTool
                         Rules = attrRules == null ? null : (int?)int.Parse(attrRules.Value),
                         Start = attrStart == null ? null : (DateTime?)DateTime.Parse(attrStart.Value),
                         End = attrEnd == null ? null : (DateTime?)DateTime.Parse(attrEnd.Value),
-                        Result = result,
+                        Status = status,
                         Summary = attrSummary == null ? null : attrSummary.Value,
                         Report = attrReport == null ? null : attrReport.Value,
                     };

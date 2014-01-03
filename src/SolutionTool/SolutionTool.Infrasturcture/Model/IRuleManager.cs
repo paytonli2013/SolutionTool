@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Orc.SolutionTool
+namespace Orc.SolutionTool.Model
 {
     public interface IRuleManager
     {

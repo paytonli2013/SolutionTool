@@ -63,6 +63,10 @@
       <Project>{824550ec-8f91-488f-85df-33aa3325311d}</Project>
       <Name>slntool</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SolutionTool.Infrasturcture\SolutionTool.Infrasturcture.csproj">
+      <Project>{386162ce-50d2-4472-b41c-f518749610be}</Project>
+      <Name>SolutionTool.Infrasturcture</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

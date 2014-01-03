@@ -1,25 +1,25 @@
 ﻿using System;
 using System.IO;
 
-namespace Orc.SolutionTool.Core.Rules
+namespace Orc.SolutionTool.Model.Rules
 {
     public class FolderMustExistsRule : Rule
     {
         public override void Exam(Context context, Action<ExamResult> action)
         {
             var path = Path.Combine(context.Repository.Path, context.Target.Path);
-            var exists = Directory.Exists(path);
+            var exists = System.IO.Directory.Exists(path);
             var result = new ExamResult();
 
             if (!exists)
             {
                 result.Status = ActionStatus.Failed;
-                result.Message = "Folder Not Exists: " + context.Target.Path;
+                result.Summary = "Folder Not Exists: " + context.Target.Path;
             }
             else
             {
                 result.Status = ActionStatus.Pass;
-                result.Message = string.Empty;
+                result.Summary = string.Empty;
             }
 
             if (action != null)
@@ -31,28 +31,28 @@ namespace Orc.SolutionTool.Core.Rules
         public override void Apply(Context context, Action<ApplyResult> action)
         {
             var path = Path.Combine(context.Repository.Path, context.Target.Path);
-            var exists = Directory.Exists(path);
+            var exists = System.IO.Directory.Exists(path);
             var result = new ApplyResult();
 
             if (!exists)
             {
                 try
                 {
-                    Directory.CreateDirectory(context.Target.Path);
+                    System.IO.Directory.CreateDirectory(context.Target.Path);
 
                     result.Status = ActionStatus.Pass;
-                    result.Message = "Folder is Created: " + context.Target.Path;
+                    result.Summary = "Folder is Created: " + context.Target.Path;
                 }
                 catch (Exception xe)
                 {
                     result.Status = ActionStatus.Failed;
-                    result.Message = xe.Message;
+                    result.Summary = xe.Message;
                 }
             }
             else
             {
                 result.Status = ActionStatus.Pass;
-                result.Message = string.Empty;
+                result.Summary = string.Empty;
             }
 
             if (action != null)

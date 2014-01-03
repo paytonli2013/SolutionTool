@@ -1,13 +1,9 @@
-﻿using Microsoft.Practices.Prism.UnityExtensions;
-using SolutionTool;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.Practices.Prism.Modularity;
-using Microsoft.Practices.Prism;
+using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
+using Orc.SolutionTool.Model;
+using SolutionTool;
 
 namespace Orc.SolutionTool
 {

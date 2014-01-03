@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Orc.SolutionTool.Core.Rules
+namespace Orc.SolutionTool.Model.Rules
 {
     public class FileMustExistsRule : Rule
     {
@@ -25,18 +25,18 @@ namespace Orc.SolutionTool.Core.Rules
         public override void Exam(Context context, Action<ExamResult> action)
         {
             var path = Path.Combine(context.Repository.Path, context.Target.Path);
-            var exists = File.Exists(path);
+            var exists = System.IO.File.Exists(path);
             var result = new ExamResult();
 
             if (!exists)
             {
                 result.Status = ActionStatus.Failed;
-                result.Message = "File Not Exists: " + context.Target.Path;
+                result.Summary = "File Not Exists: " + context.Target.Path;
             }
             else
             {
                 result.Status = ActionStatus.Pass;
-                result.Message = string.Empty;
+                result.Summary = string.Empty;
             }
 
             if (action != null)
@@ -48,31 +48,31 @@ namespace Orc.SolutionTool.Core.Rules
         public override void Apply(Context context, Action<ApplyResult> action)
         {
             var path = Path.Combine(context.Repository.Path, context.Target.Path);
-            var exists = File.Exists(path);
+            var exists = System.IO.File.Exists(path);
             var result = new ApplyResult();
 
             if (!exists)
             {
                 try
                 {
-                    using (var fs = File.CreateText(context.Target.Path))
+                    using (var fs = System.IO.File.CreateText(context.Target.Path))
                     {
                         fs.Write(FileContent);
                     }
 
                     result.Status = ActionStatus.Pass;
-                    result.Message = "File is Created: " + context.Target.Path;
+                    result.Summary = "File is Created: " + context.Target.Path;
                 }
                 catch (Exception xe)
                 {
                     result.Status = ActionStatus.Failed;
-                    result.Message = xe.Message;
+                    result.Summary = xe.Message;
                 }
             }
             else
             {
                 result.Status = ActionStatus.Pass;
-                result.Message = string.Empty;
+                result.Summary = string.Empty;
             }
 
             if (action != null)

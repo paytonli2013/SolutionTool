@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml.Serialization;
-using Orc.SolutionTool.Core.Rules;
+using Orc.SolutionTool.Model.Rules;
+using Orc.SolutionTool.Mvvm;
 
-namespace Orc.SolutionTool.Core
+namespace Orc.SolutionTool.Model
 {
     [XmlRoot("target")]
     [XmlInclude(typeof(CheckCsprojOutputPathRule))]

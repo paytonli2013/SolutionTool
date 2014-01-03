@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Orc.SolutionTool
+namespace Orc.SolutionTool.Model
 {
     public class RuleManager : IRuleManager
     {

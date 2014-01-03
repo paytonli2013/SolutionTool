@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Orc.SolutionTool.Core.Rules
+namespace Orc.SolutionTool.Model.Rules
 {
-    public class CheckWithStyleCopRule : Rule
+    public class CheckWithInspectCodeRule : Rule
     {
         public override void Exam(Context context, Action<ExamResult> action)
         {

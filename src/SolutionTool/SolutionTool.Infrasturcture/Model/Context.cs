@@ -1,4 +1,4 @@
-﻿namespace Orc.SolutionTool.Core
+﻿namespace Orc.SolutionTool.Model
 {
     public class Context
     {

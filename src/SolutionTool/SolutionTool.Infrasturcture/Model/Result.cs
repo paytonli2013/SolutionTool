@@ -1,4 +1,5 @@
-﻿namespace Orc.SolutionTool.Core
+﻿using Orc.SolutionTool.Mvvm;
+namespace Orc.SolutionTool.Model
 {
     public enum ActionStatus
     {
@@ -7,7 +8,7 @@
         Failed,
     }
 
-    public abstract class Result : NotificationObject
+    public class Result : NotificationObject
     {
         private ActionStatus _status;
         public ActionStatus Status
@@ -26,26 +27,26 @@
             }
         }
 
-        private string _message;
-        public string Message
+        private string _summary;
+        public string Summary
         {
             get
             {
-                return _message;
+                return _summary;
             }
             set
             {
-                if (_message != value)
+                if (_summary != value)
                 {
-                    _message = value;
-                    RaisePropertyChanged(() => Message);
+                    _summary = value;
+                    RaisePropertyChanged(() => Summary);
                 }
             }
         }
 
         public override string ToString()
         {
-            var s = string.Format("[{0}] - [{1}] - [{2}]", this.GetType().Name, Status, Message);
+            var s = string.Format("[{0}] - [{1}] - [{2}]", this.GetType().Name, Status, Summary);
 
             return s;
         }

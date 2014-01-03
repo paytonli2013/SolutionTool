@@ -18,17 +18,19 @@ namespace Orc.SolutionTool.Model
         [XmlElement("end")]
         public DateTime? End { get; set; }
 
-        [XmlIgnore]
-        ExamResult _result;
+        private Result _result;
 
-        [XmlElement("result")]
-        public Result? Result
+        [XmlElement("status")]
+        public ActionStatus Status
         {
             get
             {
-                var rv = _result == null ? null : (Result?)_result.Result;
+                if (_result == null)
+                {
+                    return ActionStatus.None;
+                }
 
-                return rv;
+                return _result.Status;
             }
             set
             {
@@ -37,7 +39,7 @@ namespace Orc.SolutionTool.Model
                     _result = new ExamResult();
                 }
 
-                _result.Result = value;
+                _result.Status = value;
             }
         }
 
@@ -48,10 +50,10 @@ namespace Orc.SolutionTool.Model
             {
                 var rv = _result == null ? null : _result.Summary;
 
-                if (rv == null && _result != null && _result.Result.HasValue && Start.HasValue && End.HasValue)
+                if (rv == null && _result != null && _result.Summary != null && Start.HasValue && End.HasValue)
                 {
                     rv = string.Format("{0} ({1} rule{2}) {3} < {4}s",
-                        Project, Rules, (Rules ?? 0) > 0 ? "s" : "", _result.Result, (End.Value - Start.Value).TotalSeconds
+                        Project, Rules, (Rules ?? 0) > 0 ? "s" : "", _result.Summary, (End.Value - Start.Value).TotalSeconds
                         );
                 }
 

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CommandLine;
-using Orc.SolutionTool.Core;
-using Orc.SolutionTool.Core.Rules;
+using Orc.SolutionTool.Model;
+using Orc.SolutionTool.Model.Rules;
 
 namespace Orc.SolutionTool
 {
@@ -34,7 +34,7 @@ namespace Orc.SolutionTool
 
             if (!string.IsNullOrWhiteSpace(options.InspectCodePath))
             {
-                if (!File.Exists(options.InspectCodePath))
+                if (!System.IO.File.Exists(options.InspectCodePath))
                 {
                     Debug.WriteLine("Cannot find InspectCode.exe in path: " + options.InspectCodePath);
 
@@ -97,7 +97,7 @@ namespace Orc.SolutionTool
 
             var exePath = "InspectCode.exe";
 
-            if (!File.Exists(exePath))
+            if (!System.IO.File.Exists(exePath))
             {
                 Debug.WriteLine("Need to specify path of InspectCode.exe");
 
@@ -106,7 +106,7 @@ namespace Orc.SolutionTool
 
             var cachesHome = @"..\Reports\InspectCode_Cache";
             var output = @"..\Reports\InspectCode_Report.xml";
-            var slns = Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
+            var slns = System.IO.Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
             var uri = new Uri(options.RepositoryPath);
 
             Debug.Indent();

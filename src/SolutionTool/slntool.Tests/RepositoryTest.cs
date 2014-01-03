@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Orc.SolutionTool.Core;
-using Orc.SolutionTool.Core.Rules;
+using Orc.SolutionTool.Model;
+using Orc.SolutionTool.Model.Rules;
 
 namespace slntool.Tests
 {

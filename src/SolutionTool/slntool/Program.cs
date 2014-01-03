@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Xml.Linq;
 using CommandLine;
 using Orc.SolutionTool.Core;
 using Orc.SolutionTool.Core.Rules;

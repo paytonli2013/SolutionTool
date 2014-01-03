@@ -35,12 +35,8 @@
     <Reference Include="CommandLine">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\packages\ServiceStack.Text.4.0.5\lib\net40\ServiceStack.Text.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,7 +52,6 @@
     <Compile Include="Core\Target.cs" />
     <Compile Include="Core\NotificationObject.cs" />
     <Compile Include="Core\Result.cs" />
-    <Compile Include="Core\IRule.cs" />
     <Compile Include="Core\Rules\Rule.cs" />
     <Compile Include="Core\Rules\FileMustExistsRule.cs" />
     <Compile Include="Core\Rules\FolderMustExistsRule.cs" />

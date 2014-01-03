@@ -1,5 +1,7 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orc.SolutionTool.Core;
 using Orc.SolutionTool.Core.Rules;
@@ -98,9 +100,21 @@ namespace slntool.Tests
             repository.AddRule("./Temp", new FolderMustExistsRule());
             repository.AddRule("./Temp/Temp.txt", new FileMustExistsRule());
 
-            var s = ServiceStack.Text.XmlSerializer.SerializeToString(repository);
+            //var s = ServiceStack.Text.XmlSerializer.SerializeToString(repository);
 
-            TestContext.WriteLine(s);
+            using (var ms = new MemoryStream())
+            {
+                var xs = new XmlSerializer(typeof(Repository));
+
+                xs.Serialize(ms, repository);
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                var sr = new StreamReader(ms);
+                var s = sr.ReadToEnd();
+
+                TestContext.WriteLine(s);
+            }
         }
     }
 }

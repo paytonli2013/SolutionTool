@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using Orc.SolutionTool.Core.Rules;
 
 namespace Orc.SolutionTool.Core
 {
-    [DataContract]
+    [XmlRoot("repository")]
     public class Repository : NotificationObject
     {
         private string _path;
-        [DataMember]
+        [XmlAttribute("path")]
         public string Path
         {
             get
@@ -27,7 +28,7 @@ namespace Orc.SolutionTool.Core
         }
 
         private Target _target;
-        [DataMember]
+        [XmlElement("target")]
         public Target Target
         {
             get
@@ -42,6 +43,11 @@ namespace Orc.SolutionTool.Core
                     RaisePropertyChanged(() => Target);
                 }
             }
+        }
+
+        public Repository()
+        {
+
         }
 
         public Repository(string path)
@@ -106,7 +112,7 @@ namespace Orc.SolutionTool.Core
             }
         }
 
-        public void AddRule(string p, IRule rule)
+        public void AddRule(string p, Rule rule)
         {
             var target = FindOrCreateTarget(Target, p);
 
@@ -116,7 +122,7 @@ namespace Orc.SolutionTool.Core
             }
         }
 
-        public void RemoveRule(string p, IRule rule)
+        public void RemoveRule(string p, Rule rule)
         {
             var target = FindOrCreateTarget(Target, p);
 
@@ -132,7 +138,7 @@ namespace Orc.SolutionTool.Core
 
             if (target != null)
             {
-                var rule = null as IRule;
+                var rule = null as Rule;
 
                 do
                 {

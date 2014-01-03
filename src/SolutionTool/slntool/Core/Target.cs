@@ -1,27 +1,27 @@
 ﻿using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Serialization;
 using Orc.SolutionTool.Core.Rules;
 
 namespace Orc.SolutionTool.Core
 {
-    [DataContract]
-    [KnownType(typeof(CheckCsprojOutputPathRule))]
-    [KnownType(typeof(CheckWithInspectCodeRule))]
-    [KnownType(typeof(CheckWithStyleCopRule))]
-    [KnownType(typeof(FileMustExistsRule))]
-    [KnownType(typeof(FolderMustExistsRule))]
+    [XmlRoot("target")]
+    [XmlInclude(typeof(CheckCsprojOutputPathRule))]
+    [XmlInclude(typeof(CheckWithInspectCodeRule))]
+    [XmlInclude(typeof(CheckWithStyleCopRule))]
+    [XmlInclude(typeof(FileMustExistsRule))]
+    [XmlInclude(typeof(FolderMustExistsRule))]
     public class Target : NotificationObject
     {
         private string _name;
-        [DataMember]
+        [XmlAttribute("name")]
         public string Name
         {
             get
             {
                 return _name;
             }
-            private set
+            set
             {
                 if (_name != value)
                 {
@@ -32,13 +32,14 @@ namespace Orc.SolutionTool.Core
         }
 
         private Target _parent;
+        [XmlIgnore]
         public Target Parent
         {
             get
             {
                 return _parent;
             }
-            private set
+            set
             {
                 if (_parent != value)
                 {
@@ -77,18 +78,24 @@ namespace Orc.SolutionTool.Core
             }
         }
 
-        [DataMember]
-        public ObservableCollection<IRule> Rules { get; private set; }
+        [XmlArray("rules")]
+        [XmlArrayItem("rule")]
+        public ObservableCollection<Rule> Rules { get; private set; }
 
-        [DataMember]
+        [XmlElement("target")]
         public ObservableCollection<Target> Children { get; private set; }
+
+        public Target()
+        {
+
+        }
 
         public Target(string name, Target parent)
         {
             Name = name;
             Parent = parent;
 
-            Rules = new ObservableCollection<IRule>();
+            Rules = new ObservableCollection<Rule>();
             Children = new ObservableCollection<Target>();
         }
     }

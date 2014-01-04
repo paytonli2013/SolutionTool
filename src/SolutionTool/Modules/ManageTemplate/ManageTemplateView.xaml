@@ -24,15 +24,21 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5">
             <TextBlock Text="Template: " HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <ComboBox MinWidth="180" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding TemplateFiles}" />
+            <ComboBox MinWidth="180" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                ItemsSource="{Binding TemplateFiles}" 
+                SelectedValue="{Binding SelectedTemplateFile}"/>
+            <Button Content="+" Width="20" Margin="5,0" Command="{Binding AddTargetCommand}"
+                CommandTarget="{Binding SelectedItem, ElementName=_targets}" />
+            <Button Content="-" Width="20" Margin="5,0" Command="{Binding RemoveTargetCommand}"
+                CommandTarget="{Binding SelectedItem, ElementName=_targets}" />
         </StackPanel>
 
-        <TreeView Grid.Row="2" ItemsSource="{Binding Repository.Target.Children}" 
-            ItemTemplate="{DynamicResource DataTemplate1}" >
+        <TreeView x:Name="_targets" Grid.Row="2" ItemsSource="{Binding Repository.Target.Children}" 
+            ItemTemplate="{DynamicResource DataTemplate1}">
         	<TreeView.Resources>
                 <HierarchicalDataTemplate x:Key="DataTemplate1" 
                     ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Path=Name}"/>
+                    <CheckBox Content="{Binding Path=Name}" IsChecked="{Binding IsChecked}"/>
                 </HierarchicalDataTemplate>
             </TreeView.Resources>
         </TreeView>

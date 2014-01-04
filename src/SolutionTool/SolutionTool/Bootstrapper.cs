@@ -43,6 +43,8 @@ namespace Orc.SolutionTool
             Container.RegisterType<IRuleRunner, RuleRunner>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<IRuleManager, RuleManager>(new ContainerControlledLifetimeManager());
+
+            Container.RegisterType<ITemplateManager, TemplateManager>(new ContainerControlledLifetimeManager());
         }
 
         protected override IModuleCatalog CreateModuleCatalog()

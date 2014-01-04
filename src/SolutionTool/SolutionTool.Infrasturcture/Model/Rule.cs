@@ -7,6 +7,8 @@ namespace Orc.SolutionTool.Model
     {
         public string Name { get { return this.GetType().Name; } }
 
+        public bool IsEnabled { get; set; }
+
         public abstract void Exam(Context context, Action<ExamResult> action);
 
         public abstract void Apply(Context context, Action<ApplyResult> action);

@@ -68,6 +68,7 @@
     <Compile Include="Model\IRule.cs" />
     <Compile Include="Model\IRuleManager.cs" />
     <Compile Include="Model\IRuleRunner.cs" />
+    <Compile Include="Model\ITemplateManager.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\ProjectManager.cs" />
     <Compile Include="Model\Repository.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Model\RunLogEventArgs.cs" />
     <Compile Include="Model\RunLogItem.cs" />
     <Compile Include="Model\Target.cs" />
+    <Compile Include="Model\TemplateManager.cs" />
     <Compile Include="Mvvm\IMenuViewmodel.cs" />
     <Compile Include="Mvvm\IViewModel.cs" />
     <Compile Include="Mvvm\MenuItemViewmodelBase.cs" />

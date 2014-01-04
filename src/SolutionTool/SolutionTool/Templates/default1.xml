@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+<repository xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" path="d:\">
+  <target name="root1">
+    <target name="scr" />
+    <target name="output">
+      <target name="debug">
+        <target name=".NET35">
+          <target name="app.exe" />
+          <target name="app.pdb" />
+          <target name="app.exe.config" />
+        </target>
+        <target name=".NET40">
+          <target name="app.exe" />
+          <target name="app.pdb" />
+          <target name="app.exe.config" />
+        </target>
+      </target>
+      <target name="release">
+        <target name=".NET35">
+          <target name="app.exe" />
+          <target name="app.pdb" />
+          <target name="app.exe.config" />
+        </target>
+        <target name=".NET40">
+          <target name="app.exe" />
+          <target name="app.pdb" />
+          <target name="app.exe.config" />
+        </target>
+      </target>
+    </target>
+    <target name="doc" />
+    <target name="deployment" />
+    <target name="readme.md" />
+    <target name=".gitignore" />
+  </target>
+</repository>
+

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Linq;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml.Serialization;
 using Orc.SolutionTool.Model.Rules;
@@ -28,6 +29,42 @@ namespace Orc.SolutionTool.Model
                 {
                     _name = value;
                     RaisePropertyChanged(() => Name);
+                }
+            }
+        }
+
+        private bool _isSelected;
+        [XmlIgnore]
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    RaisePropertyChanged(() => IsSelected);
+                }
+            }
+        }
+
+        private bool _isChecked;
+        [XmlIgnore]
+        public bool IsChecked
+        {
+            get
+            {
+                return _isChecked;
+            }
+            set
+            {
+                if (_isChecked != value)
+                {
+                    _isChecked = value;
+                    RaisePropertyChanged(() => IsChecked);
                 }
             }
         }
@@ -88,16 +125,15 @@ namespace Orc.SolutionTool.Model
 
         public Target()
         {
-
+            Rules = new ObservableCollection<Rule>();
+            Children = new ObservableCollection<Target>();
         }
 
-        public Target(string name, Target parent)
+        public Target(string name, Target parent) 
+            : this()
         {
             Name = name;
             Parent = parent;
-
-            Rules = new ObservableCollection<Rule>();
-            Children = new ObservableCollection<Target>();
         }
     }
 }

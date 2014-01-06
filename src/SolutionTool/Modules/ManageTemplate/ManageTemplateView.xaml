@@ -7,51 +7,63 @@
     xmlns:orc="http://schemas.orc.com/2014/xaml/presentation" 
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="800">
-    <Grid Margin="5">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!--<TextBlock Text="{Binding ViewName}" FontWeight="Bold"/>-->
+        <Border Margin="2" Grid.ColumnSpan="3" BorderBrush="Gainsboro" BorderThickness="1"  Background="#FFF9F9CA">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="ToolBar" VerticalAlignment="Center" Margin="10,0"/>
+            </StackPanel>
+        </Border>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5">
-            <TextBlock Text="Template: " HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <ComboBox MinWidth="180" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Center" 
+        <Grid Margin="10,10,5,10" Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Margin="2" FontSize="18" Text="Templates"/>
+
+            <Border Grid.Row="1" Height="1" Background="#FFABADB3" />
+
+            <ListBox Grid.Row="2" MinWidth="160" HorizontalContentAlignment="Stretch" Margin="0,10,0,0"
                 ItemsSource="{Binding TemplateFiles}" 
                 SelectedValue="{Binding SelectedTemplateFile}"/>
-            <Button Content="+" Width="20" Margin="5,0" Command="{Binding AddTargetCommand}"
-                CommandTarget="{Binding SelectedItem, ElementName=_targets}" />
-            <Button Content="-" Width="20" Margin="5,0" Command="{Binding RemoveTargetCommand}"
-                CommandTarget="{Binding SelectedItem, ElementName=_targets}" />
-        </StackPanel>
+        </Grid>
 
-        <TreeView x:Name="_targets" Grid.Row="2" ItemsSource="{Binding Repository.Target.Children}" 
-            ItemTemplate="{DynamicResource DataTemplate1}">
-        	<TreeView.Resources>
-                <HierarchicalDataTemplate x:Key="DataTemplate1" 
-                    ItemsSource="{Binding Children}">
-                    <CheckBox Content="{Binding Path=Name}" IsChecked="{Binding IsChecked}"/>
-                </HierarchicalDataTemplate>
-            </TreeView.Resources>
-        </TreeView>
+        <Rectangle Visibility="Hidden" Width="1" Grid.Row="1" Margin="0,5" Grid.Column="1" Fill="#FFABADB3"/>
 
-        <GridSplitter Grid.Row="2" Grid.Column="1"  
-            HorizontalAlignment="Center" VerticalAlignment="Stretch" 
-            ShowsPreview="True" Width="5" />
+        <Grid Margin="5,10,10,10" Grid.Column="2" Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <xctk:PropertyGrid Grid.Row="2" Grid.Column="2"/>
+            <TextBlock Margin="2" FontSize="18" Text="Details" />
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal">
-            <Button Content="Save" Margin="0,5" />
-            <Button Content="Cancel" Margin="5" />
-        </StackPanel>
+            <Border Grid.Row="1" Height="1" Background="#FFABADB3" />
+
+            <TextBox Grid.Row="2" Text="{Binding TemplateFile, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,5" />
+
+            <TextBox Grid.Row="3" AcceptsReturn="True" AcceptsTab="True" Margin="0,5" 
+                Text="{Binding TemplateXmlContent, UpdateSourceTrigger=PropertyChanged}" />
+
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,0" >
+                <Button Content="Save" Width="50" Command="{Binding SaveCommand}" />
+                <Button Content="Delete" Width="50" Margin="5,0" Command="{Binding DeleteCommand}" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

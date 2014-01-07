@@ -1,4 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<project name="demo1" ruleset="ruleset_default" target="e:\tools">
-  
+<project name="demo1" ruleSet="default.xml" path="e:\tools">
+  <ruleSet>
+    <fileStructure enabled='true' template='default.xml' />
+    <outputPath enabled='true' path='./output/{active_solution}/' />
+    <codeAnalysis enabled='true' />
+  </ruleSet>
 </project>

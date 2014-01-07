@@ -43,33 +43,6 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-        [XmlElement("summary")]
-        public String Summary
-        {
-            get
-            {
-                var rv = _result == null ? null : _result.Summary;
-
-                if (rv == null && _result != null && _result.Summary != null && Start.HasValue && End.HasValue)
-                {
-                    rv = string.Format("{0} ({1} rule{2}) {3} < {4}s",
-                        Project, Rules, (Rules ?? 0) > 0 ? "s" : "", _result.Summary, (End.Value - Start.Value).TotalSeconds
-                        );
-                }
-
-                return rv;
-            }
-            set
-            {
-                if (_result == null)
-                {
-                    _result = new ExamResult();
-                }
-
-                _result.Summary = value;
-            }
-        }
-
         [XmlElement("report")]
         public string Report { get; set; }
     }

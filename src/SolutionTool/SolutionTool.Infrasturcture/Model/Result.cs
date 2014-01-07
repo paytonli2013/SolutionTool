@@ -10,6 +10,23 @@ namespace Orc.SolutionTool.Model
 
     public class Result : NotificationObject
     {
+        private string _ruleName;
+        public string RuleName
+        {
+            get
+            {
+                return _ruleName;
+            }
+            set
+            {
+                if (_ruleName != value)
+                {
+                    _ruleName = value;
+                    RaisePropertyChanged(() => RuleName);
+                }
+            }
+        }
+
         private ActionStatus _status;
         public ActionStatus Status
         {
@@ -27,26 +44,9 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-        private string _summary;
-        public string Summary
-        {
-            get
-            {
-                return _summary;
-            }
-            set
-            {
-                if (_summary != value)
-                {
-                    _summary = value;
-                    RaisePropertyChanged(() => Summary);
-                }
-            }
-        }
-
         public override string ToString()
         {
-            var s = string.Format("[{0}] - [{1}] - [{2}]", this.GetType().Name, Status, Summary);
+            var s = string.Format("[{0}] - [{1}]", RuleName, Status);
 
             return s;
         }

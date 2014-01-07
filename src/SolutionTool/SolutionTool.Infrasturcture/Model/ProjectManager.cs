@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 using Orc.SolutionTool.Model;
 
 namespace Orc.SolutionTool
@@ -33,18 +34,14 @@ namespace Orc.SolutionTool
 
             foreach (var i in System.IO.Directory.GetFiles(_dir, "*.xml"))
             {
-                var xdoc = XDocument.Load(i);
-                var attrName = xdoc.Root.Attribute("name");
-                var attrRuleSet = xdoc.Root.Attribute("ruleset");
-                var attrTarget = xdoc.Root.Attribute("target");
-                var prj = new Project
-                {
-                    Name = attrName == null ? null : attrName.Value,
-                    RuleSetPath = attrRuleSet == null ? null : attrRuleSet.Value,
-                    TargetPath = attrTarget == null ? null : attrTarget.Value,
-                };
+                var xs = new XmlSerializer(typeof(Project));
 
-                list.Add(prj);
+                using (var xr = XmlReader.Create(i))
+                {
+                    var prj = xs.Deserialize(xr) as Project;
+            
+                    list.Add(prj);
+                }
             }
 
             //list.Sort(new Comparison<Project>((p1, p2) =>

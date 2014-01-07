@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orc.SolutionTool.Model.Rules;
 
 namespace Orc.SolutionTool.Model
 {
@@ -12,6 +11,6 @@ namespace Orc.SolutionTool.Model
 
         void Persist(RuleSet ruleSet, Action<bool, Exception> onComplete);
 
-        void LoadRuleSet(Action<IEnumerable<IRuleSet>, Exception> onComplete);
+        void LoadRuleSet(Action<IEnumerable<RuleSet>, Exception> onComplete);
     }
 }

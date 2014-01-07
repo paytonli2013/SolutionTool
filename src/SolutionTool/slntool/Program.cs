@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using CommandLine;
 using Orc.SolutionTool.Model;
-using Orc.SolutionTool.Model.Rules;
 
 namespace Orc.SolutionTool
 {
@@ -44,31 +43,7 @@ namespace Orc.SolutionTool
 
             Debug.WriteLine("Begin checking " + options.RepositoryPath);
 
-            var repository = new Repository(options.RepositoryPath);
             var results = new List<Result>();
-
-            if (options.Directories != null)
-            {
-                foreach (var i in options.Directories)
-                {
-                    repository.AddRule(i, new FolderMustExistsRule());
-                }
-            }
-
-            if (options.Files != null)
-            {
-                foreach (var i in options.Files)
-                {
-                    repository.AddRule(i, new FileMustExistsRule());
-                }
-            }
-
-            if (options.CheckOutputBuildPath)
-            {
-                repository.AddRule(".", new CheckCsprojOutputPathRule());
-            }
-
-            repository.Exam(x => results.Add(x), true);
 
             foreach (var i in results)
             {

@@ -36,6 +36,10 @@
     <Reference Include="Microsoft.Practices.Prism.UnityExtensions">
       <HintPath>..\..\..\lib\prism\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\prism\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Unity">
       <HintPath>..\..\..\lib\prism\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
@@ -64,11 +68,8 @@
     <Compile Include="IMessageService.cs" />
     <Compile Include="IShellService.cs" />
     <Compile Include="IStatusBar.cs" />
-    <Compile Include="Model\Context.cs" />
     <Compile Include="Model\Directory.cs" />
-    <Compile Include="Model\ExamContext.cs" />
     <Compile Include="Model\IProjectManager.cs" />
-    <Compile Include="Model\IRule.cs" />
     <Compile Include="Model\IRuleManager.cs" />
     <Compile Include="Model\IRuleRunner.cs" />
     <Compile Include="Model\IRuleSet.cs" />
@@ -77,20 +78,12 @@
     <Compile Include="Model\ProjectManager.cs" />
     <Compile Include="Model\Report.cs" />
     <Compile Include="Model\ReportResult.cs" />
-    <Compile Include="Model\Repository.cs" />
     <Compile Include="Model\Result.cs" />
     <Compile Include="Model\RuleManager.cs" />
     <Compile Include="Model\RuleRunner.cs" />
-    <Compile Include="Model\Rules\CheckCsprojOutputPathRule.cs" />
-    <Compile Include="Model\Rules\CheckWithInspectCodeRule.cs" />
-    <Compile Include="Model\Rules\CheckWithStyleCopRule.cs" />
-    <Compile Include="Model\Rules\FileMustExistsRule.cs" />
-    <Compile Include="Model\Rules\FolderMustExistsRule.cs" />
-    <Compile Include="Model\Rule.cs" />
-    <Compile Include="Model\Rules\RuleSet.cs" />
+    <Compile Include="Model\RuleSet.cs" />
     <Compile Include="Model\RunLogEventArgs.cs" />
     <Compile Include="Model\RunLogItem.cs" />
-    <Compile Include="Model\Target.cs" />
     <Compile Include="Model\TemplateManager.cs" />
     <Compile Include="Mvvm\IMenuViewmodel.cs" />
     <Compile Include="Mvvm\IViewModel.cs" />

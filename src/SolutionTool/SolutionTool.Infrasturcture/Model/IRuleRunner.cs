@@ -6,7 +6,7 @@ namespace Orc.SolutionTool
 {
     public interface IRuleRunner
     {
-        void Exam(ExamContext context, IEnumerable<IRule> rules, Action<ExamResult> onComplete);
+        void Exam(Project project, Action<ExamResult> onComplete);
 
         void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete);
 

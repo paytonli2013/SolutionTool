@@ -1,72 +1,57 @@
-﻿using Orc.SolutionTool.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+﻿using System;
+using System.Xml.Serialization;
+using Orc.SolutionTool.Mvvm;
 
 namespace Orc.SolutionTool.Model
 {
+    [XmlRoot("project")]
     public class Project : NotificationObject
     {
         string _name;
+        [XmlAttribute("name")]
         public string Name
         {
             get { return _name; }
             set
             {
                 _name = value;
-                RaisePropertyChanged("Name");
+                RaisePropertyChanged(() => Name);
             }
         }
 
-        string _ruleSetPath;
-
-        public string RuleSetPath
+        string _path;
+        [XmlAttribute("path")]
+        public string Path
         {
-            get { return _ruleSetPath; }
+            get { return _path; }
             set
             {
-                _ruleSetPath = value;
-                RaisePropertyChanged("RuleSetPath");
+                _path = value;
+                RaisePropertyChanged(() => Path);
             }
         }
-
-        string _targetPath;
-
-        public string TargetPath
-        {
-            get { return _targetPath; }
-            set
-            {
-                _targetPath = value;
-                RaisePropertyChanged("TargetPath");
-            }
-        }
-
-        IRuleSet _ruleSet;
-        public IRuleSet RuleSet
-        {
-            get
-            {
-                return _ruleSet;
-            }
-            private set
-            {
-                _ruleSet = value;
-                RaisePropertyChanged("RuleSetPath");
-            }
-        }
-
-        private DateTime createTime;
-
+        private DateTime _createTime;
+        [XmlAttribute("createTime")]
         public DateTime CreateTime
         {
-            get { return createTime; }
+            get { return _createTime; }
             set
             {
-                createTime = value;
-                RaisePropertyChanged("CreateTime");
+                _createTime = value;
+                RaisePropertyChanged(() => CreateTime);
+            }
+        }
+
+
+        RuleSet _ruleSet;
+        [XmlElement("ruleSet")]
+        public RuleSet RuleSet
+        {
+            get { return _ruleSet; }
+            set
+            {
+                _ruleSet = value;
+                RaisePropertyChanged("TargetPath");
             }
         }
     }

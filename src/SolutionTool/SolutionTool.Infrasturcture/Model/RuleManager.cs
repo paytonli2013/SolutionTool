@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Orc.SolutionTool.Model.Rules;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Orc.SolutionTool.Model
 {
@@ -17,8 +21,16 @@ namespace Orc.SolutionTool.Model
             LoadRules();
         }
 
-        Dictionary<string, IEnumerable<IRule>> _ruleSets = new Dictionary<string, IEnumerable<IRule>>();
-        public Dictionary<string, IEnumerable<IRule>> RuleSets
+        public string DefaultRuleSetName
+        {
+            get
+            {
+                return "default.xml";
+            }
+        }
+
+        Dictionary<string, RuleSet> _ruleSets = new Dictionary<string, RuleSet>();
+        public Dictionary<string, RuleSet> RuleSets
         {
             get
             {
@@ -26,7 +38,17 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-        public void Persist(IEnumerable<IRule> ruleSet, Action<bool, Exception> onComplete)
+        public RuleSet DefaultRuleSet
+        {
+            get
+            {
+                var rules = _ruleSets.FirstOrDefault(x => x.Key == DefaultRuleSetName).Value;
+
+                return rules;
+            }
+        }
+
+        public void Persist(RuleSet ruleSet, Action<bool, Exception> onComplete)
         {
             throw new NotImplementedException();
         }
@@ -59,23 +81,40 @@ namespace Orc.SolutionTool.Model
             foreach (var i in files)
             {
                 var fi = new System.IO.FileInfo(i);
+                var key = fi.Name.ToLower();
 
-                if (_ruleSets.ContainsKey(fi.Name))
+                if (_ruleSets.ContainsKey(key))
                 {
-                    _ruleSets.Remove(fi.Name);
+                    _ruleSets.Remove(key);
                 }
 
+                var ruleSet = null as RuleSet;
+
+                using (var xr = XmlReader.Create(i))
+                {
+                    var xs = new XmlSerializer(typeof(RuleSet));
+
+                    ruleSet = xs.Deserialize(xr) as RuleSet;
+                }
+
+                if (ruleSet != null)
+                {
+                    _ruleSets.Add(key, ruleSet);
+                }
+            }
+
+            // Check for default ruleset
+            if (!_ruleSets.ContainsKey(DefaultRuleSetName))
+            {
                 var rules = new List<IRule>();
-
-                _ruleSets.Add(fi.Name, rules);
-
-                var xdoc = XDocument.Load(fi.FullName);
-
-                foreach (var j in xdoc.Root.Elements())
+                var ruleSet = new RuleSet
                 {
-                    // TODO:
-                    rules.Add(new DirectoryExistedRule { });
-                }
+                    new Rules.FileStructureRule(),
+                    new Rules.OutputPathRule(),
+                    new Rules.CodeAnalysisRule(),
+                };
+
+                _ruleSets.Add(DefaultRuleSetName, ruleSet);
             }
 
             _fsw.EnableRaisingEvents = true;

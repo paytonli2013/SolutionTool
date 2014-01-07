@@ -82,6 +82,7 @@
     <Compile Include="Model\Rules\FileMustExistsRule.cs" />
     <Compile Include="Model\Rules\FolderMustExistsRule.cs" />
     <Compile Include="Model\Rule.cs" />
+    <Compile Include="Model\Rules\RuleSet.cs" />
     <Compile Include="Model\RunLogEventArgs.cs" />
     <Compile Include="Model\RunLogItem.cs" />
     <Compile Include="Model\Target.cs" />

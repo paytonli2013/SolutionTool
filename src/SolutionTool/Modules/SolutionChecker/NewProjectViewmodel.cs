@@ -23,7 +23,6 @@ namespace SolutionChecker
             Init();
         }
 
-
         #endregion
 
         #region Commands & Methods

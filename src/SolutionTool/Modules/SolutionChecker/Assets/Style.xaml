@@ -83,6 +83,11 @@
         <MenuItem Header="Run Selected Project" Command="{Binding RunProjectCommand}"/>
     </ContextMenu>
     
+    <ContextMenu x:Key="RunLogMenu">
+        <MenuItem Header="View Report" Command="{Binding ViewReportCommand}"/>
+        <MenuItem Header="Rerun Project" Command="{Binding RerunProjectCommand}"/>
+    </ContextMenu>
+
     <DataTemplate x:Key="ProjectItemTemplate">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <TextBlock FontSize="18" HorizontalAlignment="Left" Text="{Binding Name}"/>
@@ -147,7 +152,7 @@
         <Setter Property="Padding" Value="4,1"/>
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="Margin" Value="1" />
         <Setter Property="Background" Value="{StaticResource Item.Normal.Background}"/>
         <Setter Property="BorderBrush" Value="{StaticResource Item.Normal.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>

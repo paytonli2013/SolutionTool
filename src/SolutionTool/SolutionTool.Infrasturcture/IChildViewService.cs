@@ -17,5 +17,7 @@ namespace Orc.SolutionTool
         public double Width { get; set; }
 
         public static ViewOptions Default = new ViewOptions() { Height = 800, Width = 600 };
+
+        public object Payload { get; set; }
     }
 }

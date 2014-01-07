@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Orc.SolutionTool.Model.Rules;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -121,17 +120,32 @@ namespace Orc.SolutionTool.Model
             _fsw.EnableRaisingEvents = true;
         }
 
-
         public void LoadRuleSet(Action<IEnumerable<IRuleSet>, Exception> onComplete)
         {
             List<IRuleSet> list = new List<IRuleSet>();
 
-            var ruleSet = new RuleSet() { Name = "Default"};
-            var rules = new List<IRule>();
+            var ruleSet = new RuleSet() { Name = "Default" };
 
-            rules.Add(new FileStructureRule() { IsActive = true});
+            ruleSet.Add(new FileStructureRule()
+            {
+                IsEnabled = true,
+                Name = "Check File Structure",
+                Description = "Check File Structure with template"
+            });
+            ruleSet.Add(new OutputPathRule()
+            {
+                IsEnabled = true,
+                Name = "Check Output Path",
+                Description = "Check output path for all project file"
+            });
 
-            ruleSet.Rules = rules;
+            ruleSet.Add(new CodeAnalysisRule()
+            {
+                IsEnabled = true,
+                Name = "Run Code Analysis",
+                Description = "Run code analysis with StyleCop"
+            });
+
             list.Add(ruleSet);
 
             if (onComplete != null)

@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Orc.SolutionTool.Model.Rules
 {
     [XmlRoot("ruleSet")]
-    public class RuleSet : IList<XRule>, IXmlSerializable
+    public class RuleSet : IList<XRule>, IXmlSerializable,IRuleSet
     {
         private List<XRule> _rules = new List<XRule>();
 
@@ -150,10 +150,23 @@ namespace Orc.SolutionTool.Model.Rules
 
             return type;
         }
+
+        string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        IEnumerator<IRule> IEnumerable<IRule>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 
     [XmlRoot("rule")]
-    public abstract class XRule
+    public abstract class XRule : IRule
     {
         [XmlAttribute("enabled")]
         public bool IsEnabled { get; set; }
@@ -162,6 +175,24 @@ namespace Orc.SolutionTool.Model.Rules
         {
             IsEnabled = true;
         }
+
+        public abstract void Exam(ExamContext context, Action<ExamResult> onComplete);
+
+        public abstract void Apply(ExamContext context, Action<ExamResult> onComplete);
+
+        [XmlAttribute("name")]
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("desc")]
+        public string Description
+        {
+            get;
+            set;
+        }
     }
 
     [XmlRoot("fileStructure")]
@@ -169,6 +200,16 @@ namespace Orc.SolutionTool.Model.Rules
     {
         [XmlAttribute("template")]
         public string Template { get; set; }
+
+        public override void Exam(ExamContext context, Action<ExamResult> onComplete)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void Apply(ExamContext context, Action<ExamResult> onComplete)
+        {
+            //throw new NotImplementedException();
+        }
     }
 
     [XmlRoot("outputPath")]
@@ -176,10 +217,30 @@ namespace Orc.SolutionTool.Model.Rules
     {
         [XmlAttribute("path")]
         public string path { get; set; }
+
+        public override void Exam(ExamContext context, Action<ExamResult> onComplete)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void Apply(ExamContext context, Action<ExamResult> onComplete)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [XmlRoot("codeAnalysis")]
     public class CodeAnalysisRule : XRule
     {
+
+        public override void Exam(ExamContext context, Action<ExamResult> onComplete)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public override void Apply(ExamContext context, Action<ExamResult> onComplete)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

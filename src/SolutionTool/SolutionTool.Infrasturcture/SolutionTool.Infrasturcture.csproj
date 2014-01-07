@@ -58,6 +58,7 @@
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="DefaultChidViewService.cs" />
     <Compile Include="HostWindow.cs" />
+    <Compile Include="IChildView.cs" />
     <Compile Include="IChildViewService.cs" />
     <Compile Include="IHostWindow.cs" />
     <Compile Include="IMessageService.cs" />
@@ -65,11 +66,7 @@
     <Compile Include="IStatusBar.cs" />
     <Compile Include="Model\Context.cs" />
     <Compile Include="Model\Directory.cs" />
-    <Compile Include="Model\DirectoryExistedRule.cs" />
     <Compile Include="Model\ExamContext.cs" />
-    <Compile Include="Model\FileStructureRule.cs" />
-    <Compile Include="Model\FileStructureRuleEnum.cs" />
-    <Compile Include="Model\FileStructureRuleExamContext.cs" />
     <Compile Include="Model\IProjectManager.cs" />
     <Compile Include="Model\IRule.cs" />
     <Compile Include="Model\IRuleManager.cs" />
@@ -82,10 +79,8 @@
     <Compile Include="Model\ReportResult.cs" />
     <Compile Include="Model\Repository.cs" />
     <Compile Include="Model\Result.cs" />
-    <Compile Include="Model\RuleBase.cs" />
     <Compile Include="Model\RuleManager.cs" />
     <Compile Include="Model\RuleRunner.cs" />
-    <Compile Include="Model\RuleSet.cs" />
     <Compile Include="Model\Rules\CheckCsprojOutputPathRule.cs" />
     <Compile Include="Model\Rules\CheckWithInspectCodeRule.cs" />
     <Compile Include="Model\Rules\CheckWithStyleCopRule.cs" />

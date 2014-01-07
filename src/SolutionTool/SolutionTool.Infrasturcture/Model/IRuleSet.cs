@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace Orc.SolutionTool.Model
 {
-    public interface IRuleSet
+    public interface IRuleSet : IEnumerable<IRule> 
     {
         string Name { get; }
-        System.Collections.Generic.IEnumerable<IRule> Rules { get; }
     }
 }

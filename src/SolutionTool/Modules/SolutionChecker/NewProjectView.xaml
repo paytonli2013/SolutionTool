@@ -24,7 +24,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-                    <CheckBox IsChecked="{Binding IsActive}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <CheckBox IsChecked="{Binding IsEnabled}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBlock Text="{Binding Description}" Grid.Row="1" VerticalAlignment="Center" FontSize="12"/>
                 </Grid>
             </DataTemplate>
@@ -53,7 +53,7 @@
 
         <ComboBox Style="{StaticResource ComboBoxStyle}" Margin="2" ItemTemplate="{StaticResource ComboBoxItemTemplate}" ItemsSource="{Binding RuleSetTemplates,Mode=OneWay}" SelectedItem="{Binding RuleSet,Mode=TwoWay}" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" />
 
-        <ListBox HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource RuleItemStyle}" Margin="2" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"  ItemsSource="{Binding RuleSet.Rules}" ItemTemplate="{StaticResource RuleItemTemplate}"/>
+        <ListBox HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource RuleItemStyle}" Margin="2" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"  ItemsSource="{Binding RuleSet}" ItemTemplate="{StaticResource RuleItemTemplate}"/>
 
         <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Command="{Binding CreateCommand}" Height="28" Width="80" Content="Save" Margin="2,4"/>

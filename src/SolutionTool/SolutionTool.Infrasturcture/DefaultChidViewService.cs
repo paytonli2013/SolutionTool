@@ -47,6 +47,11 @@ namespace Orc.SolutionTool
 
             var view = childContainer.Resolve<object>(viewName);
 
+            if (option.Payload!=null && view is IChildView)
+            {
+                ((IChildView)view).SetPayload(option.Payload);
+            }
+
             cv.SetContent(view);
 
             window.Content = cv;

@@ -8,7 +8,7 @@ namespace Orc.SolutionTool.Model
 
         void Apply(ExamContext context, Action<ExamResult> onComplete);
 
-        bool IsActive { get; set; }
+        bool IsEnabled { get; set; }
 
         string Name { get; }
 

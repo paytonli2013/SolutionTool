@@ -85,6 +85,10 @@
       <DependentUpon>NewProjectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="NewProjectViewmodel.cs" />
+    <Compile Include="ReportViewer.xaml.cs">
+      <DependentUpon>ReportViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportViewerViewmodel.cs" />
     <Compile Include="SolutionCheckerMenuItemView.xaml.cs">
       <DependentUpon>SolutionCheckerMenuItemView.xaml</DependentUpon>
     </Compile>
@@ -120,6 +124,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="NewProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

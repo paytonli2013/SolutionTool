@@ -41,6 +41,19 @@ namespace SolutionChecker
             }
         }
 
+        RunLogItem _selectedRunLog;
+
+        public RunLogItem SelectedRunLog
+        {
+            get { return _selectedRunLog; }
+            set
+            {
+                _selectedRunLog = value;
+                RaisePropertyChanged("SelectedRunLog");
+                ViewReportCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         ObservableCollection<Project> _projects;
 
         public ObservableCollection<Project> Projects
@@ -110,8 +123,7 @@ namespace SolutionChecker
                         Refresh();
                     }
 
-
-                }, new ViewOptions { Height = 320, Width = 480 });
+                }, new ViewOptions { Height = 380, Width = 500 });
             }
             catch (Exception ex)
             {
@@ -122,6 +134,46 @@ namespace SolutionChecker
         bool CanExecCreate()
         {
             return true;
+        }
+
+        DelegateCommand viewReportCommand;
+        public DelegateCommand ViewReportCommand
+        {
+            get
+            {
+                if (viewReportCommand == null)
+                    viewReportCommand = new DelegateCommand(ExecViewReport, CanExecViewReport);
+                return viewReportCommand;
+            }
+        }
+
+        void ExecViewReport()
+        {
+            try
+            {
+                _shellService.OpenChildView("ReportViewer", "Report Viewer", (result) =>
+                {
+                    //if (result.HasFlag(CloseResult.Success))
+                    //    _shellService.PostStatusMessage(StatusCatgory.None, "Project Created!");
+
+                    //if (result.HasFlag(CloseResult.Cancel))
+                    //    _shellService.PostStatusMessage(StatusCatgory.None, "Canceled");
+
+                    //if (result.HasFlag(CloseResult.RefreshParent))
+                    //{
+                    //    Refresh();
+                    //}
+                }, new ViewOptions { Height = 600, Width = 800,Payload = SelectedRunLog });
+            }
+            catch (Exception ex)
+            {
+                _shellService.MessageService.Show(ex.Message);
+            }
+        }
+
+        bool CanExecViewReport()
+        {
+            return SelectedRunLog != null;
         }
 
         DelegateCommand runProjectCommand;
@@ -137,7 +189,7 @@ namespace SolutionChecker
 
         void ExecRun()
         {
-            _shellService.PostStatusMessage(StatusCatgory.Info, string.Format( "Running {0}",SelectedProject.Name));
+            _shellService.PostStatusMessage(StatusCatgory.Info, string.Format("Running {0}", SelectedProject.Name));
             _ruleRunner.RunProject(SelectedProject, OnRunComplete);
         }
 
@@ -147,7 +199,7 @@ namespace SolutionChecker
             {
                 _shellService.MessageService.Show(report.Error.Message);
             }
-            else 
+            else
             {
                 _shellService.PostStatusMessage(StatusCatgory.Info, "Complete");
             }

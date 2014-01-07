@@ -27,6 +27,7 @@ namespace SolutionChecker
 
             _container.RegisterType<object, SolutionCheckerView>("SolutionChecker");
             _container.RegisterType<object, NewProjectView>("NewProjectView");
+            _container.RegisterType<object, ReportViewer>("ReportViewer");
         }
     }
 }

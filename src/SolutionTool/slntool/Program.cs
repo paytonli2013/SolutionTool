@@ -16,7 +16,7 @@ namespace Orc.SolutionTool
         /// Program entry point.
         /// </summary>
         /// <example>
-        /// -r "f:\_E_\SolutionTool" -d ./src ./output ./doc ./deployment -f .gitignore *.md
+        /// -r "f:\_E_\SolutionTool" -t default.xml
         /// </example>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -31,23 +31,45 @@ namespace Orc.SolutionTool
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(options.InspectCodePath))
-            {
-                if (!System.IO.File.Exists(options.InspectCodePath))
-                {
-                    Debug.WriteLine("Cannot find InspectCode.exe in path: " + options.InspectCodePath);
+            //if (!string.IsNullOrWhiteSpace(options.InspectCodePath))
+            //{
+            //    if (!System.IO.File.Exists(options.InspectCodePath))
+            //    {
+            //        Debug.WriteLine("Cannot find InspectCode.exe in path: " + options.InspectCodePath);
 
-                    return;
-                }
+            //        return;
+            //    }
+            //}
+
+            Debug.WriteLine("Begin checking " + options.Repository);
+
+            var path = System.IO.Path.GetFullPath(options.Repository);
+
+            if (!System.IO.Directory.Exists(path))
+            {
+                Console.WriteLine("Repository directory does not exist: [" + options.Repository + "]");
             }
-
-            Debug.WriteLine("Begin checking " + options.RepositoryPath);
-
-            var results = new List<Result>();
-
-            foreach (var i in results)
+            else
             {
-                Debug.WriteLine(i);
+                var di = new DirectoryInfo(path);
+                var project = new Project { Name = di.Name, Path = path, CreateTime = DateTime.Now, };
+                var ruleSet = new RuleSet { new FileStructureRule { Name = "FileStructureRule", Template = options.Template, IsEnabled = true, }, };
+                var ruleRunner = new RuleRunner();
+
+                project.RuleSet = ruleSet;
+                ruleRunner.RunProject(project, (x, y) => 
+                {
+                    if (x != null)
+                    {
+                        foreach (var i in x.Outputs)
+                        {
+                            foreach (var j in i.Value)
+                            {
+                                Console.WriteLine(j);
+                            }
+                        }
+                    }
+                });
             }
 
             //CheckWithInspectCode(options);
@@ -81,8 +103,8 @@ namespace Orc.SolutionTool
 
             var cachesHome = @"..\Reports\InspectCode_Cache";
             var output = @"..\Reports\InspectCode_Report.xml";
-            var slns = System.IO.Directory.GetFiles(options.RepositoryPath, "*.sln", SearchOption.AllDirectories);
-            var uri = new Uri(options.RepositoryPath);
+            var slns = System.IO.Directory.GetFiles(options.Repository, "*.sln", SearchOption.AllDirectories);
+            var uri = new Uri(options.Repository);
 
             Debug.Indent();
 
@@ -102,7 +124,7 @@ namespace Orc.SolutionTool
                     {
                         FileName = exePath,
                         Arguments = cmdLine,
-                        WorkingDirectory = options.RepositoryPath,
+                        WorkingDirectory = options.Repository,
                         ////CreateNoWindow = true,
                         //WindowStyle = ProcessWindowStyle.Hidden,
                         //RedirectStandardInput = true,

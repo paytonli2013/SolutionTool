@@ -14,6 +14,6 @@ namespace Orc.SolutionTool
 
         event EventHandler<RunLogEventArgs> RunLogAdded;
 
-        void RunProject(Project project, Action<Report> onComplete);
+        void RunProject(Project project, Action<ExamContext, Report> onComplete);
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.Practices.ServiceLocation;
 
 namespace Orc.SolutionTool.Model
 {
@@ -177,33 +176,52 @@ namespace Orc.SolutionTool.Model
 
     public class ExamContext
     {
-        Dictionary<string, List<string>> Outputs { get; set; }
-        List<ExamResult> Results { get; set; }
+        public Dictionary<string, List<string>> Outputs { get; set; }
+        public List<ExamResult> Results { get; set; }
 
-        public ExamContext()
+        public Project Project { get; set; }
+
+        public ExamContext(Project project)
         {
+            Project = project;
             Outputs = new Dictionary<string, List<string>>();
             Results = new List<ExamResult>();
         }
 
         public void WriteOutput(string ruleName, string output)
         {
-            var item = Outputs.FirstOrDefault(x => x.Key == ruleName);
+            var lines = null as List<string>;
 
-            if (item == null)
+            if (Outputs.ContainsKey(ruleName))
             {
+                lines = Outputs[ruleName];
             }
+            else
+            {
+                lines = new List<string>();
+                Outputs.Add(ruleName, lines);
+            }
+
+            lines.Add(output);
         }
 
         public void AddResult(ExamResult result)
         {
-
+            Results.Add(result);
         }
     }
 
     [XmlRoot("fileStructure")]
     public class FileStructureRule : Rule
     {
+        const string DIR_EXISTS = "DE";
+        const string DIR_MISSING = "DM";
+        const string FILE_EXISTS = "FE";
+        const string FILE_MISSING = "FM";
+
+        Stack<String> _dir2Root;
+        Dictionary<string, List<string>> _dict;
+
         [XmlAttribute("template")]
         public string Template { get; set; }
 
@@ -214,7 +232,128 @@ namespace Orc.SolutionTool.Model
                 throw new Exception("Template is not specified. ");
             }
 
-            var tplMgr = ServiceLocator.Current.GetInstance<ITemplateManager>();
+            var tplMgr = new TemplateManager();
+
+            tplMgr.LoadTemplate(Template, (x, y, z) => 
+            {
+                if (z != null)
+                {
+                    context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
+                    context.WriteOutput(Name, y.ToString());
+
+                    return;
+                }
+
+                if (x != null)
+                {
+                    _dir2Root = new Stack<string>();
+
+                    _dict = new Dictionary<string, List<string>>();
+                    _dict.Add(DIR_EXISTS, new List<string>());
+                    _dict.Add(DIR_MISSING, new List<string>());
+                    _dict.Add(FILE_EXISTS, new List<string>());
+                    _dict.Add(FILE_MISSING, new List<string>());
+
+                    InnerExam(context, x);
+
+                    context.WriteOutput(Name, "***" + Name + "***");
+
+                    if (_dict[DIR_EXISTS].Count > 0)
+                    {
+                        context.WriteOutput(Name, new string('-', 80));
+                        context.WriteOutput(Name, "Directory Exists");
+
+                        foreach (var i in _dict[DIR_EXISTS])
+                        {
+                            context.WriteOutput(Name, i);
+                        }
+                    }
+
+                    if (_dict[DIR_MISSING].Count > 0)
+                    {
+                        context.WriteOutput(Name, new string('-', 80));
+                        context.WriteOutput(Name, "Directory Missing");
+
+                        foreach (var i in _dict[DIR_MISSING])
+                        {
+                            context.WriteOutput(Name, i);
+                        }
+                    }
+
+                    if (_dict[FILE_EXISTS].Count > 0)
+                    {
+                        context.WriteOutput(Name, new string('-', 80));
+                        context.WriteOutput(Name, "File Exists");
+
+                        foreach (var i in _dict[FILE_EXISTS])
+                        {
+                            context.WriteOutput(Name, i);
+                        }
+                    }
+
+                    if (_dict[FILE_MISSING].Count > 0)
+                    {
+                        context.WriteOutput(Name, new string('-', 80));
+                        context.WriteOutput(Name, "File Missing");
+
+                        foreach (var i in _dict[FILE_MISSING])
+                        {
+                            context.WriteOutput(Name, i);
+                        }
+                    }
+                }
+            });
+        }
+
+        private void InnerExam(ExamContext context, Directory dir)
+        {
+            _dir2Root.Push(dir.Name);
+
+            var rel = string.Empty;
+
+            foreach (var i in _dir2Root.Reverse())
+            {
+                rel = System.IO.Path.Combine(rel, i);
+            }
+
+            var full = System.IO.Path.Combine(context.Project.Path, rel);
+
+            if (!System.IO.Directory.Exists(full))
+            {
+                _dict[DIR_MISSING].Add(rel);
+            }
+            else
+            {
+                _dict[DIR_EXISTS].Add(rel);
+            }
+
+            if (dir.SubDirectories != null)
+            {
+                foreach (var i in dir.SubDirectories)
+                {
+                    InnerExam(context, i);
+                }
+            }
+
+            if (dir.Files != null)
+            {
+                foreach (var i in dir.Files)
+                {
+                    var path = System.IO.Path.Combine(full, i.Name);
+                    var path2 = System.IO.Path.Combine(rel, i.Name);
+
+                    if (!System.IO.Directory.Exists(path))
+                    {
+                        _dict[FILE_MISSING].Add(path2);
+                    }
+                    else
+                    {
+                        _dict[FILE_EXISTS].Add(path2);
+                    }
+                }
+            }
+
+            _dir2Root.Pop();
         }
     }
 

@@ -101,20 +101,6 @@ namespace Orc.SolutionTool
 
         public void Exam(Project project, Action<ExamResult> onComplete)
         {
-            if (project == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (project.RuleSet == null)
-            {
-                throw new Exception("RuleSet is not specified. ");
-            }
-
-            foreach (var i in project.RuleSet)
-            {
-
-            }
         }
 
         void FireRunLogAdded(RunLogItem item)
@@ -125,12 +111,29 @@ namespace Orc.SolutionTool
             }
         }
 
-        public void RunProject(Project project, Action<Report> onComplete)
+        public void RunProject(Project project, Action<ExamContext, Report> onComplete)
         {
+            if (project == null)
+            {
+                throw new ArgumentException();
+            }
+
+            if (project.RuleSet == null)
+            {
+                throw new Exception("RuleSet is not specified. ");
+            }
+
+            var context = new ExamContext(project);
+
+            foreach (var i in project.RuleSet)
+            {
+                i.Exam(context);
+            }
+
             //throw new NotImplementedException();
             if (onComplete != null)
             {
-                onComplete.Invoke(new Report(ReportResult.Passed, new RunLogItem() 
+                onComplete.Invoke(context, new Report(ReportResult.Passed, new RunLogItem() 
                 { 
                     Project = project.Name,
                      Start = DateTime.Now.AddMinutes(-1),

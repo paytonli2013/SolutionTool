@@ -180,9 +180,19 @@ namespace Orc.SolutionTool.Model
         Dictionary<string, List<string>> Outputs { get; set; }
         List<ExamResult> Results { get; set; }
 
+        public ExamContext()
+        {
+            Outputs = new Dictionary<string, List<string>>();
+            Results = new List<ExamResult>();
+        }
+
         public void WriteOutput(string ruleName, string output)
         {
+            var item = Outputs.FirstOrDefault(x => x.Key == ruleName);
 
+            if (item == null)
+            {
+            }
         }
 
         public void AddResult(ExamResult result)

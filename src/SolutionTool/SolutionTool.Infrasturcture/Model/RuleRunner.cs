@@ -72,7 +72,6 @@ namespace Orc.SolutionTool
                     var attrStart = run.Attribute("start");
                     var attrEnd = run.Attribute("end");
                     var attrResult = run.Attribute("result");
-                    var attrSummary = run.Attribute("summary");
                     var attrReport = run.Attribute("report");
                     var status = ActionStatus.None;
 
@@ -88,7 +87,6 @@ namespace Orc.SolutionTool
                         Start = attrStart == null ? null : (DateTime?)DateTime.Parse(attrStart.Value),
                         End = attrEnd == null ? null : (DateTime?)DateTime.Parse(attrEnd.Value),
                         Status = status,
-                        Summary = attrSummary == null ? null : attrSummary.Value,
                         Report = attrReport == null ? null : attrReport.Value,
                     };
 
@@ -101,9 +99,22 @@ namespace Orc.SolutionTool
 
         public event EventHandler<RunLogEventArgs> RunLogAdded;
 
-        public void Exam(ExamContext context, IEnumerable<IRule> rules, Action<ExamResult> onComplete)
+        public void Exam(Project project, Action<ExamResult> onComplete)
         {
+            if (project == null)
+            {
+                throw new ArgumentException();
+            }
 
+            if (project.RuleSet == null)
+            {
+                throw new Exception("RuleSet is not specified. ");
+            }
+
+            foreach (var i in project.RuleSet)
+            {
+
+            }
         }
 
         void FireRunLogAdded(RunLogItem item)
@@ -124,7 +135,6 @@ namespace Orc.SolutionTool
                     Project = project.Name,
                      Start = DateTime.Now.AddMinutes(-1),
                      End = DateTime.Now,
-                     Summary = project.Name + " runned at " + DateTime.Now.ToShortTimeString()
                 }));
             }
         }

@@ -1,5 +1,4 @@
-﻿using Orc.SolutionTool.Model.Rules;
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -106,12 +105,12 @@ namespace Orc.SolutionTool.Model
             // Check for default ruleset
             if (!_ruleSets.ContainsKey(DefaultRuleSetName))
             {
-                var rules = new List<IRule>();
+                var rules = new List<Rule>();
                 var ruleSet = new RuleSet
                 {
-                    new Rules.FileStructureRule(),
-                    new Rules.OutputPathRule(),
-                    new Rules.CodeAnalysisRule(),
+                    new FileStructureRule(),
+                    new OutputPathRule(),
+                    new CodeAnalysisRule(),
                 };
 
                 _ruleSets.Add(DefaultRuleSetName, ruleSet);
@@ -120,9 +119,9 @@ namespace Orc.SolutionTool.Model
             _fsw.EnableRaisingEvents = true;
         }
 
-        public void LoadRuleSet(Action<IEnumerable<IRuleSet>, Exception> onComplete)
+        public void LoadRuleSet(Action<IEnumerable<RuleSet>, Exception> onComplete)
         {
-            List<IRuleSet> list = new List<IRuleSet>();
+            var list = new List<RuleSet>();
 
             var ruleSet = new RuleSet() { Name = "Default" };
 

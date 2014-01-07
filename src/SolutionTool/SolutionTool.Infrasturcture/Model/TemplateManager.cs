@@ -118,7 +118,6 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-
         public void ValidateTemplate(string templateXmlContent, Action<bool, Exception> onComplete)
         {
             var exception = null as Exception;

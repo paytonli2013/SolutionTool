@@ -181,14 +181,14 @@ namespace SolutionTool.Infrasturcture.Tests
         [TestMethod]
         public void TestSerializeRuleSet()
         {
-            var ruleSet = new Orc.SolutionTool.Model.Rules.RuleSet();
+            var ruleSet = new Orc.SolutionTool.Model.RuleSet();
             var ruleSetXml = null as string;
 
-            ruleSet.Add(new Orc.SolutionTool.Model.Rules.FileStructureRule() { Template = "default.xml", });
-            ruleSet.Add(new Orc.SolutionTool.Model.Rules.OutputPathRule() { path = "./output/{{active_solution}}/", });
-            ruleSet.Add(new Orc.SolutionTool.Model.Rules.CodeAnalysisRule());
+            ruleSet.Add(new Orc.SolutionTool.Model.FileStructureRule() { Template = "default.xml", });
+            ruleSet.Add(new Orc.SolutionTool.Model.OutputPathRule() { path = "./output/{{active_solution}}/", });
+            ruleSet.Add(new Orc.SolutionTool.Model.CodeAnalysisRule());
 
-            var xs = new XmlSerializer(typeof(Orc.SolutionTool.Model.Rules.RuleSet));
+            var xs = new XmlSerializer(typeof(Orc.SolutionTool.Model.RuleSet));
 
             using (var ms = new System.IO.MemoryStream())
             {
@@ -215,19 +215,19 @@ namespace SolutionTool.Infrasturcture.Tests
   <codeAnalysis enabled='true' />
 </ruleSet>
 ";
-            var xs1 = new XmlSerializer(typeof(Orc.SolutionTool.Model.Rules.RuleSet));
+            var xs1 = new XmlSerializer(typeof(Orc.SolutionTool.Model.RuleSet));
             
             using (var sr = new System.IO.StringReader(ruleSetXml))
             {
-                var rules = xs1.Deserialize(sr) as Orc.SolutionTool.Model.Rules.RuleSet;
+                var rules = xs1.Deserialize(sr) as Orc.SolutionTool.Model.RuleSet;
 
                 Assert.IsNotNull(rules);
                 Assert.AreEqual(rules.Count, 3);
-                Assert.IsInstanceOfType(rules[0], typeof(Orc.SolutionTool.Model.Rules.FileStructureRule));
-                Assert.IsInstanceOfType(rules[1], typeof(Orc.SolutionTool.Model.Rules.OutputPathRule));
-                Assert.IsInstanceOfType(rules[2], typeof(Orc.SolutionTool.Model.Rules.CodeAnalysisRule));
-                Assert.AreEqual(((Orc.SolutionTool.Model.Rules.FileStructureRule)rules[0]).IsEnabled, false);
-                Assert.AreEqual(((Orc.SolutionTool.Model.Rules.FileStructureRule)rules[0]).Template, "default.xml");
+                Assert.IsInstanceOfType(rules[0], typeof(Orc.SolutionTool.Model.FileStructureRule));
+                Assert.IsInstanceOfType(rules[1], typeof(Orc.SolutionTool.Model.OutputPathRule));
+                Assert.IsInstanceOfType(rules[2], typeof(Orc.SolutionTool.Model.CodeAnalysisRule));
+                Assert.AreEqual(((Orc.SolutionTool.Model.FileStructureRule)rules[0]).IsEnabled, false);
+                Assert.AreEqual(((Orc.SolutionTool.Model.FileStructureRule)rules[0]).Template, "default.xml");
             }
 
         }

@@ -171,10 +171,10 @@ namespace SolutionChecker
 
         public string TargetPath
         {
-            get { return _project.TargetPath; }
+            get { return _project.Path; }
             set
             {
-                _project.TargetPath = value;
+                _project.Path = value;
                 RaisePropertyChanged("TargetPath");
                 CreateCommand.RaiseCanExecuteChanged();
             }

@@ -1,4 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<project name="demo3" ruleset="ruleset_default" target="e:\tools">
-  
+<project name="demo3" ruleSet="default.xml" path="e:\tools">
+  <ruleSet>
+    <fileStructure enabled='true' template='default.xml' />
+  </ruleSet>
 </project>

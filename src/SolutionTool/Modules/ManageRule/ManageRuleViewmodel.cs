@@ -4,7 +4,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using Orc.SolutionTool;
 using Orc.SolutionTool.Model;
-using Orc.SolutionTool.Model.Rules;
 using Orc.SolutionTool.Mvvm;
 
 namespace ManageRule
@@ -13,8 +12,8 @@ namespace ManageRule
     {
         IRuleManager _ruleManager;
 
-        private ObservableCollection<XRule> _rules;
-        public ObservableCollection<XRule> Rules
+        private ObservableCollection<Rule> _rules;
+        public ObservableCollection<Rule> Rules
         {
             get
             {
@@ -30,8 +29,8 @@ namespace ManageRule
             }
         }
 
-        private XRule _selectedRule;
-        public XRule SelectedRule
+        private Rule _selectedRule;
+        public Rule SelectedRule
         {
             get
             {
@@ -88,7 +87,7 @@ namespace ManageRule
         {
             _ruleManager = ruleManager;
 
-            Rules = new ObservableCollection<XRule>();
+            Rules = new ObservableCollection<Rule>();
 
             foreach (var i in _ruleManager.DefaultRuleSet)
             {

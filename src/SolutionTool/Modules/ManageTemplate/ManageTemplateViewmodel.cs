@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using Orc.SolutionTool.Model;
 using System.ComponentModel;
 using Microsoft.Practices.Prism.Commands;
+using System.IO;
 
 namespace ManageTemplate
 {
@@ -32,6 +33,30 @@ namespace ManageTemplate
             }
         }
 
+        private string _templateFile;
+        public string TemplateFile
+        {
+            get
+            {
+                return _templateFile;
+            }
+            set
+            {
+                if (_templateFile != value)
+                {
+                    _templateFile = value;
+
+                    if (_templateFile != null && !_templateFile.EndsWith(".xml"))
+                    {
+                        _templateFile += ".xml";
+                    }
+
+                    RaisePropertyChanged(() => TemplateFile);
+                    SaveCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
         private string _selectedTemplateFile;
         public string SelectedTemplateFile
         {
@@ -51,115 +76,108 @@ namespace ManageTemplate
             }
         }
 
-        private string _addingNewText = "--Add a New Template--";
-        public string AddingNewText
+        private string _templateXmlContent;
+        public string TemplateXmlContent
         {
             get
             {
-                return _addingNewText;
+                return _templateXmlContent;
             }
             set
             {
-                if (_addingNewText != value)
+                if (_templateXmlContent != value)
                 {
-                    _addingNewText = value;
-                    RaisePropertyChanged(() => AddingNewText);
+                    _templateXmlContent = value;
+                    RaisePropertyChanged(() => TemplateXmlContent);
+                    SaveCommand.RaiseCanExecuteChanged();
                 }
             }
         }
 
-        private Repository _repository;
-        public Repository Repository
+        #region Save Command
+
+        public DelegateCommand<object> _saveCommand;
+        public DelegateCommand<object> SaveCommand
         {
             get
             {
-                return _repository;
+                return _saveCommand ?? (_saveCommand = new DelegateCommand<object>(Save, CanSave));
             }
             set
             {
-                if (_repository != value)
-                {
-                    _repository = value;
-                    RaisePropertyChanged(() => Repository);
-                }
+                _saveCommand = value;
             }
         }
 
-        private Target _selectedTarget;
-        public Target SelectedTarget
+        private bool CanSave(object arg)
         {
-            get
+            if (string.IsNullOrWhiteSpace(TemplateFile)
+                || string.Compare(TemplateFile, SelectedTemplateFile, StringComparison.OrdinalIgnoreCase) == 0
+                || string.IsNullOrWhiteSpace(TemplateXmlContent) 
+                || Path.GetInvalidFileNameChars().Any(x => TemplateFile.IndexOf(x) > -1))
             {
-                return _selectedTarget;
+                return false;
             }
-            set
-            {
-                if (_selectedTarget != value)
-                {
-                    _selectedTarget = value;
-                    RaisePropertyChanged(() => SelectedTarget);
-                }
-            }
-        }
 
-        #region AddTarget Command
-
-        public DelegateCommand<object> _addTargetCommand;
-        public DelegateCommand<object> AddTargetCommand
-        {
-            get
-            {
-                return _addTargetCommand ?? (_addTargetCommand = new DelegateCommand<object>(AddTarget, CanAddTarget));
-            }
-            set
-            {
-                _addTargetCommand = value;
-            }
-        }
-
-        private bool CanAddTarget(object arg)
-        {
             return true;
         }
 
-        private void AddTarget(object arg)
+        private void Save(object arg)
         {
-#if DEBUG
-            var sf = new System.Diagnostics.StackFrame();
+            _templateMgr.SaveTemplate(TemplateFile, TemplateXmlContent, (x, y) => 
+            {
+                if (y != null)
+                {
+                    _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
+                }
 
-            System.Windows.MessageBox.Show(sf.GetMethod().Name + (arg != null ? arg.ToString() : null));
-#endif
+                if (x && !TemplateFiles.Any(z => string.Compare(z, TemplateFile, StringComparison.OrdinalIgnoreCase) == 0))
+                {
+                    TemplateFiles.Add(TemplateFile);
+                    SelectedTemplateFile = TemplateFile;
+                }
+            });
         }
 
         #endregion
 
-        #region RemoveTarget Command
+        #region Delete Command
 
-        public DelegateCommand<object> _removeTargetCommand;
-        public DelegateCommand<object> RemoveTargetCommand
+        public DelegateCommand<object> _deleteCommand;
+        public DelegateCommand<object> DeleteCommand
         {
             get
             {
-                return _removeTargetCommand ?? (_removeTargetCommand = new DelegateCommand<object>(RemoveTarget, CanRemoveTarget));
+                return _deleteCommand ?? (_deleteCommand = new DelegateCommand<object>(Delete, CanDelete));
             }
             set
             {
-                _removeTargetCommand = value;
+                _deleteCommand = value;
             }
         }
 
-        private bool CanRemoveTarget(object arg)
+        private bool CanDelete(object arg)
         {
-            return true;
+            return !string.IsNullOrWhiteSpace(SelectedTemplateFile);
         }
 
-        private void RemoveTarget(object arg)
+        private void Delete(object arg)
         {
-#if DEBUG
-            var sf = new System.Diagnostics.StackFrame();
+            _templateMgr.DeleteTemplate(SelectedTemplateFile, (x, y) => 
+            {
+                if (y != null)
+                {
+                    _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
+                }
 
-            System.Windows.MessageBox.Show(sf.GetMethod().Name + (arg != null ? arg.ToString() : null));
-#endif
+                if (x)
+                {
+                    TemplateFiles.Remove(SelectedTemplateFile);
+                    TemplateFile = null;
+                    TemplateXmlContent = null;
+                    SelectedTemplateFile = TemplateFiles.LastOrDefault();
+                }
+            });
         }
 
         #endregion
@@ -187,28 +205,23 @@ namespace ManageTemplate
                     {
                         TemplateFiles.Add(i);
                     }
-
-                    TemplateFiles.Insert(0, AddingNewText);
                 }
             });
-
-            Repository = new Repository(@"..\..\..\");
         }
 
         private void ReloadRepository()
         {
-            if (SelectedTemplateFile != AddingNewText)
+            _templateMgr.LoadTemplate(SelectedTemplateFile, (x, y) =>
             {
-                _templateMgr.LoadTemplate(SelectedTemplateFile, (x, y) =>
+                if (y != null)
                 {
-                    if (y != null)
-                    {
-                        _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
-                    }
+                    _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
+                }
 
-                    Repository = x;
-                });
-            }
+                TemplateFile = SelectedTemplateFile;
+                TemplateXmlContent = x;
+                DeleteCommand.RaiseCanExecuteChanged();
+            });
         }
 
     }

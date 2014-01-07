@@ -1,6 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 using Orc.SolutionTool;
 using Orc.SolutionTool.Model;
+using Orc.SolutionTool.Model.Rules;
 using Orc.SolutionTool.Mvvm;
 
 namespace ManageRule
@@ -9,62 +13,73 @@ namespace ManageRule
     {
         IRuleManager _ruleManager;
 
-        private ObservableCollection<string> _ruleSetNames;
-        public ObservableCollection<string> RuleSetNames
+        private ObservableCollection<XRule> _rules;
+        public ObservableCollection<XRule> Rules
         {
             get
             {
-                return _ruleSetNames;
+                return _rules;
             }
             set
             {
-                if (_ruleSetNames != value)
+                if (_rules != value)
                 {
-                    _ruleSetNames = value;
-                    RaisePropertyChanged(() => RuleSetNames);
+                    _rules = value;
+                    RaisePropertyChanged(() => Rules);
                 }
             }
         }
 
-        private string _selectedRuleSetName;
-        public string SelectedRuleSetName
+        private XRule _selectedRule;
+        public XRule SelectedRule
         {
             get
             {
-                return _selectedRuleSetName;
+                return _selectedRule;
             }
             set
             {
-                if (_selectedRuleSetName != value)
+                if (_selectedRule != value)
                 {
-                    _selectedRuleSetName = value;
+                    _selectedRule = value;
+                    RaisePropertyChanged(() => SelectedRule);
 
-                    var rules = _ruleManager.RuleSets[_selectedRuleSetName];
-
-                    SelectedRuleSet = new ObservableCollection<IRule>();
-                    foreach (var i in rules)
+                    if (_selectedRule != null)
                     {
-                        SelectedRuleSet.Add(i);
-                    }
+                        var sb = new StringBuilder();
 
-                    RaisePropertyChanged(() => SelectedRuleSetName);
+                        using (var sw = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true, }))
+                        {
+                            var xs = new XmlSerializer(_selectedRule.GetType());
+                            var ns = new XmlSerializerNamespaces();
+
+                            ns.Add("", "");
+                            xs.Serialize(sw, _selectedRule, ns);
+                        }
+
+                        SelectedRuleXmlContent = sb.ToString();
+                    }
+                    else
+                    {
+                        SelectedRuleXmlContent = null;
+                    }
                 }
             }
         }
 
-        private ObservableCollection<IRule> _selectedRuleSet;
-        public ObservableCollection<IRule> SelectedRuleSet
+        private string _selectedRuleXmlContent;
+        public string SelectedRuleXmlContent
         {
             get
             {
-                return _selectedRuleSet;
+                return _selectedRuleXmlContent;
             }
             set
             {
-                if (_selectedRuleSet != value)
+                if (_selectedRuleXmlContent != value)
                 {
-                    _selectedRuleSet = value;
-                    RaisePropertyChanged(() => SelectedRuleSet);
+                    _selectedRuleXmlContent = value;
+                    RaisePropertyChanged(() => SelectedRuleXmlContent);
                 }
             }
         }
@@ -73,12 +88,11 @@ namespace ManageRule
         {
             _ruleManager = ruleManager;
 
-            RuleSetNames = new ObservableCollection<string>();
-            SelectedRuleSet = new ObservableCollection<IRule>();
+            Rules = new ObservableCollection<XRule>();
 
-            foreach (var i in _ruleManager.RuleSets.Keys)
+            foreach (var i in _ruleManager.DefaultRuleSet)
             {
-                RuleSetNames.Add(i);
+                Rules.Add(i);
             }
         }
     }

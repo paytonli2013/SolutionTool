@@ -1,0 +1,6 @@
+﻿<?xml version='1.0'?>
+<ruleSet>
+  <fileStructure enabled='true' template='default.xml' />
+  <outputPath enabled='true' path='./output/{active_solution}/' />
+  <codeAnalysis enabled='true' />
+</ruleSet>

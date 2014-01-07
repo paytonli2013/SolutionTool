@@ -15,7 +15,7 @@ namespace Orc.SolutionTool
 
             var window = new Window() { Content = shell };
 
-            Container.RegisterInstance<IHostWindow>(new HostWindow(window, shell as IStatusBar));
+            Container.RegisterInstance<IWindowHost>(new HostWindow(window, shell as IStatusBar));
             Container.RegisterInstance<IMessageService>(shell);
             Container.RegisterInstance<IStatusBar>(shell);
 
@@ -45,6 +45,8 @@ namespace Orc.SolutionTool
             Container.RegisterType<IRuleManager, RuleManager>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<ITemplateManager, TemplateManager>(new ContainerControlledLifetimeManager());
+
+            Container.RegisterType<IChildViewService, DefaultChiLdViewService>(new ContainerControlledLifetimeManager());
         }
 
         protected override IModuleCatalog CreateModuleCatalog()

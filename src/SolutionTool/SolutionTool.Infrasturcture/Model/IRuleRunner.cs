@@ -9,8 +9,11 @@ namespace Orc.SolutionTool
         void Exam(ExamContext context, IEnumerable<IRule> rules, Action<ExamResult> onComplete);
 
         void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete);
+
         void ClearLog(Action<Exception> onComplete);
 
         event EventHandler<RunLogEventArgs> RunLogAdded;
+
+        void RunProject(Project project, Action<Report> onComplete);
     }
 }

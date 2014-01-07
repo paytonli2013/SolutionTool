@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Orc.SolutionTool.Model
 {
-    public abstract class FileStructureRule : RuleBase
+    public class FileStructureRule : RuleBase
     {
         IEnumerable<FileStructureRule> _children;
 
@@ -19,8 +19,9 @@ namespace Orc.SolutionTool.Model
         }
 
         public FileStructureRule() : base()
-        { 
-
+        {
+            Name = "File Structure Rule";
+            Description = "Description File Structure Rule";
         }
 
         public override void Exam(ExamContext context, Action<ExamResult> onComplete)
@@ -33,13 +34,19 @@ namespace Orc.SolutionTool.Model
             throw new NotImplementedException();
         }
 
-        protected abstract void InnerExam(FileStructureRuleExamContext context, Action<ExamResult> onComplete);
+        protected virtual void InnerExam(FileStructureRuleExamContext context, Action<ExamResult> onComplete) 
+        {
+
+        }
 
         public override void Apply(ExamContext context, Action<ExamResult> onComplete)
         {
             InnerApply(new FileStructureRuleExamContext(context, MakeCurrentDirectory()), onComplete);
         }
 
-        protected abstract void InnerApply(FileStructureRuleExamContext fileStructureRuleExamContext, Action<ExamResult> onComplete);
+        protected virtual void InnerApply(FileStructureRuleExamContext fileStructureRuleExamContext, Action<ExamResult> onComplete) 
+        {
+
+        }
     }
 }

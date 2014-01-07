@@ -40,12 +40,12 @@ namespace Orc.SolutionTool.Model
             set
             {
                 _targetPath = value;
-                RaisePropertyChanged("RuleSetPath");
+                RaisePropertyChanged("TargetPath");
             }
         }
 
-        ObservableCollection<IRule> _ruleSet;
-        public ObservableCollection<IRule> RuleSet
+        IRuleSet _ruleSet;
+        public IRuleSet RuleSet
         {
             get
             {
@@ -54,6 +54,19 @@ namespace Orc.SolutionTool.Model
             private set
             {
                 _ruleSet = value;
+                RaisePropertyChanged("RuleSetPath");
+            }
+        }
+
+        private DateTime createTime;
+
+        public DateTime CreateTime
+        {
+            get { return createTime; }
+            set
+            {
+                createTime = value;
+                RaisePropertyChanged("CreateTime");
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orc.SolutionTool.Model.Rules;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -79,6 +80,26 @@ namespace Orc.SolutionTool.Model
             }
 
             _fsw.EnableRaisingEvents = true;
+        }
+
+
+        public void LoadRuleSet(Action<IEnumerable<IRuleSet>, Exception> onComplete)
+        {
+            List<IRuleSet> list = new List<IRuleSet>();
+
+            var ruleSet = new RuleSet() { Name = "Default"};
+            var rules = new List<IRule>();
+
+            rules.Add(new FileStructureRule() { IsActive = true});
+
+            ruleSet.Rules = rules;
+            list.Add(ruleSet);
+
+            if (onComplete != null)
+            {
+                onComplete.Invoke(list, null);
+            }
+            //throw new NotImplementedException();
         }
     }
 }

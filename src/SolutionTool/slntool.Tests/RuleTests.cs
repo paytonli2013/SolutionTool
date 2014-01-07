@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿        using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orc.SolutionTool.Model;
 using Orc.SolutionTool.Model.Rules;
 

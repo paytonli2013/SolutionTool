@@ -113,5 +113,20 @@ namespace Orc.SolutionTool
                 RunLogAdded.Invoke(this, new RunLogEventArgs(item));
             }
         }
+
+        public void RunProject(Project project, Action<Report> onComplete)
+        {
+            //throw new NotImplementedException();
+            if (onComplete != null)
+            {
+                onComplete.Invoke(new Report(ReportResult.Passed, new RunLogItem() 
+                { 
+                    Project = project.Name,
+                     Start = DateTime.Now.AddMinutes(-1),
+                     End = DateTime.Now,
+                     Summary = project.Name + " runned at " + DateTime.Now.ToShortTimeString()
+                }));
+            }
+        }
     }
 }

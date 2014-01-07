@@ -73,5 +73,20 @@ namespace Orc.SolutionTool.Mvvm
         {
             //throw new NotImplementedException();
         }
+
+        bool isBusy;
+
+        public bool IsBusy
+        {
+            get
+            {
+                return isBusy;
+            }
+            set
+            {
+                isBusy = value;
+                RaisePropertyChanged("IsBusy");
+            }
+        }
     }
 }

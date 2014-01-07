@@ -8,5 +8,7 @@ namespace Orc.SolutionTool.Model
         Dictionary<string, IEnumerable<IRule>> RuleSets { get; }
 
         void Persist(IEnumerable<IRule> ruleSet, Action<bool, Exception> onComplete);
+
+        void LoadRuleSet(Action<IEnumerable<IRuleSet>, Exception> onComplete);
     }
 }

@@ -7,5 +7,11 @@ namespace Orc.SolutionTool.Model
         void Exam(ExamContext context, Action<ExamResult> onComplete);
 
         void Apply(ExamContext context, Action<ExamResult> onComplete);
+
+        bool IsActive { get; set; }
+
+        string Name { get; }
+
+        string Description { get; }
     }
 }

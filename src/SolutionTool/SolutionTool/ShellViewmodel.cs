@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Xceed.Wpf.Toolkit;
 
 namespace Orc.SolutionTool
 {
@@ -59,7 +60,7 @@ namespace Orc.SolutionTool
 
         public void Show(string message)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(message);
         }
 
         internal void Avtive(int p)

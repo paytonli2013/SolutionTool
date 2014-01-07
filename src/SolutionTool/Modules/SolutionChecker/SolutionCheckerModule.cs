@@ -26,6 +26,7 @@ namespace SolutionChecker
             _regionManager.RegisterViewWithRegion("LeftMenuRegion", typeof(SolutionCheckerMenuItemView));
 
             _container.RegisterType<object, SolutionCheckerView>("SolutionChecker");
+            _container.RegisterType<object, NewProjectView>("NewProjectView");
         }
     }
 }

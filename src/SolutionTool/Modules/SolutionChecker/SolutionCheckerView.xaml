@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="564">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,15 +19,16 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Margin="2" Grid.ColumnSpan="3" BorderBrush="Gainsboro" BorderThickness="1"  Background="#FFF9F9CA">
+        <Border Margin="2" Visibility="Collapsed" Grid.ColumnSpan="3" BorderBrush="Gainsboro" BorderThickness="1" Background="#FFF9F9CA">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="ToolBar" VerticalAlignment="Center" Margin="10,0"/>
+                <Button Height="28" Width="28" ToolTip="New Project" Command="{Binding CreateProjectCommand}" />
             </StackPanel>
         </Border>
-        <Grid Margin="12,20" Grid.Column="0" Grid.Row="1">
+        <Grid Margin="12,12" Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -35,14 +36,18 @@
             <TextBlock Margin="2" FontSize="18" Text="Recent run"/>
             <ListBox MinWidth="160" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"  Grid.Row="1" BorderThickness="0,1,0,0" ItemsSource="{Binding RecentRun}" ItemTemplate="{StaticResource RunLogItemTemplate}" ItemContainerStyle="{StaticResource RunLogItemStyle}" Background="Transparent"/>
         </Grid>
-        <Rectangle Visibility="Hidden" Width="1" Grid.Row="1" Margin="0,20" Grid.Column="1" Fill="#FFABADB3"/>
-        <Grid Margin="12,20" Grid.Column="2" Grid.Row="1" >
+        <Rectangle Visibility="Hidden" Width="1" Grid.Row="1" Margin="0,20" Grid.Column="1" Fill="{Binding SpliterBrush}"/>
+        <Grid Margin="12" Grid.Column="2" Grid.Row="1" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Margin="2" FontSize="18" Text="Projects"/>
-            <ListBox Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Name="projectList" BorderThickness="0,1,0,0" ItemsSource="{Binding Projects}" ItemTemplate="{StaticResource ProjectItemTemplate}" ItemContainerStyle="{StaticResource ProjectItemStyle}" Background="Transparent">
+            <StackPanel Margin="2" Orientation="Horizontal">
+                <TextBlock FontSize="18" Text="Projects"/>
+                <Rectangle Margin="8,0" Width="1" Height="20" Fill="{StaticResource SpliterBrush}" VerticalAlignment="Stretch"/>
+                <Button FontSize="16" Padding="2,-2" Style="{StaticResource LinkButtonStyle}" Content="New" Command="{Binding CreateProjectCommand}"/>
+            </StackPanel>
+            <ListBox Grid.Row="1" ContextMenu="{StaticResource ProjectItemMenu}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Name="projectList" BorderThickness="0,1,0,0" SelectedItem="{Binding SelectedProject}" ItemsSource="{Binding Projects}" ItemTemplate="{StaticResource ProjectItemTemplate}" ItemContainerStyle="{StaticResource ProjectItemStyle}" Background="Transparent">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Margin="0" Width="{Binding ActualWidth,ElementName=projectList}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsItemsHost="True"/>

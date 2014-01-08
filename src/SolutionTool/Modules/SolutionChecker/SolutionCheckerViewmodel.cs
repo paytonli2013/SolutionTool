@@ -198,7 +198,7 @@ namespace SolutionChecker
             });
         }
 
-        private void OnRunComplete(ExamContext context, Report report)
+        private void OnRunComplete(Report report)
         {
             if (report.Error != null)
             {
@@ -207,6 +207,11 @@ namespace SolutionChecker
             else
             {
                 _shellService.PostStatusMessage(StatusCatgory.Info, "Complete");
+
+                RunCodeInUiThread(() =>
+                {
+                    _shellService.OpenChildView("ReportViewer", "Report Viewer", option: new ViewOptions { Height = 600, Width = 800, Payload = report.Log });
+                });
             }
         }
 

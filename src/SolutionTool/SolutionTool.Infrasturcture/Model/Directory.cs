@@ -15,9 +15,18 @@ namespace Orc.SolutionTool.Model
     {
         public string Name { get; set; }
 
+        public int? Ocurr { get; set; }
+
+        public bool? Recursive { get; set; }
+
         public IList<Directory> SubDirectories { get; set; }
 
         public IList<File> Files { get; set; }
+
+        public Directory()
+        {
+
+        }
 
 #if DEBUG
         public static Directory Sample
@@ -101,7 +110,20 @@ namespace Orc.SolutionTool.Model
                     {
                         name = reader["name"];
 
-                        var cd = new Directory { Name = name, };
+                        var ocurr = 1;
+                        var recursive = false;
+
+                        if (!string.IsNullOrWhiteSpace(reader["ocurr"]))
+                        {
+                            int.TryParse(reader["ocurr"], out ocurr);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(reader["recursive"]))
+                        {
+                            bool.TryParse(reader["recursive"], out recursive);
+                        }
+
+                        var cd = new Directory { Name = name, Ocurr = ocurr, Recursive = recursive, };
 
                         if (dir.SubDirectories == null)
                         {
@@ -148,6 +170,8 @@ namespace Orc.SolutionTool.Model
                 {
                     writer.WriteStartElement("dir");
                     writer.WriteAttributeString("name", i.Name);
+                    writer.WriteAttributeString("occur", i.Ocurr.ToString());
+                    writer.WriteAttributeString("recursive", i.Recursive.ToString());
 
                     if (i.SubDirectories != null)
                     {

@@ -7,18 +7,12 @@ namespace Orc.SolutionTool.Model
 {
     public class Report
     {
-        public Report(ReportResult result,RunLogItem log,Exception error=null)
+        public Report(ExamContext context,RunLogItem log,Exception error=null)
         {
-            _result = result;
+            // TODO: Complete member initialization
             _log = log;
             _error = error;
-        }
-
-        ReportResult _result;
-
-        public ReportResult Result
-        {
-            get { return _result; }
+            this.context = context;
         }
 
         Exception _error;
@@ -29,10 +23,38 @@ namespace Orc.SolutionTool.Model
         }
 
         RunLogItem _log;
+        private ExamContext context;
 
         public RunLogItem Log
         {
             get { return _log; }
+        }
+
+        public string GetText()
+        {
+            var sb = new StringBuilder();
+            foreach (var strs in context.Outputs)
+            {
+                foreach (var str in strs.Value)
+                {
+                    sb.AppendLine((str));
+                }
+            }
+            return sb.ToString();
+        }
+
+        public ActionStatus Status
+        {
+            get
+            {
+                if (context == null || context.Results == null)
+                    return ActionStatus.None;
+
+                if (context.Results.Any(r => r.Status == ActionStatus.Failed))
+                    return ActionStatus.Failed;
+                else
+                    return ActionStatus.Pass;
+            }
         }
     }
 }

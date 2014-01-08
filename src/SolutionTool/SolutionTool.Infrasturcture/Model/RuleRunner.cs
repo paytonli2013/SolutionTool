@@ -9,7 +9,7 @@ namespace Orc.SolutionTool
     public class RuleRunner : IRuleRunner
     {
         private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Logs\");
-        
+
         public void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete)
         {
             var list = BuildLogs();
@@ -111,8 +111,13 @@ namespace Orc.SolutionTool
             }
         }
 
-        public void RunProject(Project project, Action<ExamContext, Report> onComplete)
+        public void RunProject(Project project, Action<Report> onComplete)
         {
+            var log = new RunLogItem();
+
+            log.Start = DateTime.Now;
+            log.Project = project.Name;
+
             if (project == null)
             {
                 throw new ArgumentException();
@@ -127,18 +132,29 @@ namespace Orc.SolutionTool
 
             foreach (var i in project.RuleSet)
             {
-                i.Exam(context);
+                try
+                {
+                    i.Exam(context);
+                }
+                catch (Exception e)
+                {
+                    context.WriteOutput(i.Name, string.Format("error occured:\n{0}", e.ToString()));
+                    context.AddResult(new ExamResult() { RuleName = i.Name, Status = ActionStatus.Failed });
+                    continue;
+                }
             }
+
+            var report = new Report(context,log);
+
+            log.End = DateTime.Now;
+            log.Status = report.Status;
+            log.Report = report.GetText();
+            log.Rules = project.RuleSet.Count;
 
             //throw new NotImplementedException();
             if (onComplete != null)
             {
-                onComplete.Invoke(context, new Report(ReportResult.Passed, new RunLogItem() 
-                {
-                     Project = project.Name,
-                     Start = DateTime.Now.AddMinutes(-1),
-                     End = DateTime.Now,
-                }));
+                onComplete.Invoke(report);
             }
         }
     }

@@ -41,7 +41,7 @@ namespace Orc.SolutionTool
             //    }
             //}
 
-            Debug.WriteLine("Begin checking " + options.Repository);
+            Console.WriteLine("Begin checking " + options.Repository);
 
             var path = System.IO.Path.GetFullPath(options.Repository);
 
@@ -53,21 +53,39 @@ namespace Orc.SolutionTool
             {
                 var di = new DirectoryInfo(path);
                 var project = new Project { Name = di.Name, Path = path, CreateTime = DateTime.Now, };
-                var ruleSet = new RuleSet { new FileStructureRule { Name = "FileStructureRule", Template = options.Template, IsEnabled = true, }, };
+                var ruleSet = new RuleSet 
+                {
+                    new FileStructureRule
+                    { 
+                        Name = "File Structure Rule",
+                        IsEnabled = true, 
+                        Template = options.Template,
+                    }, 
+                    new OutputPathRule 
+                    {
+                        Name = "Output Path Rule",
+                        IsEnabled = true, 
+                        path = "./output/$(Configuration)/",
+                    },
+                };
                 var ruleRunner = new RuleRunner();
 
                 project.RuleSet = ruleSet;
-                ruleRunner.RunProject(project, (x, y) => 
+                ruleRunner.RunProject(project, (x) =>
                 {
-                    if (x != null)
+                    if (x != null && x.Error == null)
                     {
-                        foreach (var i in x.Outputs)
-                        {
-                            foreach (var j in i.Value)
-                            {
-                                Console.WriteLine(j);
-                            }
-                        }
+                        Console.WriteLine(x.GetText());
+                        //foreach (var i in x.Outputs)
+                        //{
+                        //    foreach (var j in i.Value)
+                        //    {
+                        //        Console.WriteLine(j);
+                        //    }
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        //}
                     }
                 });
             }

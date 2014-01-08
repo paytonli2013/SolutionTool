@@ -129,7 +129,8 @@ namespace Orc.SolutionTool.Model
             {
                 IsEnabled = true,
                 Name = "Check File Structure",
-                Description = "Check File Structure with template"
+                Description = "Check File Structure with template",
+                Template = "default.xml"
             });
             ruleSet.Add(new OutputPathRule()
             {

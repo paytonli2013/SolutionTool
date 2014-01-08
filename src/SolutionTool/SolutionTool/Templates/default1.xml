@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0"?>
 <dir name=".">
-  <dir name="src" />
+  <dir name="src">
+    <dir name="bin" ocurr="0" recursive="true" />
+    <dir name="obj" ocurr="0" recursive="true" />
+  </dir>
   <dir name="output">
     <dir name="debug">
       <dir name=".NET35">

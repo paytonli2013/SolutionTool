@@ -13,6 +13,6 @@ namespace Orc.SolutionTool
 
         void PostStatusMessage(StatusCatgory catgory, string message);
 
-        void OpenChildView(string viewName, string title, Action<CloseResult> onClosed, ViewOptions option = null);
+        void OpenChildView(string viewName, string title, Action<CloseResult> onClosed = null, ViewOptions option = null);
     }
 }

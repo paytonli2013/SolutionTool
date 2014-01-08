@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Orc.SolutionTool.Model
@@ -137,10 +140,10 @@ namespace Orc.SolutionTool.Model
 
         static Type FindType(string name)
         {
-            var type = _knownTypes.FirstOrDefault(x => 
+            var type = _knownTypes.FirstOrDefault(x =>
             {
                 var attrs = x.GetCustomAttributes(false);
-                var b = attrs.Any(y => 
+                var b = attrs.Any(y =>
                 {
                     var attr = y as XmlRootAttribute;
 
@@ -227,6 +230,21 @@ namespace Orc.SolutionTool.Model
 
         public override void Exam(ExamContext context)
         {
+            var output = null as string;
+
+            if (!IsEnabled)
+            {
+                output = "***" + Name + "***";
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                output = "Scape rule checking since it's not enabled. ";
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(Template))
             {
                 throw new Exception("Template is not specified. ");
@@ -236,12 +254,15 @@ namespace Orc.SolutionTool.Model
 
             var tplMgr = new TemplateManager();
 
-            tplMgr.LoadTemplate(Template, (x, y, z) => 
+            tplMgr.LoadTemplate(Template, (x, y, z) =>
             {
                 if (z != null)
                 {
                     context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
-                    context.WriteOutput(Name, y.ToString());
+
+                    output = z.ToString();
+                    context.WriteOutput(Name, output);
+                    Debug.WriteLine(output);
 
                     return;
                 }
@@ -258,50 +279,89 @@ namespace Orc.SolutionTool.Model
 
                     InnerExam(context, x);
 
-                    context.WriteOutput(Name, "***" + Name + "***");
+                    output = "***" + Name + "***";
+                    context.WriteOutput(Name, output);
+                    Debug.WriteLine(output);
 
                     if (_dict[DIR_EXISTS].Count > 0)
                     {
-                        context.WriteOutput(Name, new string('-', 80));
-                        context.WriteOutput(Name, "Directory Exists");
+                        output = new string('-', 80);
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
+
+                        output = "Directory Exists";
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[DIR_EXISTS])
                         {
-                            context.WriteOutput(Name, i);
+                            output = i;
+                            context.WriteOutput(Name, output);
+                            Debug.WriteLine(output);
                         }
                     }
 
                     if (_dict[DIR_MISSING].Count > 0)
                     {
-                        context.WriteOutput(Name, new string('-', 80));
-                        context.WriteOutput(Name, "Directory Missing");
+                        output = new string('-', 80);
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
+
+                        output = "Directory Missing";
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[DIR_MISSING])
                         {
-                            context.WriteOutput(Name, i);
+                            output = i;
+                            context.WriteOutput(Name, output);
+                            Debug.WriteLine(output);
                         }
                     }
 
                     if (_dict[FILE_EXISTS].Count > 0)
                     {
-                        context.WriteOutput(Name, new string('-', 80));
-                        context.WriteOutput(Name, "File Exists");
+                        output = new string('-', 80);
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
+
+                        output = "File Exists";
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[FILE_EXISTS])
                         {
-                            context.WriteOutput(Name, i);
+                            output = i;
+                            context.WriteOutput(Name, output);
+                            Debug.WriteLine(output);
                         }
                     }
 
                     if (_dict[FILE_MISSING].Count > 0)
                     {
-                        context.WriteOutput(Name, new string('-', 80));
-                        context.WriteOutput(Name, "File Missing");
+                        output = new string('-', 80);
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
+
+                        output = "File Missing";
+                        context.WriteOutput(Name, output);
+                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[FILE_MISSING])
                         {
-                            context.WriteOutput(Name, i);
+                            output = i;
+                            context.WriteOutput(Name, output);
+                            Debug.WriteLine(output);
                         }
+                    }
+
+                    if (_dict[DIR_MISSING].Count > 0 || _dict[FILE_MISSING].Count > 0)
+                    {
+                        context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
+                    }
+                    else
+                    {
+                        context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Pass, });
                     }
                 }
             });
@@ -318,15 +378,21 @@ namespace Orc.SolutionTool.Model
                 rel = System.IO.Path.Combine(rel, i);
             }
 
-            var full = System.IO.Path.Combine(context.Project.Path, rel);
+            var root = context.Project.Path;
+            var full = System.IO.Path.Combine(root, rel);
 
-            if (!System.IO.Directory.Exists(full))
+            if ((dir.Ocurr ?? 1) >= 1 && !System.IO.Directory.Exists(full))
             {
                 _dict[DIR_MISSING].Add(rel);
             }
             else
             {
-                _dict[DIR_EXISTS].Add(rel);
+                if ((dir.Ocurr ?? 1) < 1)
+                {
+                    var fsDirInfo = new System.IO.DirectoryInfo(full).Parent;
+
+                    InnerExamFsDirectory(context, dir, fsDirInfo);
+                }
             }
 
             if (dir.SubDirectories != null)
@@ -344,29 +410,181 @@ namespace Orc.SolutionTool.Model
                     var path = System.IO.Path.Combine(full, i.Name);
                     var path2 = System.IO.Path.Combine(rel, i.Name);
 
-                    if (!System.IO.Directory.Exists(path))
+                    if (!System.IO.File.Exists(path))
                     {
                         _dict[FILE_MISSING].Add(path2);
                     }
-                    else
-                    {
-                        _dict[FILE_EXISTS].Add(path2);
-                    }
+                    //else
+                    //{
+                    //    _dict[FILE_EXISTS].Add(path2);
+                    //}
                 }
             }
 
             _dir2Root.Pop();
+        }
+
+        private void InnerExamFsDirectory(ExamContext context, Directory dir, System.IO.DirectoryInfo fsDirInfo)
+        {
+            if (!fsDirInfo.Exists)
+            {
+                return;
+            }
+
+            var fsDirs = fsDirInfo.GetDirectories();
+
+            foreach (var i in fsDirs)
+            {
+                var eq = string.Compare(dir.Name, i.Name, StringComparison.OrdinalIgnoreCase) == 0;
+                var uri = new Uri(i.FullName);
+                var uriRoot = new Uri(context.Project.Path);
+                var uriDiff2Root = uriRoot.MakeRelativeUri(uri);
+                var rel2Root = uriDiff2Root.ToString().Replace("/", "\\");
+                var rel2RootIx = rel2Root.IndexOf("\\");
+
+                if (eq && (dir.Ocurr ?? 1) < 1 && System.IO.Directory.Exists(i.FullName))
+                {
+                    _dict[DIR_EXISTS].Add(".\\" + (rel2RootIx == -1 ? rel2Root : rel2Root.Substring(rel2RootIx + 1)));
+                }
+
+                if ((dir.Recursive ?? false) && System.IO.Directory.Exists(i.FullName))
+                {
+                    InnerExamFsDirectory(context, dir, i);
+                }
+            }
         }
     }
 
     [XmlRoot("outputPath")]
     public class OutputPathRule : Rule
     {
+        const string PATH_OK = "PO";
+        const string PATH_NG = "PN";
+
+        Dictionary<string, List<string>> _dict;
+
         [XmlAttribute("path")]
         public string path { get; set; }
 
         public override void Exam(ExamContext context)
         {
+            var output = null as string;
+
+            if (!IsEnabled)
+            {
+                output = "***" + Name + "***";
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                output = "Scape rule checking since it's not enabled. ";
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                return;
+            }
+
+            _dict = new Dictionary<string, List<string>>();
+            _dict.Add(PATH_OK, new List<string>());
+            _dict.Add(PATH_NG, new List<string>());
+
+            var root = System.IO.Path.GetFullPath(context.Project.Path);
+            var csprojs = System.IO.Directory.GetFiles(
+                root, "*.csproj",
+                System.IO.SearchOption.AllDirectories
+                );
+            var ns = (XNamespace)"http://schemas.microsoft.com/developer/msbuild/2003";
+            var re = new Regex(@"(?<c>\w+)\|(?<p>\w+)");
+            var uri = new Uri(root);
+
+            output = "***" + Name + "***";
+            context.WriteOutput(Name, output);
+            Debug.WriteLine(output);
+
+            foreach (var i in csprojs)
+            {
+                var fi = new System.IO.FileInfo(i);
+                var doc = XDocument.Load(i);
+                //var eleTargetFrameworkVersion = doc.Descendants(ns + "TargetFrameworkVersion").First().Value;
+                var eleOutputPaths = doc.Descendants(ns + "OutputPath").ToList();
+
+                foreach (var j in eleOutputPaths)
+                {
+                    var condition = j.Parent.Attribute("Condition").Value;
+                    var config = null as string;
+                    var platform = null as string;
+
+                    var match = re.Match(condition);
+
+                    if (match.Success)
+                    {
+                        config = match.Groups["c"].Value;
+                        platform = match.Groups["p"].Value;
+                    }
+
+                    var uri2Tgt = new Uri(uri, path);
+                    var uri2Prj = new Uri(fi.FullName);
+                    var uri2PrjDir = new Uri(fi.Directory.FullName);
+                    var uriDiff = uri2PrjDir.MakeRelativeUri(uri2Tgt);
+                    var uriDiff2Root = uri.MakeRelativeUri(uri2Prj);
+                    var expected = uriDiff.ToString();
+                    var expected2Root = uriDiff2Root.ToString().Replace("/", "\\");
+                    var expected2RootIx = expected2Root.IndexOf("\\");
+                    var path1 = System.IO.Path.GetFullPath(j.Value);
+                    var path2 = System.IO.Path.GetFullPath(expected);
+
+                    output = ".\\" + (expected2RootIx == -1 ? expected2Root : expected2Root.Substring(expected2RootIx + 1));
+
+                    if (string.Compare(path1, path2, StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        _dict[PATH_OK].Add(output);
+                        output = j.Value + " <--> " + expected;
+                        _dict[PATH_OK].Add(output);
+                    }
+                    else
+                    {
+                        _dict[PATH_NG].Add(output);
+                        output = j.Value + " ---> " + expected;
+                        _dict[PATH_NG].Add(output);
+                    }
+                }
+            }
+
+            if (_dict[PATH_OK].Count > 0)
+            {
+                output = new string('-', 80);
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                output = "Path OK";
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                foreach (var i in _dict[PATH_OK])
+                {
+                    output = i;
+                    context.WriteOutput(Name, output);
+                    Debug.WriteLine(output);
+                }
+            }
+
+            if (_dict[PATH_NG].Count > 0)
+            {
+                output = new string('-', 80);
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                output = "Path NG";
+                context.WriteOutput(Name, output);
+                Debug.WriteLine(output);
+
+                foreach (var i in _dict[PATH_NG])
+                {
+                    output = i;
+                    context.WriteOutput(Name, output);
+                    Debug.WriteLine(output);
+                }
+            }
+
         }
     }
 

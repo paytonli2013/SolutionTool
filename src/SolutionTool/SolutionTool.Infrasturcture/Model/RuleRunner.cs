@@ -45,10 +45,11 @@ namespace Orc.SolutionTool
             }
         }
 
-        private static List<RunLogItem> BuildLogs()
-        {
-            List<RunLogItem> list = new List<RunLogItem>();
+        
+        List<RunLogItem> list = new List<RunLogItem>();
 
+        private List<RunLogItem> BuildLogs()
+        {
             if (!System.IO.Directory.Exists(_dir))
             {
                 return list;
@@ -156,6 +157,10 @@ namespace Orc.SolutionTool
             {
                 onComplete.Invoke(report);
             }
+
+            list.Insert(0,log);
+
+            FireRunLogAdded(log);
         }
     }
 }

@@ -24,6 +24,14 @@ namespace SolutionChecker
             _projectManager.Load(OnLoaded);
 
             _ruleRunner.LoadRunLog(OnLogLoaded);
+
+            _ruleRunner.RunLogAdded += _ruleRunner_RunLogAdded;
+        }
+
+        void _ruleRunner_RunLogAdded(object sender, RunLogEventArgs e)
+        {
+            RecentRun.Insert(0, e.Item);
+            //throw new NotImplementedException();
         }
 
         Project _selectedProject;

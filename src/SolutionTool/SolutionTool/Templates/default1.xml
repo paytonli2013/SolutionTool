@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<dir name="root">
+<dir name=".">
   <dir name="src" />
   <dir name="output">
     <dir name="debug">

@@ -193,7 +193,7 @@ namespace SolutionChecker
             _ruleRunner.RunProject(SelectedProject, OnRunComplete);
         }
 
-        private void OnRunComplete(Report report)
+        private void OnRunComplete(ExamContext context, Report report)
         {
             if (report.Error != null)
             {

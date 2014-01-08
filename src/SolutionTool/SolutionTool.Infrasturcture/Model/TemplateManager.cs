@@ -32,17 +32,25 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-        public void LoadTemplate(string templateFileName, Action<string, Exception> onComplete)
+        public void LoadTemplate(string templateFileName, Action<Directory, string, Exception> onComplete)
         {
             var exception = null as Exception;
-            var directory = null as string;
+            var directory = null as Directory;
+            var xml = null as string;
             var path = System.IO.Path.Combine(_dir, templateFileName);
 
             if (System.IO.File.Exists(path))
             {
                 try
                 {
-                    directory = System.IO.File.ReadAllText(path);
+                    xml = System.IO.File.ReadAllText(path);
+
+                    using (var sr = new System.IO.StringReader(xml))
+                    {
+                        var xs = new XmlSerializer(typeof(Directory));
+
+                        directory = xs.Deserialize(sr) as Directory;
+                    }
                 }
                 catch (Exception xe)
                 {
@@ -52,7 +60,7 @@ namespace Orc.SolutionTool.Model
 
             if (onComplete != null)
             {
-                onComplete(directory, exception);
+                onComplete(directory, xml, exception);
             }
         }
 

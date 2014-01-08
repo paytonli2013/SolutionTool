@@ -1,14 +1,11 @@
-﻿using Orc.SolutionTool;
-using Orc.SolutionTool.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Collections.ObjectModel;
-using Orc.SolutionTool.Model;
-using System.ComponentModel;
-using Microsoft.Practices.Prism.Commands;
 using System.IO;
+using System.Linq;
+using Microsoft.Practices.Prism.Commands;
+using Orc.SolutionTool;
+using Orc.SolutionTool.Model;
+using Orc.SolutionTool.Mvvm;
 
 namespace ManageTemplate
 {
@@ -211,15 +208,15 @@ namespace ManageTemplate
 
         private void ReloadRepository()
         {
-            _templateMgr.LoadTemplate(SelectedTemplateFile, (x, y) =>
+            _templateMgr.LoadTemplate(SelectedTemplateFile, (x, y, z) =>
             {
-                if (y != null)
+                if (z != null)
                 {
-                    _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
+                    _shellService.PostStatusMessage(StatusCatgory.Error, z.Message);
                 }
 
                 TemplateFile = SelectedTemplateFile;
-                TemplateXmlContent = x;
+                TemplateXmlContent = y;
                 DeleteCommand.RaiseCanExecuteChanged();
             });
         }

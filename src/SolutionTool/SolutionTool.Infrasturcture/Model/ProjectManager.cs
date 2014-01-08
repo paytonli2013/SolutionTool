@@ -12,7 +12,6 @@ namespace Orc.SolutionTool
 
         public void Load(Action<IEnumerable<Project>, Exception> onComplete)
         {
-            //throw new NotImplementedException();
             if (onComplete != null)
             {
                 onComplete(BuildProjects(), null);
@@ -39,7 +38,7 @@ namespace Orc.SolutionTool
                 using (var xr = XmlReader.Create(i))
                 {
                     var prj = xs.Deserialize(xr) as Project;
-            
+
                     list.Add(prj);
                 }
             }
@@ -59,25 +58,100 @@ namespace Orc.SolutionTool
 
         public void Create(Project project, Action<Project, Exception> onComplete)
         {
-            if (project.CreateTime == DateTime.MinValue)
-                project.CreateTime = DateTime.Now;
+            var exception = null as Exception;
 
-            list.Insert(0,project);
+            try
+            {
+                SaveProject(project);
+            }
+            catch (Exception xe)
+            {
+                exception = xe;
+            }
 
             if (onComplete != null)
             {
-                onComplete.Invoke(project, null);
+                onComplete.Invoke(project, exception);
             }
-            //throw new NotImplementedException();
         }
 
         public void Update(Project project, Action<Project, Exception> onComplete)
         {
+            var exception = null as Exception;
+
+            try
+            {
+                SaveProject(project, overrideExist: true);
+            }
+            catch (Exception xe)
+            {
+                exception = xe;
+            }
+
             if (onComplete != null)
             {
-                onComplete.Invoke(project, null);
+                onComplete.Invoke(project, exception);
             }
-            //throw new NotImplementedException();
+        }
+
+        public void Delete(Project project, Action<bool, Exception> onComplete)
+        {
+            var exception = null as Exception;
+
+            try
+            {
+                SaveProject(project, delete: true);
+            }
+            catch (Exception xe)
+            {
+                exception = xe;
+            }
+
+            if (onComplete != null)
+            {
+                onComplete.Invoke(exception == null, exception);
+            }
+        }
+
+        private Exception SaveProject(Project project, bool overrideExist = false, bool delete = false)
+        {
+            if (project.CreateTime == DateTime.MinValue)
+                project.CreateTime = DateTime.Now;
+
+            if (!System.IO.Directory.Exists(_dir))
+            {
+                System.IO.Directory.CreateDirectory(_dir);
+            }
+
+            var path = System.IO.Path.Combine(_dir, project.Name + ".xml");
+            var exception = null as Exception;
+
+            if (delete && System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+            else if (System.IO.File.Exists(path) && !overrideExist)
+            {
+                throw new Exception("Project [" + project.Name + "] already exists. ");
+            }
+            else
+            {
+                if (overrideExist)
+                {
+                    System.IO.File.Delete(path);
+                }
+
+                using (var fs = XmlWriter.Create(path))
+                {
+                    var xs = new XmlSerializer(typeof(Project));
+
+                    xs.Serialize(fs, project);
+                }
+
+                list.Insert(0, project);
+            }
+
+            return exception;
         }
     }
 }

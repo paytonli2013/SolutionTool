@@ -1,9 +1,11 @@
 ﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Win32;
 using Orc.SolutionTool;
 using Orc.SolutionTool.Model;
 using Orc.SolutionTool.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -60,7 +62,23 @@ namespace SolutionChecker
 
         void ExecSaveAs()
         {
-
+            try
+            {
+                var fileName = string.Format("Check_solution_{0}.txt",Runlog.Project);
+                var dlg = new SaveFileDialog() { Filter = "All files|*.txt", Title = "Select file name", FileName = fileName };
+                if (dlg.ShowDialog() == true)
+                {
+                    using (var stream = dlg.OpenFile())
+                    using(var sr = new StreamWriter(stream))
+                    {
+                        sr.Write(ReportText);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         bool CanExecSaveAs()

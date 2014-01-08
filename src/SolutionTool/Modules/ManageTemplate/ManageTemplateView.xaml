@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:orc="http://schemas.orc.com/2014/xaml/presentation" 
-    mc:Ignorable="d" FontSize="18" 
+    mc:Ignorable="d" FontSize="16" 
     d:DesignHeight="300" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>

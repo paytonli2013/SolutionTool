@@ -74,5 +74,10 @@ namespace Orc.SolutionTool
             }
             //throw new NotImplementedException();
         }
+
+        public void Confirm(string message, Action<MessageBoxResult> onConfirmed)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

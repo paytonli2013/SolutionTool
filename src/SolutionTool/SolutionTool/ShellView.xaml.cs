@@ -57,5 +57,17 @@ namespace Orc.SolutionTool
         {
             _viewmodel.Show(message);
         }
+
+        public void Confirm(string message, Action<MessageBoxResult> onConfirmed)
+        {
+            var result = MessageBox.Show(message, "alert", MessageBoxButton.YesNo);
+
+            var result2 = (MessageBoxResult)((int)result);
+
+            if (onConfirmed != null)
+            {
+                onConfirmed.Invoke(result2);
+            }
+        }
     }
 }

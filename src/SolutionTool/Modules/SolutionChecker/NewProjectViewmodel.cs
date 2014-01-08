@@ -113,7 +113,13 @@ namespace SolutionChecker
                 var result = dlg.ShowDialog();
 
                 if (result == System.Windows.Forms.DialogResult.OK || result == System.Windows.Forms.DialogResult.Yes)
+                {
                     TargetPath = dlg.SelectedPath;
+                    if (string.IsNullOrEmpty(ProjectName))
+                    {
+                        ProjectName = TargetPath.Substring(TargetPath.LastIndexOf("\\")).TrimStart('\\');
+                    }
+                }
             }
             catch (Exception ex)
             {

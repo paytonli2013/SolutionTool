@@ -110,7 +110,7 @@ namespace ManageTemplate
         {
             //string.Compare(TemplateFile, SelectedTemplateFile, StringComparison.OrdinalIgnoreCase) == 0 || 
             if (string.IsNullOrWhiteSpace(TemplateFile)
-                || string.IsNullOrWhiteSpace(TemplateXmlContent) 
+                || string.IsNullOrWhiteSpace(TemplateXmlContent)
                 || Path.GetInvalidFileNameChars().Any(x => TemplateFile.IndexOf(x) > -1))
             {
                 return false;
@@ -169,21 +169,28 @@ namespace ManageTemplate
 
         private void Delete(object arg)
         {
-            _templateMgr.DeleteTemplate(SelectedTemplateFile, (x, y) => 
+            _shellService.MessageService.Confirm("are you sure to delete this template?",(r) =>
             {
-                if (y != null)
+                if (r == MessageBoxResult.Yes)
                 {
-                    _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
-                }
+                    _templateMgr.DeleteTemplate(SelectedTemplateFile, (x, y) =>
+                    {
+                        if (y != null)
+                        {
+                            _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
+                        }
 
-                if (x)
-                {
-                    TemplateFiles.Remove(SelectedTemplateFile);
-                    TemplateFile = null;
-                    TemplateXmlContent = null;
-                    SelectedTemplateFile = TemplateFiles.LastOrDefault();
+                        if (x)
+                        {
+                            TemplateFiles.Remove(SelectedTemplateFile);
+                            TemplateFile = null;
+                            TemplateXmlContent = null;
+                            SelectedTemplateFile = TemplateFiles.LastOrDefault();
+                        }
+                    });
                 }
             });
+
         }
 
         #endregion

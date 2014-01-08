@@ -232,6 +232,8 @@ namespace Orc.SolutionTool.Model
                 throw new Exception("Template is not specified. ");
             }
 
+            //Don't load template, use the copy
+
             var tplMgr = new TemplateManager();
 
             tplMgr.LoadTemplate(Template, (x, y, z) => 

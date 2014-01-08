@@ -115,6 +115,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Style.xaml">
+      <SubType>Designer</SubType>
+    </Resource>
     <Page Include="ManageTemplateMenuItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

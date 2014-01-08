@@ -42,7 +42,6 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-
         RuleSet _ruleSet;
         [XmlElement("ruleSet")]
         public RuleSet RuleSet

@@ -85,7 +85,7 @@ namespace ManageTemplate
                 if (_templateXmlContent != value)
                 {
                     _templateXmlContent = value;
-                    RaisePropertyChanged(() => TemplateXmlContent);
+                    RaisePropertyChanged("TemplateXmlContent");
                     SaveCommand.RaiseCanExecuteChanged();
                 }
             }
@@ -108,8 +108,8 @@ namespace ManageTemplate
 
         private bool CanSave(object arg)
         {
+            //string.Compare(TemplateFile, SelectedTemplateFile, StringComparison.OrdinalIgnoreCase) == 0 || 
             if (string.IsNullOrWhiteSpace(TemplateFile)
-                || string.Compare(TemplateFile, SelectedTemplateFile, StringComparison.OrdinalIgnoreCase) == 0
                 || string.IsNullOrWhiteSpace(TemplateXmlContent) 
                 || Path.GetInvalidFileNameChars().Any(x => TemplateFile.IndexOf(x) > -1))
             {
@@ -121,18 +121,27 @@ namespace ManageTemplate
 
         private void Save(object arg)
         {
-            _templateMgr.SaveTemplate(TemplateFile, TemplateXmlContent, (x, y) => 
-            {
-                if (y != null)
-                {
-                    _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
-                }
+            _shellService.PostStatusMessage(StatusCatgory.None, "Saving Template");
 
-                if (x && !TemplateFiles.Any(z => string.Compare(z, TemplateFile, StringComparison.OrdinalIgnoreCase) == 0))
+            RunCodeInUiThread(() =>
+            {
+                _templateMgr.SaveTemplate(TemplateFile, TemplateXmlContent, (x, y) =>
                 {
-                    TemplateFiles.Add(TemplateFile);
-                    SelectedTemplateFile = TemplateFile;
-                }
+                    if (y != null)
+                    {
+                        _shellService.PostStatusMessage(StatusCatgory.Error, y.Message);
+                    }
+                    else
+                    {
+                        _shellService.PostStatusMessage(StatusCatgory.None, "Template Saved!");
+                    }
+
+                    if (x && !TemplateFiles.Any(z => string.Compare(z, TemplateFile, StringComparison.OrdinalIgnoreCase) == 0))
+                    {
+                        TemplateFiles.Add(TemplateFile);
+                        SelectedTemplateFile = TemplateFile;
+                    }
+                });
             });
         }
 

@@ -19,7 +19,6 @@
     <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#FF555581"/>
     <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="Gold"/>
 
-
     <Style x:Key="TextBoxStyle" TargetType="TextBox">
         <Setter Property="Background" Value="#FFE6E1C1"/>
         <Setter Property="Margin" Value="2"/>
@@ -33,14 +32,14 @@
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
 
-    <DataTemplate x:Key="RunLogItemTemplate">
+    <DataTemplate x:Key="FileTemplateItemTemplate">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-            <TextBlock FontSize="16" HorizontalAlignment="Left" Text="{Binding Project}"/>
-            <TextBlock FontSize="12" HorizontalAlignment="Left" Text="{Binding Summary}" />
+            <TextBlock FontSize="16" HorizontalAlignment="Left" Text="{Binding .}"/>
+            <TextBlock FontSize="12" HorizontalAlignment="Left" Text="{Binding Description}" />
         </StackPanel>
     </DataTemplate>
 
-    <Style x:Key="RunLogItemStyle" TargetType="{x:Type ListBoxItem}">
+    <Style x:Key="FileTemplateItemStyle" TargetType="{x:Type ListBoxItem}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Padding" Value="4,1"/>
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
@@ -48,7 +47,7 @@
         <Setter Property="Margin" Value="0,2" />
         <Setter Property="Background" Value="{StaticResource LogItem.Normal.Background}"/>
         <Setter Property="BorderBrush" Value="{StaticResource LogItem.Normal.Border}"/>
-        <Setter Property="BorderThickness" Value="1,3,1,1"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{StaticResource LogItem.Normal.Foreground}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -67,26 +66,38 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                         </Trigger>
-                        <DataTrigger Binding="{Binding Status}" Value="Pass">
-                            <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource LogItem.Passed.Border}"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="Failed">
-                            <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource LogItem.Fail.Border}"/>
-                        </DataTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Border}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Item.MouseOver.Foreground}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                <Condition Property="IsSelected" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Border}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Item.MouseOver.Foreground}"/>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <ContextMenu x:Key="ProjectItemMenu">
+    <!--<ContextMenu x:Key="ProjectItemMenu">
         <MenuItem Header="Run Selected Project" Command="{Binding RunProjectCommand}"/>
     </ContextMenu>
     
     <ContextMenu x:Key="RunLogMenu">
         <MenuItem Header="View Report" Command="{Binding ViewReportCommand}"/>
         <MenuItem Header="Rerun Project" Command="{Binding RerunProjectCommand}"/>
-    </ContextMenu>
+    </ContextMenu>-->
 
     <DataTemplate x:Key="ProjectItemTemplate">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">

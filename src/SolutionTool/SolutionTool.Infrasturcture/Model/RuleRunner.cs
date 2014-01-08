@@ -71,7 +71,7 @@ namespace Orc.SolutionTool
                     var attrRules = run.Attribute("rules");
                     var attrStart = run.Attribute("start");
                     var attrEnd = run.Attribute("end");
-                    var attrResult = run.Attribute("result");
+                    var attrResult = run.Attribute("status");
                     var attrReport = run.Attribute("report");
                     var status = ActionStatus.None;
 
@@ -134,8 +134,8 @@ namespace Orc.SolutionTool
             if (onComplete != null)
             {
                 onComplete.Invoke(context, new Report(ReportResult.Passed, new RunLogItem() 
-                { 
-                    Project = project.Name,
+                {
+                     Project = project.Name,
                      Start = DateTime.Now.AddMinutes(-1),
                      End = DateTime.Now,
                 }));

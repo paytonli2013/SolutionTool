@@ -145,31 +145,33 @@
     <Content Include="Modules\SolutionChecker.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Templates\ReportTemplate.xslt" />
-    <None Include="Templates\default1.xml">
+    <Content Include="Templates\ReportTemplate.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Projects\demo1_project.xml">
+    </Content>
+    <Content Include="Templates\default1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Projects\demo2_project.xml">
+    </Content>
+    <Content Include="Projects\demo1_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Projects\demo3_project.xml">
+    </Content>
+    <Content Include="Projects\demo2_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Projects\demo_project.xml">
+    </Content>
+    <Content Include="Projects\demo3_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\default.xml">
+    </Content>
+    <Content Include="Projects\demo_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Logs\log.xml">
+    </Content>
+    <Content Include="Rules\default.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\default.xml">
+    </Content>
+    <Content Include="Logs\log.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="Templates\default.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Assets\SolutionToolIcon.png" />
     <Content Include="Modules\ManageRule.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

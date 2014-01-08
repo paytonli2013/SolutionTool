@@ -1,6 +1,6 @@
 ﻿<?xml version='1.0'?>
 <ruleSet>
-  <fileStructure enabled='true' template='default.xml' />
-  <outputPath enabled='true' path='./output/{active_solution}/' />
-  <codeAnalysis enabled='true' />
+  <fileStructure name='Check file structure' description='Check file structure against specified template' enabled='true' template='default.xml' />
+  <outputPath name='Check output path' description='Check output path for all solution files' enabled='true' path='./output/{active_solution}/' />
+  <codeAnalysis name='run code analysis' description='run code analysis with StyleCop' enabled='true' />
 </ruleSet>

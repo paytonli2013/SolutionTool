@@ -6,21 +6,21 @@ namespace Orc.SolutionTool.Model
     [XmlRoot("run")]
     public class RunLogItem
     {
-        [XmlElement("project")]
+        [XmlAttribute("project")]
         public string Project { get; set; }
 
-        [XmlElement("rules")]
+        [XmlAttribute("rules")]
         public int? Rules { get; set; }
 
-        [XmlElement("start")]
+        [XmlAttribute("start")]
         public DateTime? Start { get; set; }
 
-        [XmlElement("end")]
+        [XmlAttribute("end")]
         public DateTime? End { get; set; }
 
         private Result _result;
 
-        [XmlElement("status")]
+        [XmlAttribute("status")]
         public ActionStatus Status
         {
             get
@@ -45,5 +45,13 @@ namespace Orc.SolutionTool.Model
 
         [XmlElement("report")]
         public string Report { get; set; }
+
+        public string Summary
+        {
+            get
+            {
+                return string.Format("{0} rules checked in {1}sec, Status:{1}", Rules, 0.1, Status.ToString());
+            }
+        }
     }
 }

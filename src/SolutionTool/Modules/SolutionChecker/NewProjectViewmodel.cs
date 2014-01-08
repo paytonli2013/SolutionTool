@@ -35,7 +35,7 @@ namespace SolutionChecker
             _ruleManager.LoadRuleSet(OnRuleSetLoaded);
         }
 
-        private void OnRuleSetLoaded(IEnumerable<IRuleSet> ruleSets, Exception error)
+        private void OnRuleSetLoaded(IEnumerable<RuleSet> ruleSets, Exception error)
         {
             if (error != null)
             {
@@ -43,7 +43,7 @@ namespace SolutionChecker
             }
             else
             {
-                RuleSetTemplates = new ObservableCollection<IRuleSet>(ruleSets);
+                RuleSetTemplates = new ObservableCollection<RuleSet>(ruleSets);
 
                 var first = RuleSetTemplates.FirstOrDefault();
 
@@ -183,9 +183,9 @@ namespace SolutionChecker
         IProjectManager _projectManager;
         IRuleManager _ruleManager;
 
-        IRuleSet ruleSet;
+        RuleSet ruleSet;
 
-        public IRuleSet RuleSet
+        public RuleSet RuleSet
         {
             get
             {
@@ -194,14 +194,15 @@ namespace SolutionChecker
             set
             {
                 ruleSet = value;
+                _project.RuleSet = ruleSet;
                 RaisePropertyChanged("RuleSet");
                 CreateCommand.RaiseCanExecuteChanged();
             }
         }
 
-        ObservableCollection<IRuleSet> ruleSetTemplates;
+        ObservableCollection<RuleSet> ruleSetTemplates;
 
-        public ObservableCollection<IRuleSet> RuleSetTemplates
+        public ObservableCollection<RuleSet> RuleSetTemplates
         {
             get { return ruleSetTemplates; }
             set

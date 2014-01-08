@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace Orc.SolutionTool.Mvvm
 {
@@ -86,6 +88,54 @@ namespace Orc.SolutionTool.Mvvm
             {
                 isBusy = value;
                 RaisePropertyChanged("IsBusy");
+            }
+        }
+
+        protected static void RunCodeInUiThread(Action action, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Background)
+        {
+            if (action == null)
+                return;
+
+            if (dispatcher == null && Application.Current != null)
+                dispatcher = Application.Current.Dispatcher;
+
+            if (dispatcher != null)
+            {
+                dispatcher.BeginInvoke(action, priority);
+            }
+            else
+            {
+                action.Invoke();
+            }
+        }
+
+        protected static void RunCodeInUiThread<T>(Action<T> action, T parameter, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Background)
+        {
+            if (action == null)
+                return;
+
+            if (dispatcher != null)
+            {
+                dispatcher.BeginInvoke(action, priority, parameter);
+            }
+            else
+            {
+                action.Invoke(parameter);
+            }
+        }
+
+        protected static void RunCodeInUiThread<T1, T2>(Action<T1, T2> action, T1 p1, T2 p2, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Background)
+        {
+            if (action == null)
+                return;
+
+            if (dispatcher != null)
+            {
+                dispatcher.BeginInvoke(action, priority, p1,p2);
+            }
+            else
+            {
+                action.Invoke(p1, p2);
             }
         }
     }

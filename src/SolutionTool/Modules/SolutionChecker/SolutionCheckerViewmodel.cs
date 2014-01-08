@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace SolutionChecker
 {
@@ -163,7 +164,7 @@ namespace SolutionChecker
                     //{
                     //    Refresh();
                     //}
-                }, new ViewOptions { Height = 600, Width = 800,Payload = SelectedRunLog });
+                }, new ViewOptions { Height = 600, Width = 800, Payload = SelectedRunLog });
             }
             catch (Exception ex)
             {
@@ -190,7 +191,11 @@ namespace SolutionChecker
         void ExecRun()
         {
             _shellService.PostStatusMessage(StatusCatgory.Info, string.Format("Running {0}", SelectedProject.Name));
-            _ruleRunner.RunProject(SelectedProject, OnRunComplete);
+
+            RunCodeInUiThread(() =>
+            {
+                _ruleRunner.RunProject(SelectedProject, OnRunComplete);
+            });
         }
 
         private void OnRunComplete(ExamContext context, Report report)

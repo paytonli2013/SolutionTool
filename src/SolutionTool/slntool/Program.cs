@@ -72,11 +72,11 @@ namespace Orc.SolutionTool
                 var ruleRunner = new RuleRunner();
 
                 project.RuleSet = ruleSet;
-                ruleRunner.RunProject(project, (x) =>
+                ruleRunner.RunProject(project, (report,log) =>
                 {
-                    if (x != null && x.Error == null)
+                    if (report != null)
                     {
-                        Console.WriteLine(x.GetText());
+                        Console.WriteLine(report.GetText());
                     }
 
                     if (!string.IsNullOrWhiteSpace(options.LogFile))
@@ -85,8 +85,7 @@ namespace Orc.SolutionTool
 
                         using (var sw = System.IO.File.AppendText(logFile))
                         {
-                            sw.Write(x.GetText());
-                            sw.Write(x.Error);
+                            sw.Write(report.GetText());
                         }
                     }
                 });

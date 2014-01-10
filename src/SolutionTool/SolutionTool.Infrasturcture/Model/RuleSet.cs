@@ -258,6 +258,10 @@ namespace Orc.SolutionTool.Model
         Stack<String> _dir2Root;
         Dictionary<string, List<string>> _dict;
 
+        /// <summary>
+        /// The template file to use for checking file structure,
+        /// which is located at ./Templates/*.xml of the app.
+        /// </summary>
         [XmlAttribute("template")]
         public string Template { get; set; }
 
@@ -269,11 +273,9 @@ namespace Orc.SolutionTool.Model
             {
                 output = "***" + Name + "***";
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 output = "Scape rule checking since it's not enabled. ";
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 return;
             }
@@ -296,7 +298,6 @@ namespace Orc.SolutionTool.Model
 
                     output = z.ToString();
                     context.WriteOutput(Name, output);
-                    Debug.WriteLine(output);
 
                     return;
                 }
@@ -315,23 +316,19 @@ namespace Orc.SolutionTool.Model
 
                     output = "***" + Name + "***";
                     context.WriteOutput(Name, output);
-                    Debug.WriteLine(output);
 
                     if (_dict[DIR_EXISTS].Count > 0)
                     {
                         output = new string('-', 80);
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         output = "Directory Exists";
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[DIR_EXISTS])
                         {
                             output = i;
                             context.WriteOutput(Name, output);
-                            Debug.WriteLine(output);
                         }
                     }
 
@@ -339,17 +336,14 @@ namespace Orc.SolutionTool.Model
                     {
                         output = new string('-', 80);
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         output = "Directory Missing";
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[DIR_MISSING])
                         {
                             output = i;
                             context.WriteOutput(Name, output);
-                            Debug.WriteLine(output);
                         }
                     }
 
@@ -357,17 +351,14 @@ namespace Orc.SolutionTool.Model
                     {
                         output = new string('-', 80);
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         output = "File Exists";
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[FILE_EXISTS])
                         {
                             output = i;
                             context.WriteOutput(Name, output);
-                            Debug.WriteLine(output);
                         }
                     }
 
@@ -375,17 +366,14 @@ namespace Orc.SolutionTool.Model
                     {
                         output = new string('-', 80);
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         output = "File Missing";
                         context.WriteOutput(Name, output);
-                        Debug.WriteLine(output);
 
                         foreach (var i in _dict[FILE_MISSING])
                         {
                             output = i;
                             context.WriteOutput(Name, output);
-                            Debug.WriteLine(output);
                         }
                     }
 
@@ -498,8 +486,13 @@ namespace Orc.SolutionTool.Model
 
         Dictionary<string, List<string>> _dict;
 
+        /// <summary>
+        /// The OutputPath node value of a *.csproj file. 
+        /// Normally it is set in PropertyGroup section like below: 
+        /// <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+        /// </summary>
         [XmlAttribute("path")]
-        public string path { get; set; }
+        public string Path { get; set; }
 
         public override void Exam(ExamContext context)
         {
@@ -509,11 +502,9 @@ namespace Orc.SolutionTool.Model
             {
                 output = "***" + Name + "***";
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 output = "Scape rule checking since it's not enabled. ";
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 return;
             }
@@ -533,7 +524,6 @@ namespace Orc.SolutionTool.Model
 
             output = "***" + Name + "***";
             context.WriteOutput(Name, output);
-            Debug.WriteLine(output);
 
             foreach (var i in csprojs)
             {
@@ -556,7 +546,7 @@ namespace Orc.SolutionTool.Model
                         platform = match.Groups["p"].Value;
                     }
 
-                    var uri2Tgt = new Uri(uri, path);
+                    var uri2Tgt = new Uri(uri, Path);
                     var uri2Prj = new Uri(fi.FullName);
                     var uri2PrjDir = new Uri(fi.Directory.FullName);
                     var uriDiff = uri2PrjDir.MakeRelativeUri(uri2Tgt);
@@ -588,17 +578,14 @@ namespace Orc.SolutionTool.Model
             {
                 output = new string('-', 80);
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 output = "Path OK";
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 foreach (var i in _dict[PATH_OK])
                 {
                     output = i;
                     context.WriteOutput(Name, output);
-                    Debug.WriteLine(output);
                 }
             }
 
@@ -606,17 +593,14 @@ namespace Orc.SolutionTool.Model
             {
                 output = new string('-', 80);
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 output = "Path NG";
                 context.WriteOutput(Name, output);
-                Debug.WriteLine(output);
 
                 foreach (var i in _dict[PATH_NG])
                 {
                     output = i;
                     context.WriteOutput(Name, output);
-                    Debug.WriteLine(output);
                 }
             }
 
@@ -626,8 +610,93 @@ namespace Orc.SolutionTool.Model
     [XmlRoot("codeAnalysis")]
     public class CodeAnalysisRule : Rule
     {
+        /// <summary>
+        /// Path to InpsectCode, e.g, d:\Program Files\Tools\InspectCode.exe. 
+        /// If not specified, this app will try to resolve it from system registry. 
+        /// </summary>
+        [XmlAttribute("path")]
+        public string Path { get; set; }
+
         public override void Exam(ExamContext context)
         {
+            var output = null as string;
+
+            if (!IsEnabled)
+            {
+                output = "***" + Name + "***";
+                context.WriteOutput(Name, output);
+
+                output = "Scape rule checking since it's not enabled. ";
+                context.WriteOutput(Name, output);
+
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Path))
+            {
+                output = "Need to specify InspectCode executable path. ";
+                context.WriteOutput(Name, output);
+
+                return;
+            }
+
+            if (!System.IO.File.Exists(Path))
+            {
+                output = "Cannot find InspectCode app at [" + Path + "]. ";
+                context.WriteOutput(Name, output);
+
+                return;
+            }
+
+            output = "***" + Name + "***";
+            context.WriteOutput(Name, output);
+
+            var root = context.Project.Path;
+            var uri = new Uri(root);
+            var rptFi = new System.IO.FileInfo(System.IO.Path.Combine(root, "Reports"));
+
+            if (!System.IO.Directory.Exists(rptFi.Directory.FullName))
+            {
+                System.IO.Directory.CreateDirectory(rptFi.Directory.FullName);
+
+                return;
+            }
+
+            var cachesHome = System.IO.Path.Combine(rptFi.Directory.FullName, "cache");
+            var slns = System.IO.Directory.GetFiles(root, "*.sln", System.IO.SearchOption.AllDirectories);
+
+            foreach (var sln in slns)
+            {
+                var uriSln = new Uri(sln);
+                var uri2Root = uri.MakeRelativeUri(uriSln).ToString().Replace("/", "\\");
+                var uri2RootIx = uri2Root.IndexOf('\\');
+                var rpt = string.Format(@".\Reports\InspectCode_Report_{0:yyyyMMddHHmmssfff}.xml", DateTime.Now);
+                var cmdLine = string.Format(@"/o=""{1}"" ""{2}""",
+                    cachesHome, rpt, sln);
+
+                var proc = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = Path,
+                        Arguments = cmdLine,
+                        WorkingDirectory = root,
+                        //CreateNoWindow = true,
+                        //WindowStyle = ProcessWindowStyle.Hidden,
+                        //RedirectStandardInput = true,
+                        //RedirectStandardError = true,
+                        //RedirectStandardOutput = true,
+                        //UseShellExecute = false,
+                        ErrorDialog = true,
+                    },
+                };
+
+                proc.Start();
+                proc.WaitForExit();
+
+                output = ".\\" + (uri2RootIx == -1 ? uri2Root : uri2Root.Substring(uri2RootIx + 1)) + ": " + rpt;
+                context.WriteOutput(Name, output);
+            }
         }
     }
 }

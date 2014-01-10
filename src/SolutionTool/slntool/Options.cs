@@ -12,21 +12,21 @@ namespace Orc.SolutionTool
             HelpText = "The xml template file name for checking solution structure. ")]
         public string Template { get; set; }
 
-        //[Option('b', "builds", Required = false, DefaultValue = true, 
-        //    HelpText = "Check the output build path. ")]
-        //public bool CheckOutputBuildPath { get; set; }
+        [Option('b', "builds", Required = false, DefaultValue = "./output/$(Configuration)/",
+            HelpText = "The BuildOutput path. ")]
+        public string OutputBuildPath { get; set; }
 
-        //[Option('i', "inspectcode", Required = false, 
-        //    HelpText = "To check with InspectCode, specify the path to InspectCode.exe. ")]
-        //public string InspectCodePath { get; set; }
+        [Option('i', "inspectcode", Required = false, 
+            HelpText = "The InspectCode executable path. ")]
+        public string InspectCodeExePath { get; set; }
 
         //[Option('c', "stylecop", Required = false,
         //    HelpText = "To check with StyleCop, specify the path to StyleCop.exe. ")]
         //public string StyleCopPath { get; set; }
 
-        //[Option('l', "log", Required = false, DefaultValue = "report.log",
-        //    HelpText = "The path of log file. ")]
-        //public string LogFile { get; set; }
+        [Option('l', "log", Required = false, 
+            HelpText = "The log file path. ")]
+        public string LogFile { get; set; }
 
         //[Option('v', "verbose", DefaultValue = true, 
         //    HelpText = "Prints all messages to standard output. ")]

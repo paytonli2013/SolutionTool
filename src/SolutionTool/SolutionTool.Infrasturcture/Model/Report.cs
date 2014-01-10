@@ -80,6 +80,10 @@ namespace Orc.SolutionTool.Model
                 {
                     sb.AppendLine((str));
                 }
+
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine();
             }
             return sb.ToString();
             //throw new NotImplementedException();

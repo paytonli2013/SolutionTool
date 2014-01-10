@@ -16,7 +16,7 @@ namespace Orc.SolutionTool
         /// Program entry point.
         /// </summary>
         /// <example>
-        /// -r "f:\_E_\SolutionTool" -t default.xml
+        /// -r "f:\_E_\SolutionTool" -t default.xml -b "./output/$(Configuration)/" -i "f:\_E_\jb-cl\inspectcode.exe" -l slntool.log
         /// </example>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -30,16 +30,6 @@ namespace Orc.SolutionTool
             {
                 return;
             }
-
-            //if (!string.IsNullOrWhiteSpace(options.InspectCodePath))
-            //{
-            //    if (!System.IO.File.Exists(options.InspectCodePath))
-            //    {
-            //        Debug.WriteLine("Cannot find InspectCode.exe in path: " + options.InspectCodePath);
-
-            //        return;
-            //    }
-            //}
 
             Console.WriteLine("Begin checking " + options.Repository);
 
@@ -65,111 +55,46 @@ namespace Orc.SolutionTool
                     {
                         Name = "Output Path Rule",
                         IsEnabled = true, 
-                        path = "./output/$(Configuration)/",
+                        Path = options.OutputBuildPath,
                     },
                 };
+
+                if (!string.IsNullOrWhiteSpace(options.InspectCodeExePath))
+                {
+                    ruleSet.Add(new CodeAnalysisRule
+                    {
+                        Name = "Code Analysis Rule",
+                        IsEnabled = true,
+                        Path = options.InspectCodeExePath,
+                    });
+                }
+
                 var ruleRunner = new RuleRunner();
 
                 project.RuleSet = ruleSet;
-                ruleRunner.RunProject(project, (report,log) =>
+                ruleRunner.RunProject(project, (x) =>
                 {
-                    if (report != null)
+                    if (x != null && x.Error == null)
                     {
-                        Console.WriteLine(report.GetText());
-                        //foreach (var i in x.Outputs)
-                        //{
-                        //    foreach (var j in i.Value)
-                        //    {
-                        //        Console.WriteLine(j);
-                        //    }
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        //}
+                        Console.WriteLine(x.GetText());
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(options.LogFile))
+                    {
+                        var logFile = System.IO.Path.GetFullPath(options.LogFile);
+
+                        using (var sw = System.IO.File.AppendText(logFile))
+                        {
+                            sw.Write(x.GetText());
+                            sw.Write(x.Error);
+                        }
                     }
                 });
             }
 
-            //CheckWithInspectCode(options);
-
-            //CheckWithStyleCop(options);
-
             Console.WriteLine("Checking is done. ");
 
             Console.ReadKey();
-        }
-
-        /// <summary>
-        /// To check solution with InspectCode.
-        /// </summary>
-        /// <example>
-        /// InspectCode.exe /caches-home="C:\Temp\DFCache" /o="report.xml" "C:\src\MySolution.sln"
-        /// </example>
-        /// <param name="options"></param>
-        private static void CheckWithInspectCode(Options options)
-        {
-            Debug.WriteLine("To check with InspectCode");
-
-            var exePath = "InspectCode.exe";
-
-            if (!System.IO.File.Exists(exePath))
-            {
-                Debug.WriteLine("Need to specify path of InspectCode.exe");
-
-                return;
-            }
-
-            var cachesHome = @"..\Reports\InspectCode_Cache";
-            var output = @"..\Reports\InspectCode_Report.xml";
-            var slns = System.IO.Directory.GetFiles(options.Repository, "*.sln", SearchOption.AllDirectories);
-            var uri = new Uri(options.Repository);
-
-            Debug.Indent();
-
-            foreach (var sln in slns)
-            {
-                var uri1 = new Uri(sln);
-                var uri2 = uri.MakeRelativeUri(uri1);
-
-                var cmdLine = string.Format(@"/caches-home=""{0}"" /o=""{1}"" ""{2}""",
-                    cachesHome, output, sln);
-
-                Debug.WriteLine(exePath + " " + cmdLine);
-
-                var proc = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = exePath,
-                        Arguments = cmdLine,
-                        WorkingDirectory = options.Repository,
-                        ////CreateNoWindow = true,
-                        //WindowStyle = ProcessWindowStyle.Hidden,
-                        //RedirectStandardInput = true,
-                        ////RedirectStandardError = true,
-                        //RedirectStandardOutput = true,
-                        //UseShellExecute = false,
-                    },
-                };
-
-                proc.ErrorDataReceived += OnErrorDataReceived;
-                proc.OutputDataReceived += OnOutputDataReceived;
-
-                proc.Start();
-                proc.WaitForExit();
-            }
-
-            Debug.Unindent();
-        }
-
-        static void OnErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            Debug.WriteLine("Error Received: " + e.Data);
-        }
-
-        static void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            Debug.WriteLine("Data Received: " + e.Data);
         }
 
         /// <summary>

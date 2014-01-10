@@ -185,7 +185,7 @@ namespace SolutionTool.Infrasturcture.Tests
             var ruleSetXml = null as string;
 
             ruleSet.Add(new Orc.SolutionTool.Model.FileStructureRule() { Template = "default.xml", });
-            ruleSet.Add(new Orc.SolutionTool.Model.OutputPathRule() { path = "./output/{{active_solution}}/", });
+            ruleSet.Add(new Orc.SolutionTool.Model.OutputPathRule() { Path = "./output/{{active_solution}}/", });
             ruleSet.Add(new Orc.SolutionTool.Model.CodeAnalysisRule());
 
             var xs = new XmlSerializer(typeof(Orc.SolutionTool.Model.RuleSet));

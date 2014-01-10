@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Orc.SolutionTool;
+using System.IO;
+using System.Xml.Xsl;
 
 namespace SolutionChecker
 {
@@ -27,12 +29,19 @@ namespace SolutionChecker
             _viewmodel = viewmodel;
             viewmodel.View = this;
             DataContext = viewmodel;
+
+            Loaded += ReportViewer_Loaded;
+        }
+
+        void ReportViewer_Loaded(object sender, RoutedEventArgs e)
+        {
+            wbPlain.Navigate(_viewmodel.ReportText);
+            wb.Navigate(_viewmodel.ReportHtml);
         }
 
         public void SetPayload(object data)
         {
             _viewmodel.SetPayload(data);
-
             //throw new NotImplementedException();
         }
     }

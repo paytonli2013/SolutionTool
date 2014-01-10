@@ -2,59 +2,103 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+using System.Xml.Xsl;
 
 namespace Orc.SolutionTool.Model
 {
+    [XmlRoot("report")]
     public class Report
     {
-        public Report(ExamContext context,RunLogItem log,Exception error=null)
+        #region Properties
+
+        [XmlAttribute("project")]
+        public string Project { get; set; }
+
+        [XmlAttribute("summary")]
+        public string Summary { get; set; }
+
+        [XmlAttribute("createTime")]
+        public DateTime CreateAt { get; set; }
+
+        [XmlElement("items")]
+        public List<ReportItem> Items { get; set; }
+
+        #endregion
+
+        static string templatePath = Environment.CurrentDirectory + "\\Templates\\ReportTemplate.xslt";
+        static string templatePathPlain = Environment.CurrentDirectory + "\\Templates\\ReportTemplate.Plain.xslt";
+
+        public static string GetTextFile(string xmlFile)
         {
-            // TODO: Complete member initialization
-            _log = log;
-            _error = error;
-            this.context = context;
+            if (string.IsNullOrEmpty(xmlFile))
+                return "";
+            // Generating a temporary HTML file
+            string outfile = System.IO.Path.GetTempFileName().Replace(".tmp", ".html");
+
+            //string path = Environment.CurrentDirectory + "\\Logs\\log.xml";
+            // Creating the XslCompiledTransform object
+            XslCompiledTransform transform = new XslCompiledTransform();
+
+            // Loading the stylesheet file from the textbox
+            transform.Load(templatePathPlain);
+            transform.Transform(xmlFile, outfile);
+
+            return outfile;
         }
 
-        Exception _error;
-
-        public Exception Error
+        public static string GetHtmlFile(string xmlFile)
         {
-            get { return _error; }
+            if (string.IsNullOrEmpty(xmlFile))
+                return "";
+            // Generating a temporary HTML file
+            string outfile = System.IO.Path.GetTempFileName().Replace(".tmp", ".html");
+
+            // Creating the XslCompiledTransform object
+            XslCompiledTransform transform = new XslCompiledTransform();
+
+            // Loading the stylesheet file from the textbox
+            transform.Load(templatePath);
+            transform.Transform(xmlFile, outfile);
+
+            return outfile;
         }
 
-        RunLogItem _log;
-        private ExamContext context;
-
-        public RunLogItem Log
+        public ActionStatus Status
         {
-            get { return _log; }
+            get;
+            set;
         }
 
         public string GetText()
         {
             var sb = new StringBuilder();
-            foreach (var strs in context.Outputs)
+
+            foreach (var item in Items)
             {
-                foreach (var str in strs.Value)
+                foreach (var str in item.Outputs)
                 {
                     sb.AppendLine((str));
                 }
             }
             return sb.ToString();
+            //throw new NotImplementedException();
         }
+    }
 
-        public ActionStatus Status
-        {
-            get
-            {
-                if (context == null || context.Results == null)
-                    return ActionStatus.None;
+    [XmlRoot("reportitem")]
+    public class ReportItem
+    {
+        [XmlAttribute("name")]
+        public string Name { get; set; }
 
-                if (context.Results.Any(r => r.Status == ActionStatus.Failed))
-                    return ActionStatus.Failed;
-                else
-                    return ActionStatus.Pass;
-            }
-        }
+        [XmlAttribute("description")]
+        public string Description { get; set; }
+
+        [XmlElement("violations")]
+        public List<Violation> Violations { get; set; }
+
+        [XmlElement("output")]
+        public List<string> Outputs { get; set; }
     }
 }

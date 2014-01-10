@@ -6,15 +6,27 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding ReportText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="2" Height="32" Orientation="Horizontal">
-            <Button Margin="2" Command="{Binding SaveAsCommand}" Height="28" Width="80" Content="Save as"/>
-            <Button Margin="2" Command="{Binding CopyCommand}"  Height="28" Width="80" Content="Copy"/>
-        </StackPanel>
+        <TabControl>
+            <TabItem Header="Html">
+                <WebBrowser Name="wb"></WebBrowser>
+            </TabItem>
+            <TabItem Header="Text">
+                <!--<Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding ReportText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="2" Height="32" Orientation="Horizontal">
+                        <Button Margin="2" Command="{Binding SaveAsCommand}" Height="28" Width="80" Content="Save as"/>
+                        <Button Margin="2" Command="{Binding CopyCommand}"  Height="28" Width="80" Content="Copy"/>
+                    </StackPanel>
+                </Grid>-->
+                <WebBrowser Name="wbPlain"></WebBrowser>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </UserControl>

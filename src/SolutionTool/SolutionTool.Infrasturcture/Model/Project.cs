@@ -50,7 +50,7 @@ namespace Orc.SolutionTool.Model
             set
             {
                 _ruleSet = value;
-                RaisePropertyChanged("TargetPath");
+                RaisePropertyChanged("RuleSet");
             }
         }
     }

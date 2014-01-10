@@ -181,7 +181,7 @@ namespace Orc.SolutionTool.Model
     {
         public Dictionary<string, List<string>> Outputs { get; set; }
         public List<ExamResult> Results { get; set; }
-
+        public List<Violation> Violations { get; set; }
         public Project Project { get; set; }
 
         public ExamContext(Project project)
@@ -189,6 +189,7 @@ namespace Orc.SolutionTool.Model
             Project = project;
             Outputs = new Dictionary<string, List<string>>();
             Results = new List<ExamResult>();
+            Violations = new List<Violation>();
         }
 
         public void WriteOutput(string ruleName, string output)
@@ -212,11 +213,43 @@ namespace Orc.SolutionTool.Model
         {
             Results.Add(result);
         }
+
+        public void AddViolation(Violation violation)
+        {
+            Violations.Add(violation);
+        }
+
+        public Report GenerateReport() 
+        {
+            var report = new Report()
+            {
+                Project = Project.Name,
+                Items = new List<ReportItem>(),
+                CreateAt = DateTime.Now
+            };
+
+            foreach (var rule in Project.RuleSet)
+            {
+                var violations = Violations.Where(v => v.RuleName == rule.Name).ToList();
+
+                var item = new ReportItem
+                {
+                    Violations = violations,
+                    Outputs = Outputs.ContainsKey(rule.Name)?Outputs[rule.Name]:null
+                };
+
+                report.Items.Add(item);
+            }
+
+            return report;
+        }
     }
 
     [XmlRoot("fileStructure")]
     public class FileStructureRule : Rule
     {
+        const string ViolationText = "Specified file should exist but it missing";
+        const string ErrorViolationText = "Error occued during rule examination";
         const string DIR_EXISTS = "DE";
         const string DIR_MISSING = "DM";
         const string FILE_EXISTS = "FE";
@@ -259,6 +292,7 @@ namespace Orc.SolutionTool.Model
                 if (z != null)
                 {
                     context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
+                    context.AddViolation(new Violation { RuleName = Name, Description = ErrorViolationText });
 
                     output = z.ToString();
                     context.WriteOutput(Name, output);
@@ -358,6 +392,7 @@ namespace Orc.SolutionTool.Model
                     if (_dict[DIR_MISSING].Count > 0 || _dict[FILE_MISSING].Count > 0)
                     {
                         context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
+                        context.AddViolation(new Violation { RuleName = Name, Description = ViolationText });
                     }
                     else
                     {

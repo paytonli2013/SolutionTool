@@ -71,11 +71,11 @@ namespace Orc.SolutionTool
                 var ruleRunner = new RuleRunner();
 
                 project.RuleSet = ruleSet;
-                ruleRunner.RunProject(project, (x) =>
+                ruleRunner.RunProject(project, (report,log) =>
                 {
-                    if (x != null && x.Error == null)
+                    if (report != null)
                     {
-                        Console.WriteLine(x.GetText());
+                        Console.WriteLine(report.GetText());
                         //foreach (var i in x.Outputs)
                         //{
                         //    foreach (var j in i.Value)

@@ -206,21 +206,14 @@ namespace SolutionChecker
             });
         }
 
-        private void OnRunComplete(Report report)
+        private void OnRunComplete(Report report,RunLogItem logitem)
         {
-            if (report.Error != null)
-            {
-                _shellService.MessageService.Show(report.Error.Message);
-            }
-            else
-            {
-                _shellService.PostStatusMessage(StatusCatgory.Info, "Complete");
+            _shellService.PostStatusMessage(StatusCatgory.Info, "Complete");
 
-                RunCodeInUiThread(() =>
-                {
-                    _shellService.OpenChildView("ReportViewer", "Report Viewer", option: new ViewOptions { Height = 600, Width = 800, Payload = report.Log });
-                });
-            }
+            RunCodeInUiThread(() =>
+            {
+                _shellService.OpenChildView("ReportViewer", "Report Viewer", option: new ViewOptions { Height = 600, Width = 800, Payload = logitem });
+            });
         }
 
         bool CanExecRun()

@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orc.SolutionTool.Model;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Orc.SolutionTool
 {
     public class RuleRunner : IRuleRunner
     {
+        const string ErrorViolationText = "Error occued during rule examination";
+
         private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Logs\");
+
+        private static readonly string _dirR = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Report\");
 
         public void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete)
         {
@@ -45,7 +51,7 @@ namespace Orc.SolutionTool
             }
         }
 
-        
+
         List<RunLogItem> list = new List<RunLogItem>();
 
         private List<RunLogItem> BuildLogs()
@@ -112,7 +118,7 @@ namespace Orc.SolutionTool
             }
         }
 
-        public void RunProject(Project project, Action<Report> onComplete)
+        public void RunProject(Project project, Action<Report,RunLogItem> onComplete)
         {
             var log = new RunLogItem();
 
@@ -141,26 +147,59 @@ namespace Orc.SolutionTool
                 {
                     context.WriteOutput(i.Name, string.Format("error occured:\n{0}", e.ToString()));
                     context.AddResult(new ExamResult() { RuleName = i.Name, Status = ActionStatus.Failed });
+                    context.AddViolation(new Violation { RuleName = i.Name, Description = ErrorViolationText });
                     continue;
                 }
             }
 
-            var report = new Report(context,log);
+            var report = context.GenerateReport();
+
+            var path = SaveReportToFile(report);
 
             log.End = DateTime.Now;
             log.Status = report.Status;
-            log.Report = report.GetText();
+            log.Report = path;
             log.Rules = project.RuleSet.Count;
 
+            list.Insert(0, log);
+
+            SaveRunlog(log);
             //throw new NotImplementedException();
             if (onComplete != null)
             {
-                onComplete.Invoke(report);
+                onComplete.Invoke(report, log);
             }
+        }
 
-            list.Insert(0,log);
-
+        private void SaveRunlog(RunLogItem log)
+        {
             FireRunLogAdded(log);
+        }
+
+        private string SaveReportToFile(Report report)
+        {
+            try
+            {
+                if (!System.IO.Directory.Exists(_dirR))
+                {
+                    System.IO.Directory.CreateDirectory(_dirR);
+                }
+
+                var reportPath = string.Format("{0}\\{1}_{2:yyyyMMddHHmmss}.xml", _dirR, report.Project, report.CreateAt);
+
+                using (var fs = XmlWriter.Create(reportPath))
+                {
+                    var xs = new XmlSerializer(typeof(Report));
+
+                    xs.Serialize(fs, report);
+                }
+
+                return reportPath;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occured when saving report to file", ex);
+            }
         }
     }
 }

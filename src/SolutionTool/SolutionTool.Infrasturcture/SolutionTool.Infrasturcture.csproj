@@ -86,6 +86,7 @@
     <Compile Include="Model\RunLogEventArgs.cs" />
     <Compile Include="Model\RunLogItem.cs" />
     <Compile Include="Model\TemplateManager.cs" />
+    <Compile Include="Model\Violation.cs" />
     <Compile Include="Mvvm\IMenuViewmodel.cs" />
     <Compile Include="Mvvm\IViewModel.cs" />
     <Compile Include="Mvvm\MenuItemViewmodelBase.cs" />

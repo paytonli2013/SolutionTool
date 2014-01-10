@@ -33,18 +33,6 @@ namespace SolutionChecker
                 RaisePropertyChanged("Runlog");
             }
         }
-        string _reportText;
-
-        public string ReportText
-        {
-            get { return _reportText; }
-            set
-            {
-                _reportText = value; RaisePropertyChanged("ReportText");
-                SaveAsCommand.RaiseCanExecuteChanged();
-                CopyCommand.RaiseCanExecuteChanged();
-            }
-        }
 
         #endregion
 
@@ -64,12 +52,12 @@ namespace SolutionChecker
         {
             try
             {
-                var fileName = string.Format("Check_solution_{0}.txt",Runlog.Project);
+                var fileName = string.Format("Check_solution_{0}.txt", Runlog.Project);
                 var dlg = new SaveFileDialog() { Filter = "All files|*.txt", Title = "Select file name", FileName = fileName };
                 if (dlg.ShowDialog() == true)
                 {
                     using (var stream = dlg.OpenFile())
-                    using(var sr = new StreamWriter(stream))
+                    using (var sr = new StreamWriter(stream))
                     {
                         sr.Write(ReportText);
                     }
@@ -115,9 +103,38 @@ namespace SolutionChecker
             if (runlog != null)
             {
                 Runlog = runlog;
-                ReportText = Runlog.Report;
+                ReportText = Report.GetTextFile(Runlog.Report);
+                ReportHtml = Report.GetHtmlFile(Runlog.Report);
             }
-            //throw new NotImplementedException();
+        }
+
+        string _reportText;
+
+        public string ReportText
+        {
+            get
+            {
+                return _reportText;
+            }
+            private set
+            {
+                _reportText = value;
+                RaisePropertyChanged("ReportText");
+            }
+        }
+
+        string _reportHtml;
+        public string ReportHtml
+        {
+            get
+            {
+                return _reportHtml;
+            }
+            private set
+            {
+                _reportHtml = value;
+                RaisePropertyChanged("ReportHtml");
+            }
         }
     }
 }

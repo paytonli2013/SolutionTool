@@ -41,11 +41,13 @@ namespace ManageTemplate
             {
                 if (_templateFile != value)
                 {
-                    _templateFile = value;
+                    var s = value ?? "unnamed1.txt";
 
-                    if (_templateFile != null && !_templateFile.EndsWith(".xml"))
+                    _templateFile = s.ToLower();
+
+                    if (_templateFile != null && !_templateFile.EndsWith(".txt"))
                     {
-                        _templateFile += ".xml";
+                        _templateFile += ".txt";
                     }
 
                     RaisePropertyChanged(() => TemplateFile);

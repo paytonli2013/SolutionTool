@@ -250,13 +250,6 @@ namespace Orc.SolutionTool.Model
     {
         const string ViolationText = "Specified file should exist but it missing";
         const string ErrorViolationText = "Error occued during rule examination";
-        const string DIR_EXISTS = "DE";
-        const string DIR_MISSING = "DM";
-        const string FILE_EXISTS = "FE";
-        const string FILE_MISSING = "FM";
-
-        Stack<String> _dir2Root;
-        Dictionary<string, List<string>> _dict;
 
         /// <summary>
         /// The template file to use for checking file structure,
@@ -304,177 +297,25 @@ namespace Orc.SolutionTool.Model
 
                 if (x != null)
                 {
-                    _dir2Root = new Stack<string>();
+                    var outputs = new Dictionary<Directive, List<string>>();
 
-                    _dict = new Dictionary<string, List<string>>();
-                    _dict.Add(DIR_EXISTS, new List<string>());
-                    _dict.Add(DIR_MISSING, new List<string>());
-                    _dict.Add(FILE_EXISTS, new List<string>());
-                    _dict.Add(FILE_MISSING, new List<string>());
+                    x.Execute(context.Project.Path, ref outputs);
 
-                    InnerExam(context, x);
-
-                    output = "***" + Name + "***";
-                    context.WriteOutput(Name, output);
-
-                    if (_dict[DIR_EXISTS].Count > 0)
+                    foreach (var i in outputs)
                     {
+                        output = i.Key.Pattern;
+                        context.WriteOutput(Name, output);
                         output = new string('-', 80);
                         context.WriteOutput(Name, output);
 
-                        output = "Directory Exists";
-                        context.WriteOutput(Name, output);
-
-                        foreach (var i in _dict[DIR_EXISTS])
+                        foreach (var j in i.Value)
                         {
-                            output = i;
+                            output = j;
                             context.WriteOutput(Name, output);
                         }
-                    }
-
-                    if (_dict[DIR_MISSING].Count > 0)
-                    {
-                        output = new string('-', 80);
-                        context.WriteOutput(Name, output);
-
-                        output = "Directory Missing";
-                        context.WriteOutput(Name, output);
-
-                        foreach (var i in _dict[DIR_MISSING])
-                        {
-                            output = i;
-                            context.WriteOutput(Name, output);
-                        }
-                    }
-
-                    if (_dict[FILE_EXISTS].Count > 0)
-                    {
-                        output = new string('-', 80);
-                        context.WriteOutput(Name, output);
-
-                        output = "File Exists";
-                        context.WriteOutput(Name, output);
-
-                        foreach (var i in _dict[FILE_EXISTS])
-                        {
-                            output = i;
-                            context.WriteOutput(Name, output);
-                        }
-                    }
-
-                    if (_dict[FILE_MISSING].Count > 0)
-                    {
-                        output = new string('-', 80);
-                        context.WriteOutput(Name, output);
-
-                        output = "File Missing";
-                        context.WriteOutput(Name, output);
-
-                        foreach (var i in _dict[FILE_MISSING])
-                        {
-                            output = i;
-                            context.WriteOutput(Name, output);
-                        }
-                    }
-
-                    if (_dict[DIR_MISSING].Count > 0 || _dict[FILE_MISSING].Count > 0)
-                    {
-                        context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
-                        context.AddViolation(new Violation { RuleName = Name, Description = ViolationText });
-                    }
-                    else
-                    {
-                        context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Pass, });
                     }
                 }
             });
-        }
-
-        private void InnerExam(ExamContext context, Directory dir)
-        {
-            _dir2Root.Push(dir.Name);
-
-            var rel = string.Empty;
-
-            foreach (var i in _dir2Root.Reverse())
-            {
-                rel = System.IO.Path.Combine(rel, i);
-            }
-
-            var root = context.Project.Path;
-            var full = System.IO.Path.Combine(root, rel);
-
-            if ((dir.Ocurr ?? 1) >= 1 && !System.IO.Directory.Exists(full))
-            {
-                _dict[DIR_MISSING].Add(rel);
-            }
-            else
-            {
-                if ((dir.Ocurr ?? 1) < 1)
-                {
-                    var fsDirInfo = new System.IO.DirectoryInfo(full).Parent;
-
-                    InnerExamFsDirectory(context, dir, fsDirInfo);
-                }
-            }
-
-            if (dir.SubDirectories != null)
-            {
-                foreach (var i in dir.SubDirectories)
-                {
-                    InnerExam(context, i);
-                }
-            }
-
-            if (dir.Files != null)
-            {
-                foreach (var i in dir.Files)
-                {
-                    var path = System.IO.Path.Combine(full, i.Name);
-                    var path2 = System.IO.Path.Combine(rel, i.Name);
-
-                    if (!System.IO.File.Exists(path))
-                    {
-                        _dict[FILE_MISSING].Add(path2);
-                    }
-                    //else
-                    //{
-                    //    _dict[FILE_EXISTS].Add(path2);
-                    //}
-                }
-            }
-
-            _dir2Root.Pop();
-        }
-
-        private void InnerExamFsDirectory(ExamContext context, Directory dir, System.IO.DirectoryInfo fsDirInfo)
-        {
-            if (!fsDirInfo.Exists)
-            {
-                return;
-            }
-
-            var fsDirs = fsDirInfo.GetDirectories();
-
-            foreach (var i in fsDirs)
-            {
-                var eq = string.Compare(dir.Name, i.Name, StringComparison.OrdinalIgnoreCase) == 0;
-                var uri = new Uri(i.FullName);
-                var uriRoot = new Uri(context.Project.Path);
-                var uriDiff2Root = uriRoot.MakeRelativeUri(uri);
-                var rel2Root = uriDiff2Root.ToString().Replace("/", "\\");
-                var rel2RootIx = rel2Root.IndexOf("\\");
-
-                if (eq && (dir.Ocurr ?? 1) < 1 && System.IO.Directory.Exists(i.FullName))
-                {
-                    _dict[DIR_EXISTS].Add(".\\" + (rel2RootIx == -1 ? rel2Root : rel2Root.Substring(rel2RootIx + 1)));
-                }
-
-                if ((dir.Recursive ?? false) && System.IO.Directory.Exists(i.FullName))
-                {
-                    InnerExamFsDirectory(context, dir, i);
-                }
-            }
         }
     }
 

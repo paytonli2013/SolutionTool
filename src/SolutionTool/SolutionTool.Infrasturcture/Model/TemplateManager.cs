@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 
 namespace Orc.SolutionTool.Model
 {
@@ -18,7 +17,7 @@ namespace Orc.SolutionTool.Model
             {
                 try
                 {
-                    files.AddRange(System.IO.Directory.GetFiles(_dir, "*.xml").Select(x => new System.IO.FileInfo(x).Name));
+                    files.AddRange(System.IO.Directory.GetFiles(_dir, "*.txt").Select(x => new System.IO.FileInfo(x).Name));
                 }
                 catch (Exception xe)
                 {
@@ -32,25 +31,22 @@ namespace Orc.SolutionTool.Model
             }
         }
 
-        public void LoadTemplate(string templateFileName, Action<Directory, string, Exception> onComplete)
+        public void LoadTemplate(string templateFileName, Action<FsDirectives, string, Exception> onComplete)
         {
             var exception = null as Exception;
-            var directory = null as Directory;
-            var xml = null as string;
+            var fsDirectives = null as FsDirectives;
+            var txt = null as string;
             var path = System.IO.Path.Combine(_dir, templateFileName);
 
             if (System.IO.File.Exists(path))
             {
                 try
                 {
-                    xml = System.IO.File.ReadAllText(path);
-
-                    using (var sr = new System.IO.StringReader(xml))
-                    {
-                        var xs = new XmlSerializer(typeof(Directory));
-
-                        directory = xs.Deserialize(sr) as Directory;
-                    }
+                    var fsd = new FsDirectives();
+                    
+                    txt = System.IO.File.ReadAllText(path);
+                    fsd.ParseText(txt);
+                    fsDirectives = fsd;
                 }
                 catch (Exception xe)
                 {
@@ -60,11 +56,11 @@ namespace Orc.SolutionTool.Model
 
             if (onComplete != null)
             {
-                onComplete(directory, xml, exception);
+                onComplete(fsDirectives, txt, exception);
             }
         }
 
-        public void SaveTemplate(string templateFileName, string templateXmlContent, Action<bool, Exception> onComplete)
+        public void SaveTemplate(string templateFileName, string templateContent, Action<bool, Exception> onComplete)
         {
             var exception = null as Exception;
             var isOk = true;
@@ -75,30 +71,20 @@ namespace Orc.SolutionTool.Model
                 System.IO.File.Delete(path);
             }
 
-            ValidateTemplate(templateXmlContent, (x, y) => 
+            try
             {
-                if (!x)
-                {
-                    isOk = false;
-                    exception = new Exception("Not a valid template file! ");
-                }
+                System.IO.File.WriteAllText(path, templateContent);
+            }
+            catch (Exception xe)
+            {
+                isOk = false;
+                exception = xe;
+            }
 
-                try
-                {
-                    System.IO.File.WriteAllText(path, templateXmlContent);
-                }
-                catch (Exception xe)
-                {
-                    isOk = false;
-                    exception = xe;
-                }
-
-                if (onComplete != null)
-                {
-                    onComplete(isOk, exception);
-                }
-
-            });
+            if (onComplete != null)
+            {
+                onComplete(isOk, exception);
+            }
         }
 
         public void DeleteTemplate(string templateFileName, Action<bool, Exception> onComplete)
@@ -123,36 +109,6 @@ namespace Orc.SolutionTool.Model
             if (onComplete != null)
             {
                 onComplete(isOk, exception);
-            }
-        }
-
-        public void ValidateTemplate(string templateXmlContent, Action<bool, Exception> onComplete)
-        {
-            var exception = null as Exception;
-            var isValid = false;
-
-            try
-            {
-                using (var sr = new System.IO.StringReader(templateXmlContent))
-                {
-                    var xs = new XmlSerializer(typeof(Directory));
-
-                    var directory = xs.Deserialize(sr) as Directory;
-
-                    if (directory != null)
-                    {
-                        isValid = true;
-                    }
-                }
-            }
-            catch (Exception xe)
-            {
-                exception = xe;
-            }
-
-            if (onComplete != null)
-            {
-                onComplete(isValid, exception);
             }
         }
     }

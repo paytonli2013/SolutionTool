@@ -33,23 +33,29 @@ namespace Orc.SolutionTool
 
             Console.WriteLine("Begin checking " + options.Repository);
 
-            var path = System.IO.Path.GetFullPath(options.Repository);
+            var pathOfRepository = System.IO.Path.GetFullPath(options.Repository);
+            var pathOfTemplate = System.IO.Path.GetFullPath(options.Template);
 
-            if (!System.IO.Directory.Exists(path))
+            if (!System.IO.Directory.Exists(pathOfRepository))
             {
                 Console.WriteLine("Repository directory does not exist: [" + options.Repository + "]");
             }
+            if (!System.IO.File.Exists(pathOfTemplate))
+            {
+                Console.WriteLine("Template File does not exist: [" + options.Repository + "]");
+            }
             else
             {
-                var di = new DirectoryInfo(path);
-                var project = new Project { Name = di.Name, Path = path, CreateTime = DateTime.Now, };
+                var di = new DirectoryInfo(pathOfRepository);
+                var fi = new DirectoryInfo(pathOfTemplate);
+                var project = new Project { Name = di.Name, Path = pathOfRepository, CreateTime = DateTime.Now, };
                 var ruleSet = new RuleSet 
                 {
                     new FileStructureRule
                     { 
                         Name = "File Structure Rule",
                         IsEnabled = true, 
-                        Template = options.Template,
+                        Template = fi.Name,
                     }, 
                     new OutputPathRule 
                     {

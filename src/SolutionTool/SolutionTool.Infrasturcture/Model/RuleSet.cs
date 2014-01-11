@@ -305,7 +305,7 @@ namespace Orc.SolutionTool.Model
                     {
                         output = i.Key.Pattern;
                         context.WriteOutput(Name, output);
-                        output = new string('-', 80);
+                        output = new string('-', 20);
                         context.WriteOutput(Name, output);
 
                         foreach (var j in i.Value)
@@ -313,6 +313,15 @@ namespace Orc.SolutionTool.Model
                             output = j;
                             context.WriteOutput(Name, output);
                         }
+
+                        if (i.Value.Count == 0)
+                        {
+                            output = "Pass";
+                            context.WriteOutput(Name, output);
+                        }
+
+                        output = new string('-', 80);
+                        context.WriteOutput(Name, output);
                     }
                 }
             });

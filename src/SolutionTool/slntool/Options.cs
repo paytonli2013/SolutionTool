@@ -8,7 +8,7 @@ namespace Orc.SolutionTool
         [Option('r', "repository", Required = true, HelpText = "The path of the repository. ")]
         public string Repository { get; set; }
 
-        [Option('t', "template", Required = false, DefaultValue = "default.xml",
+        [Option('t', "template", Required = false, DefaultValue = "./templates/default.txt",
             HelpText = "The xml template file name for checking solution structure. ")]
         public string Template { get; set; }
 

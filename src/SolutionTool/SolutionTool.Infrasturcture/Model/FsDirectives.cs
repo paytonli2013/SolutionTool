@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Orc.SolutionTool.Model
 {
@@ -52,11 +54,11 @@ namespace Orc.SolutionTool.Model
 
         public void ParseFile(string path)
         {
-            if (System.IO.File.Exists(path))
+            if (File.Exists(path))
             {
                 Directives = new List<Directive>();
 
-                using (var fr = System.IO.File.OpenText(path))
+                using (var fr = File.OpenText(path))
                 {
                     var line = fr.ReadLine();
 
@@ -174,7 +176,7 @@ namespace Orc.SolutionTool.Model
                 return rv;
             }
 
-            var cc = System.IO.Path.GetInvalidPathChars();
+            var cc = Path.GetInvalidPathChars();
 
             foreach (var i in cc)
             {
@@ -297,194 +299,55 @@ namespace Orc.SolutionTool.Model
             if (recursive)
             {
                 var segs = relPath.Split('/', '\\');
-                var allDirectories = false;
+                var diMatched = new List<DirectoryInfo>();
+                var diRoot = new System.IO.DirectoryInfo(repository);
+                var ix = 0;
 
-                for (int i = 0; i < segs.Length; i++)
+                foreach (var i in segs)
                 {
-                    var sub = string.Join("\\", segs.Take(i + 1));
-                    var star = sub.IndexOf("*") > -1;
-
-                    if (star)
+                    if (i.IndexOf("**") > -1)
                     {
-                        allDirectories = segs[i].IndexOf("**") > -1 && i < segs.Length - 1;
-                        sub = string.Join("\\", i == 0 ? "." : segs[i - 1]);
-
-                        var path = System.IO.Path.Combine(repository, sub);
-                        var di = new System.IO.DirectoryInfo(path);
-
-                        if (allDirectories)
-                        {
-                            ExecuteAllDirectories(repository, ref outputs, i + 1, di);
-
-                            break;
-                        }
-                        else
-                        {
-                            var dc = di.GetDirectories(segs[i]);
-
-                            if (Exclude && dc.Length > 0)
-                            {
-                                foreach (var j in dc)
-                                {
-                                    Execute(repository, ref outputs, i + 1, j);
-                                }
-                            }
-                            else if (!Exclude && dc.Length == 0)
-                            {
-                                var output = "[" + di.FullName + "] does not contain any sub directories that matches [" + segs[i] + "]. ";
-
-                                outputs.Add(output);
-
-                                break;
-                            }
-                        }
+                        break;
                     }
-                    else
-                    {
-                        var path = System.IO.Path.Combine(repository, sub);
-                        var exist = System.IO.Directory.Exists(path);
 
-                        if (exist && Exclude || !exist && !Exclude)
-                        {
-                            var s = System.IO.Path.GetFullPath(path);
+                    var p = System.IO.Path.Combine(diRoot.FullName, i);
 
-                            outputs.Add(s);
-
-                            break;
-                        }
-                    }
+                    diRoot = new DirectoryInfo(p);
+                    ix++;
                 }
-            }
-            else
-            {
-                var path = System.IO.Path.Combine(repository, relPath);
-                var exist = System.IO.Directory.Exists(path);
 
-                if (exist && Exclude || !exist && !Exclude)
+                var patterns = segs.Where((x, i) => x.IndexOf("**") == -1 & !string.IsNullOrWhiteSpace(x) && i > ix).ToArray();
+
+                FsHelper.InterateAllDirectories(diRoot, ref diMatched, patterns);
+
+                if (Exclude && diMatched.Count > 0)
                 {
-                    var s = System.IO.Path.GetFullPath(path);
-
-                    outputs.Add(s);
-                }
-            }
-        }
-
-        private void Execute(string repository, ref List<string> outputs, int level, System.IO.DirectoryInfo directoryInfo)
-        {
-            var relPath = Exclude ? Pattern.Substring(1) : Pattern;
-            var segs = relPath.Split('/', '\\');
-
-            if (level >= segs.Length)
-            {
-                return;
-            }
-            else
-            {
-                var star = segs[level].IndexOf("*") > -1;
-                var allDirectories = segs[level].IndexOf("**") > -1;
-
-                if (star)
-                {
-                    if (allDirectories)
+                    foreach (var i in diMatched)
                     {
-                        ExecuteAllDirectories(repository, ref outputs, level + 1, directoryInfo);
-                    }
-                    else
-                    {
-                        AddFolderMustNotExists(ref outputs, directoryInfo, segs[level]);
-                    }
-                }
-                else
-                {
-                    if (level == segs.Length - 1)
-                    {
-                        AddFolderMustNotExists(ref outputs, directoryInfo, segs[level]);
-                    }
-                    else
-                    {
-                        var dc = directoryInfo.GetDirectories(segs[level]);
-
-                        foreach (var i in dc)
-                        {
-                            Execute(repository, ref outputs, level + 1, i);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void ExecuteAllDirectories(string repository, ref List<string> outputs, int level, System.IO.DirectoryInfo directoryInfo)
-        {
-            var relPath = Exclude ? Pattern.Substring(1) : Pattern;
-            var segs = relPath.Split('/', '\\');
-
-            if (level >= segs.Length)
-            {
-                return;
-            }
-            else
-            {
-                var star = segs[level].IndexOf("*") > -1;
-                var allDirectories = segs[level].IndexOf("**") > -1;
-
-                if (star)
-                {
-                    var dc = directoryInfo.GetDirectories(allDirectories ? "*" : segs[level]);
-
-                    foreach (var i in dc)
-                    {
-                        ExecuteAllDirectories(repository, ref outputs, level + 1, i);
-                    }
-                }
-                else
-                {
-                    var dc = directoryInfo.GetDirectories(segs[level]);
-
-                    if (Exclude && dc.Length > 0)
-                    {
-                        foreach (var i in dc)
-                        {
-                            Execute(repository, ref outputs, level + 1, i);
-                        }
-                    }
-                    else if (!Exclude && dc.Length == 0)
-                    {
-                        var output = "[" + directoryInfo.FullName + "] does not contain any sub directories with the name [" + segs[level] + "]. ";
+                        var output = i.FullName;
 
                         outputs.Add(output);
-
-                        return;
                     }
                 }
-            }
-
-        }
-
-        private void AddFolderMustNotExists(ref List<string> outputs, System.IO.DirectoryInfo directoryInfo, string pattern)
-        {
-            var dc = directoryInfo.GetDirectories(pattern);
-
-            if (Exclude && dc.Length > 0)
-            {
-                foreach (var i in dc)
+                else if (!Exclude && diMatched.Count == 0)
                 {
-                    var output = i.FullName;
+                    var output = "[" + diRoot.FullName + "] does not contain any directories that matches this pattern. ";
 
                     outputs.Add(output);
                 }
-
-                return;
             }
-            else if (!Exclude && dc.Length == 0)
+            else
             {
-                var output = "[" + directoryInfo.FullName + "] does not contain any sub directories that matches [" + pattern + "]. ";
+                var path = Path.Combine(repository, relPath);
+                var exist = Directory.Exists(path);
 
-                outputs.Add(output);
+                if (exist && Exclude || !exist && !Exclude)
+                {
+                    var output = Path.GetFullPath(path);
 
-                return;
+                    outputs.Add(output);
+                }
             }
-
-            return;
         }
     }
 
@@ -500,194 +363,189 @@ namespace Orc.SolutionTool.Model
             if (recursive)
             {
                 var segs = relPath.Split('/', '\\');
-                var allDirectories = false;
+                var diMatched = new List<DirectoryInfo>();
+                var diRoot = new System.IO.DirectoryInfo(repository);
+                var ix = 0;
 
-                for (int i = 0; i < segs.Length; i++)
+                foreach (var i in segs)
                 {
-                    var sub = string.Join("\\", segs.Take(i + 1));
-                    var star = sub.IndexOf("*") > -1;
-
-                    if (star)
+                    if (i.IndexOf("**") > -1)
                     {
-                        allDirectories = segs[i].IndexOf("**") > -1 && i < segs.Length - 1;
-                        sub = string.Join("\\", segs[i - 1]);
+                        break;
+                    }
 
-                        var path = System.IO.Path.Combine(repository, sub);
-                        var di = new System.IO.DirectoryInfo(path);
+                    var p = System.IO.Path.Combine(diRoot.FullName, i);
 
-                        if (allDirectories)
+                    diRoot = new DirectoryInfo(p);
+                    ix++;
+                }
+
+                var patterns = segs.Where((x, i) => x.IndexOf("**") == -1 && i > ix && i != segs.Length - 1).ToArray();
+
+                FsHelper.InterateAllDirectories(diRoot, ref diMatched, patterns);
+
+                var lastSeg = segs[segs.Length - 1];
+                var allFiles = lastSeg.IndexOf("**") > -1;
+
+                foreach (var i in diMatched)
+                {
+                    if (allFiles)
+                    {
+                        var fiMatched = new List<FileInfo>();
+
+                        FsHelper.InterateAllFiles(i, ref fiMatched, "*", true);
+
+                        if (Exclude && fiMatched.Count > 0)
                         {
-                            Execute(repository, ref outputs, i + 1, di);
-
-                            break;
-                        }
-                        else
-                        {
-                            var dc = di.GetDirectories(segs[i]);
-
-                            if (Exclude && dc.Length > 0)
+                            foreach (var j in fiMatched)
                             {
-                                foreach (var j in dc)
-                                {
-                                    Execute(repository, ref outputs, i + 1, j);
-                                }
-
-                                break;
-                            }
-                            else if (!Exclude && dc.Length == 0)
-                            {
-                                var output = "[" + di.FullName + "] does not contain any sub directories that matches [" + segs[i] + "]. ";
+                                var output = j.FullName;
 
                                 outputs.Add(output);
-
-                                break;
                             }
+                        }
+                        else if (!Exclude && fiMatched.Count == 0)
+                        {
+                            var output = "[" + i.FullName + "] does not contain any files that matches this pattern. ";
+
+                            outputs.Add(output);
                         }
                     }
                     else
                     {
-                        var path = System.IO.Path.Combine(repository, sub);
-                        var exist = System.IO.Directory.Exists(path);
+                        var fis = i.GetFiles(lastSeg);
 
-                        if (exist && Exclude || !exist && !Exclude)
+                        if (Exclude && fis.Length > 0)
                         {
-                            var s = System.IO.Path.GetFullPath(path);
+                            foreach (var j in fis)
+                            {
+                                var output = j.FullName;
 
-                            outputs.Add(s);
+                                outputs.Add(output);
+                            }
+                        }
+                        else if (!Exclude && fis.Length == 0)
+                        {
+                            var output = "[" + i.FullName + "] does not contain any files that matches [" + lastSeg + "]. ";
 
-                            break;
+                            outputs.Add(output);
                         }
                     }
                 }
             }
             else
             {
-                var path = System.IO.Path.Combine(repository, relPath);
-                var exist = System.IO.File.Exists(path);
+                var path = Path.Combine(repository, relPath);
+                var exist = File.Exists(path);
 
                 if (exist && Exclude || !exist && !Exclude)
                 {
-                    var s = System.IO.Path.GetFullPath(path);
+                    var s = Path.GetFullPath(path);
 
                     outputs.Add(s);
                 }
             }
         }
+    }
 
-        private void Execute(string repository, ref List<string> outputs, int level, System.IO.DirectoryInfo directoryInfo)
+    public static class FsHelper
+    {
+        class FileSystemInfoEqualityComparer : IEqualityComparer<System.IO.FileSystemInfo>
         {
-            var relPath = Exclude ? Pattern.Substring(1) : Pattern;
-            var segs = relPath.Split('/', '\\');
-
-            if (level >= segs.Length)
+            public bool Equals(FileSystemInfo x, FileSystemInfo y)
             {
+                return x.FullName == y.FullName;
+            }
+
+            public int GetHashCode(FileSystemInfo obj)
+            {
+                return obj.FullName.GetHashCode();
+            }
+        }
+
+        public static void InterateAllDirectories(DirectoryInfo diRoot, ref List<DirectoryInfo> diMatched, string[] patterns)
+        {
+            if (patterns.Length == 0)
+            {
+                InterateAllDirectories(diRoot, ref diMatched, (string)null);
+
                 return;
             }
-            else
+
+            var stack = new Stack<List<DirectoryInfo>>();
+            var dis = new List<DirectoryInfo> { diRoot, };
+
+            stack.Push(dis);
+
+            foreach (var i in patterns)
             {
-                var star = segs[level].IndexOf("*") > -1;
-                var allFiles = segs[level].IndexOf("**") > -1 && level == segs.Length - 1;
-                var allDirectories = segs[level].IndexOf("**") > -1 && level < segs.Length - 1;
+                dis = stack.Peek();
 
-                if (star)
+                var disx = new List<DirectoryInfo>();
+
+                foreach (var j in dis)
                 {
-                    if (allFiles)
-                    {
-                        if (Exclude)
-                        {
-                            AddFileMustNotExists(ref outputs, directoryInfo, true);
-                        }
-                    }
-                    else if (allDirectories)
-                    {
-                        var dc = directoryInfo.GetDirectories();
-
-                        foreach (var i in dc)
-                        {
-                            Execute(repository, ref outputs, level + 1, i);
-                        }
-                    }
-                    else
-                    {
-                        AddFileMustNotExists(ref outputs, directoryInfo, segs[level]);
-                    }
+                    InterateAllDirectories(j, ref disx, i);
                 }
-                else
+
+                stack.Push(disx);
+            }
+
+            foreach (var i in stack.Peek())
+            {
+                if (!diMatched.Contains(i, new FileSystemInfoEqualityComparer()))
                 {
-                    if (level == segs.Length - 1)
-                    {
-                        AddFileMustNotExists(ref outputs, directoryInfo, segs[level]);
-                    }
-                    else
-                    {
-                        var dc = directoryInfo.GetDirectories(segs[level]);
-
-                        if (Exclude && dc.Length > 0)
-                        {
-                            foreach (var i in dc)
-                            {
-                                Execute(repository, ref outputs, level + 1, i);
-                            }
-                        }
-                        else if (!Exclude && dc.Length == 0)
-                        {
-                            var output = "[" + directoryInfo.FullName + "] does not contain any sub directories with the name [" + segs[level] + "]. ";
-
-                            outputs.Add(output);
-
-                            return;
-                        }
-                    }
+                    diMatched.Add(i);
                 }
             }
         }
 
-        private void AddFileMustNotExists(ref List<string> outputs, System.IO.DirectoryInfo directoryInfo, string pattern)
+        public static void InterateAllDirectories(DirectoryInfo diRoot, ref List<DirectoryInfo> diMatched, string pattern)
         {
-            var fc = directoryInfo.GetFiles(pattern);
-
-            if (Exclude && fc.Length > 0)
+            if (!diRoot.Exists)
             {
-                foreach (var i in fc)
+                return;
+            }
+
+            foreach (var i in diRoot.GetDirectories())
+            {
+                InterateAllDirectories(i, ref diMatched, pattern);
+            }
+
+            var dis = diRoot.GetDirectories(pattern == null ? "*" : pattern);
+
+            foreach (var i in dis)
+            {
+                if (!diMatched.Contains(i, new FileSystemInfoEqualityComparer()))
                 {
-                    var output = i.FullName;
-
-                    outputs.Add(output);
+                    diMatched.Add(i);
                 }
-
-                return;
             }
-            else if (!Exclude && fc.Length == 0)
-            {
-                var output = "[" + directoryInfo.FullName + "] does not contain any files that matches [" + pattern + "]. ";
-
-                outputs.Add(output);
-
-                return;
-            }
-
-            return;
         }
 
-        private void AddFileMustNotExists(ref List<string> outputs, System.IO.DirectoryInfo directoryInfo, bool recursive)
+        public static void InterateAllFiles(DirectoryInfo diRoot, ref List<FileInfo> fiMatched, string pattern, bool recursive = false)
         {
-            var dc = directoryInfo.GetDirectories();
+            if (!diRoot.Exists)
+            {
+                return;
+            }
 
             if (recursive)
             {
-                foreach (var i in dc)
+                foreach (var i in diRoot.GetDirectories())
                 {
-                    AddFileMustNotExists(ref outputs, i, recursive);
+                    InterateAllFiles(i, ref fiMatched, pattern);
                 }
             }
 
-            var fc = directoryInfo.GetFiles();
+            var fis = diRoot.GetFiles(pattern);
 
-            foreach (var i in fc)
+            foreach (var i in fis)
             {
-                var output = i.FullName;
-
-                outputs.Add(output);
+                if (!fiMatched.Contains(i, new FileSystemInfoEqualityComparer()))
+                {
+                    fiMatched.Add(i);
+                }
             }
         }
     }

@@ -67,7 +67,7 @@ namespace SolutionTool.Infrasturcture.Tests
 </ruleSet>
 ";
             var xs1 = new XmlSerializer(typeof(Orc.SolutionTool.Model.RuleSet));
-            
+
             using (var sr = new System.IO.StringReader(ruleSetXml))
             {
                 var rules = xs1.Deserialize(sr) as Orc.SolutionTool.Model.RuleSet;
@@ -84,35 +84,78 @@ namespace SolutionTool.Infrasturcture.Tests
         }
 
         [TestMethod]
-        public void TestFsDirectives()
+        public void TestFsHelper()
+        {
+            var path1 = System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\");
+            var repository = System.IO.Path.GetFullPath(path1);
+            var diRoot = new System.IO.DirectoryInfo(repository);
+            var diMatched1 = new List<System.IO.DirectoryInfo>();
+
+            FsHelper.InterateAllDirectories(diRoot, ref diMatched1, "bin");
+
+            foreach (var i in diMatched1)
+            {
+                TestContext.WriteLine(i.FullName);
+            }
+
+            TestContext.WriteLine(new string('-', 80));
+
+            var diMatched2 = new List<System.IO.DirectoryInfo>();
+
+            FsHelper.InterateAllDirectories(diRoot, ref diMatched2, new string[] { "*tool*", "bin" });
+
+            foreach (var i in diMatched2)
+            {
+                TestContext.WriteLine(i.FullName);
+            }
+        }
+
+        [TestMethod]
+        public void TestFsDirectives1()
         {
             var fsDirectives = new FsDirectives();
-            var text1 = @"
-#Default File Structure
-
-#Directory must exist
-src/
-doc/
-output/
-output/debug/
-output/release/
-deployment/
-
-#File must exist
-.gitignore
-readme.md
-src/**/*.cs
-
-#Directory must not exist
-!**/bin/
-!**/obj/
-
-#File must not exist
-";
+            var text1 = @"src/**/*.cs";
             fsDirectives.ParseText(text1);
 
             Assert.IsNotNull(fsDirectives.Directives);
-            Assert.AreNotEqual(fsDirectives.Directives.Count, 0);
+            Assert.AreEqual(fsDirectives.Directives.Count, 1);
+
+            var outputs = new Dictionary<Directive, List<string>>();
+            var path1 = System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\");
+            var repository = System.IO.Path.GetFullPath(path1);
+
+            fsDirectives.Execute(repository, ref outputs);
+
+            Assert.AreNotEqual(outputs.Count, 0);
+
+            foreach (var i in outputs)
+            {
+                TestContext.WriteLine(i.Key.Pattern);
+                TestContext.WriteLine(new string('-', 80));
+
+                foreach (var j in i.Value)
+                {
+                    TestContext.WriteLine(j);
+                }
+
+                if (i.Value.Count == 0)
+                {
+                    TestContext.WriteLine("Pass");
+                }
+
+                TestContext.WriteLine(Environment.NewLine);
+            }
+        }
+
+        [TestMethod]
+        public void TestFsDirectives2()
+        {
+            var fsDirectives = new FsDirectives();
+            var text1 = @"!src/**/bin/";
+            fsDirectives.ParseText(text1);
+
+            Assert.IsNotNull(fsDirectives.Directives);
+            Assert.AreEqual(fsDirectives.Directives.Count, 1);
 
             var outputs = new Dictionary<Directive, List<string>>();
             var path1 = System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\");

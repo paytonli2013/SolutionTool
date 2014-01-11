@@ -1,0 +1,19 @@
+﻿#Default File Structure
+
+#Directory must exist
+src/
+doc/
+output/
+output/debug/
+output/release/
+deployment/
+
+#File must exist
+.gitignore
+readme.md
+
+#Directory must not exist
+!**/bin/
+!**/obj/
+
+#File must not exist

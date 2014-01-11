@@ -70,6 +70,7 @@
     <Compile Include="IStatusBar.cs" />
     <Compile Include="MessageBoxResult.cs" />
     <Compile Include="Model\Directory.cs" />
+    <Compile Include="Model\FsDirectives.cs" />
     <Compile Include="Model\IProjectManager.cs" />
     <Compile Include="Model\IRuleManager.cs" />
     <Compile Include="Model\IRuleRunner.cs" />

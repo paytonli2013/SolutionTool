@@ -130,11 +130,12 @@ namespace Orc.SolutionTool.Model
                 IsEnabled = true,
                 Name = "Check File Structure",
                 Description = "Check File Structure with template",
-                Template = "default.xml"
+                Template = "default.txt"
             });
             ruleSet.Add(new OutputPathRule()
             {
                 IsEnabled = true,
+                Path = "./output/$(Configuration)/",
                 Name = "Check Output Path",
                 Description = "Check output path for all project file"
             });

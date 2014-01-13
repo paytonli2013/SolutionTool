@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <project name="demo3" ruleSet="default.xml" path="e:\tools">
   <ruleSet>
-    <fileStructure enabled='true' template='default.xml' />
+    <codeAnalysis name='Run Code Analysis' description='Run code analysis with InspectCode. ' enabled='true' />
   </ruleSet>
 </project>

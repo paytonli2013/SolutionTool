@@ -1,6 +1,6 @@
 ﻿<?xml version='1.0'?>
 <ruleSet>
-  <fileStructure name='Check file structure' description='Check file structure against specified template' enabled='true' template='default.xml' />
-  <outputPath name='Check output path' description='Check output path for all solution files' enabled='true' path='./output/$(Configuration)/$(TargetFrameworkVersion)/' />
-  <codeAnalysis name='run code analysis' description='run code analysis with StyleCop' enabled='true' />
+  <fileStructure name='Check File Structure' description='Check file structure with template. ' enabled='true' template='default.xml' />
+  <outputPath name='Check Build Output Path' description='Check output path for all project files (*.csproj). ' enabled='true' path='./output/$(Configuration)/' />
+  <codeAnalysis name='Run Code Analysis' description='Run code analysis with InspectCode. ' enabled='true' />
 </ruleSet>

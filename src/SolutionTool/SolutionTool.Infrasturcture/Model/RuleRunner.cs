@@ -10,11 +10,8 @@ namespace Orc.SolutionTool
 {
     public class RuleRunner : IRuleRunner
     {
-        const string ErrorViolationText = "Error occued during rule examination";
-
-        private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Logs\");
-
-        private static readonly string _dirR = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Report\");
+        private static readonly string _dirLogs = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Logs\");
+        private static readonly string _dirReports = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Reports\");
 
         public void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete)
         {
@@ -28,12 +25,12 @@ namespace Orc.SolutionTool
         {
             var xe = null as Exception;
 
-            if (!System.IO.Directory.Exists(_dir))
+            if (!System.IO.Directory.Exists(_dirLogs))
             {
                 return;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(_dir))
+            foreach (var i in System.IO.Directory.GetFiles(_dirLogs))
             {
                 try
                 {
@@ -56,12 +53,12 @@ namespace Orc.SolutionTool
 
         private List<RunLogItem> BuildLogs()
         {
-            if (!System.IO.Directory.Exists(_dir))
+            if (!System.IO.Directory.Exists(_dirLogs))
             {
                 return list;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(_dir, "*.xml"))
+            foreach (var i in System.IO.Directory.GetFiles(_dirLogs, "*.xml"))
             {
                 var xdoc = XDocument.Load(i);
 
@@ -112,13 +109,15 @@ namespace Orc.SolutionTool
 
         void FireRunLogAdded(RunLogItem item)
         {
+
+
             if (RunLogAdded != null)
             {
                 RunLogAdded.Invoke(this, new RunLogEventArgs(item));
             }
         }
 
-        public void RunProject(Project project, Action<Report,RunLogItem> onComplete)
+        public void RunProject(Project project, Action<Report, RunLogItem> onComplete)
         {
             var log = new RunLogItem();
 
@@ -145,9 +144,24 @@ namespace Orc.SolutionTool
                 }
                 catch (Exception e)
                 {
-                    context.WriteOutput(i.Name, string.Format("error occured:\n{0}", e.ToString()));
-                    context.AddResult(new ExamResult() { RuleName = i.Name, Status = ActionStatus.Failed });
-                    context.AddViolation(new Violation { RuleName = i.Name, Description = ErrorViolationText });
+                    context.WriteOutput(i.Name, new Output
+                    {
+                        Summary = e.Message,
+                        Details = new List<string>
+                        {
+                            e.ToString(),
+                        },
+                    });
+                    context.AddResult(new ExamResult()
+                    {
+                        RuleName = i.Name,
+                        Status = ActionStatus.Failed,
+                    });
+                    context.AddViolation(new Violation
+                    {
+                        RuleName = i.Name,
+                        Description = e.Message,
+                    });
                     continue;
                 }
             }
@@ -164,7 +178,7 @@ namespace Orc.SolutionTool
             list.Insert(0, log);
 
             SaveRunlog(log);
-            //throw new NotImplementedException();
+
             if (onComplete != null)
             {
                 onComplete.Invoke(report, log);
@@ -174,27 +188,62 @@ namespace Orc.SolutionTool
         private void SaveRunlog(RunLogItem log)
         {
             FireRunLogAdded(log);
+
+            if (!System.IO.Directory.Exists(_dirLogs))
+            {
+                System.IO.Directory.CreateDirectory(_dirLogs);
+            }
+
+            var path = System.IO.Path.Combine(_dirLogs, log.Project + ".xml");
+            var xdoc = null as XDocument;
+
+            if (System.IO.File.Exists(path))
+            {
+                xdoc = XDocument.Load(path);
+            }
+            else
+            {
+                xdoc = new XDocument();
+            }
+
+            if (xdoc.Root == null)
+            {
+                xdoc.Add(new XElement("runlog"));
+            }
+
+            xdoc.Root.Add(new XElement(
+                "run",
+                new XAttribute("project", log.Project),
+                new XAttribute("rules", log.Rules),
+                new XAttribute("start", log.Start),
+                new XAttribute("end", log.End),
+                new XAttribute("status", log.Status),
+                new XAttribute("summary", log.Summary),
+                new XAttribute("report", log.Report)
+                ));
+            xdoc.Save(path);
         }
 
         private string SaveReportToFile(Report report)
         {
             try
             {
-                if (!System.IO.Directory.Exists(_dirR))
+                if (!System.IO.Directory.Exists(_dirReports))
                 {
-                    System.IO.Directory.CreateDirectory(_dirR);
+                    System.IO.Directory.CreateDirectory(_dirReports);
                 }
 
-                var reportPath = string.Format("{0}\\{1}_{2:yyyyMMddHHmmss}.xml", _dirR, report.Project, report.CreateAt);
+                var path = string.Format("{0}\\{1}_{2:yyyyMMddHHmmss}.xml",
+                    _dirReports, report.Project, DateTime.Now);
 
-                using (var fs = XmlWriter.Create(reportPath))
+                using (var fs = XmlWriter.Create(path))
                 {
                     var xs = new XmlSerializer(typeof(Report));
 
                     xs.Serialize(fs, report);
                 }
 
-                return reportPath;
+                return path;
             }
             catch (Exception ex)
             {

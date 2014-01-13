@@ -179,7 +179,7 @@ namespace Orc.SolutionTool.Model
 
     public class ExamContext
     {
-        public Dictionary<string, List<string>> Outputs { get; set; }
+        public Dictionary<string, List<Output>> Outputs { get; set; }
         public List<ExamResult> Results { get; set; }
         public List<Violation> Violations { get; set; }
         public Project Project { get; set; }
@@ -187,26 +187,26 @@ namespace Orc.SolutionTool.Model
         public ExamContext(Project project)
         {
             Project = project;
-            Outputs = new Dictionary<string, List<string>>();
+            Outputs = new Dictionary<string, List<Output>>();
             Results = new List<ExamResult>();
             Violations = new List<Violation>();
         }
 
-        public void WriteOutput(string ruleName, string output)
+        public void WriteOutput(string ruleName, Output output)
         {
-            var lines = null as List<string>;
+            var outputs = null as List<Output>;
 
             if (Outputs.ContainsKey(ruleName))
             {
-                lines = Outputs[ruleName];
+                outputs = Outputs[ruleName];
             }
             else
             {
-                lines = new List<string>();
-                Outputs.Add(ruleName, lines);
+                outputs = new List<Output>();
+                Outputs.Add(ruleName, outputs);
             }
 
-            lines.Add(output);
+            outputs.Add(output);
         }
 
         public void AddResult(ExamResult result)
@@ -219,7 +219,7 @@ namespace Orc.SolutionTool.Model
             Violations.Add(violation);
         }
 
-        public Report GenerateReport() 
+        public Report GenerateReport()
         {
             var report = new Report()
             {
@@ -231,11 +231,14 @@ namespace Orc.SolutionTool.Model
             foreach (var rule in Project.RuleSet)
             {
                 var violations = Violations.Where(v => v.RuleName == rule.Name).ToList();
+                var outputs = Outputs.ContainsKey(rule.Name) ? Outputs[rule.Name] : null;
 
                 var item = new ReportItem
                 {
+                    Name = rule.Name,
+                    Description = rule.Description,
                     Violations = violations,
-                    Outputs = Outputs.ContainsKey(rule.Name)?Outputs[rule.Name]:null
+                    Outputs = outputs,
                 };
 
                 report.Items.Add(item);
@@ -248,9 +251,6 @@ namespace Orc.SolutionTool.Model
     [XmlRoot("fileStructure")]
     public class FileStructureRule : Rule
     {
-        const string ViolationText = "Specified file should exist but it missing";
-        const string ErrorViolationText = "Error occued during rule examination";
-
         /// <summary>
         /// The template file to use for checking file structure,
         /// which is located at ./Templates/*.xml of the app.
@@ -260,14 +260,11 @@ namespace Orc.SolutionTool.Model
 
         public override void Exam(ExamContext context)
         {
-            var output = null as string;
+            var output = null as Output;
 
             if (!IsEnabled)
             {
-                output = "***" + Name + "***";
-                context.WriteOutput(Name, output);
-
-                output = "Scape rule checking since it's not enabled. ";
+                output = new Output { Summary = "Rule [" + Name + "] is disabled. ", };
                 context.WriteOutput(Name, output);
 
                 return;
@@ -286,10 +283,25 @@ namespace Orc.SolutionTool.Model
             {
                 if (z != null)
                 {
-                    context.AddResult(new ExamResult { RuleName = Name, Status = ActionStatus.Failed, });
-                    context.AddViolation(new Violation { RuleName = Name, Description = ErrorViolationText });
+                    context.AddResult(new ExamResult
+                    {
+                        RuleName = Name,
+                        Status = ActionStatus.Failed,
+                    });
+                    context.AddViolation(new Violation
+                    {
+                        RuleName = Name,
+                        Description = "Can not load file structure template file. ",
+                    });
 
-                    output = z.ToString();
+                    output = new Output
+                    {
+                        Summary = z.Message,
+                        Details = new List<string>
+                        {
+                            z.ToString(),
+                        }
+                    };
                     context.WriteOutput(Name, output);
 
                     return;
@@ -303,24 +315,22 @@ namespace Orc.SolutionTool.Model
 
                     foreach (var i in outputs)
                     {
-                        output = i.Key.Pattern;
-                        context.WriteOutput(Name, output);
-                        output = new string('-', 20);
-                        context.WriteOutput(Name, output);
+                        output = new Output
+                        {
+                            Summary = i.Key.Pattern,
+                            Details = new List<string>(),
+                        };
 
                         foreach (var j in i.Value)
                         {
-                            output = j;
-                            context.WriteOutput(Name, output);
+                            output.Details.Add(j);
                         }
 
                         if (i.Value.Count == 0)
                         {
-                            output = "Pass";
-                            context.WriteOutput(Name, output);
+                            output.Details.Add("Pass");
                         }
 
-                        output = new string('-', 80);
                         context.WriteOutput(Name, output);
                     }
                 }
@@ -331,11 +341,6 @@ namespace Orc.SolutionTool.Model
     [XmlRoot("outputPath")]
     public class OutputPathRule : Rule
     {
-        const string PATH_OK = "PO";
-        const string PATH_NG = "PN";
-
-        Dictionary<string, List<string>> _dict;
-
         /// <summary>
         /// The OutputPath node value of a *.csproj file. 
         /// Normally it is set in PropertyGroup section like below: 
@@ -346,22 +351,15 @@ namespace Orc.SolutionTool.Model
 
         public override void Exam(ExamContext context)
         {
-            var output = null as string;
+            var output = null as Output;
 
             if (!IsEnabled)
             {
-                output = "***" + Name + "***";
-                context.WriteOutput(Name, output);
-
-                output = "Scape rule checking since it's not enabled. ";
+                output = new Output { Summary = "Rule [" + Name + "] is disabled. ", };
                 context.WriteOutput(Name, output);
 
                 return;
             }
-
-            _dict = new Dictionary<string, List<string>>();
-            _dict.Add(PATH_OK, new List<string>());
-            _dict.Add(PATH_NG, new List<string>());
 
             var root = System.IO.Path.GetFullPath(context.Project.Path);
             var csprojs = System.IO.Directory.GetFiles(
@@ -372,22 +370,34 @@ namespace Orc.SolutionTool.Model
             var re = new Regex(@"(?<c>\w+)\|(?<p>\w+)");
             var uri = new Uri(root);
 
-            output = "***" + Name + "***";
-            context.WriteOutput(Name, output);
-
             foreach (var i in csprojs)
             {
                 var fi = new System.IO.FileInfo(i);
                 var doc = XDocument.Load(i);
                 //var eleTargetFrameworkVersion = doc.Descendants(ns + "TargetFrameworkVersion").First().Value;
                 var eleOutputPaths = doc.Descendants(ns + "OutputPath").ToList();
+                var uri2Tgt = new Uri(uri, Path);
+                var uri2Prj = new Uri(fi.FullName);
+                var uri2PrjDir = new Uri(fi.Directory.FullName);
+                var uriDiff = uri2PrjDir.MakeRelativeUri(uri2Tgt);
+                var uriDiff2Root = uri.MakeRelativeUri(uri2Prj);
+                var expected = uriDiff.ToString();
+                var expected2Root = uriDiff2Root.ToString().Replace("/", "\\");
+                var expected2RootIx = expected2Root.IndexOf("\\");
+                var pathCsproj = ".\\" + (expected2RootIx == -1
+                    ? expected2Root : expected2Root.Substring(expected2RootIx + 1));
+
+                output = new Output
+                {
+                    Summary = pathCsproj,
+                    Details = new List<string>(),
+                };
 
                 foreach (var j in eleOutputPaths)
                 {
                     var condition = j.Parent.Attribute("Condition").Value;
                     var config = null as string;
                     var platform = null as string;
-
                     var match = re.Match(condition);
 
                     if (match.Success)
@@ -396,64 +406,21 @@ namespace Orc.SolutionTool.Model
                         platform = match.Groups["p"].Value;
                     }
 
-                    var uri2Tgt = new Uri(uri, Path);
-                    var uri2Prj = new Uri(fi.FullName);
-                    var uri2PrjDir = new Uri(fi.Directory.FullName);
-                    var uriDiff = uri2PrjDir.MakeRelativeUri(uri2Tgt);
-                    var uriDiff2Root = uri.MakeRelativeUri(uri2Prj);
-                    var expected = uriDiff.ToString();
-                    var expected2Root = uriDiff2Root.ToString().Replace("/", "\\");
-                    var expected2RootIx = expected2Root.IndexOf("\\");
                     var path1 = System.IO.Path.GetFullPath(j.Value);
                     var path2 = System.IO.Path.GetFullPath(expected);
 
-                    output = ".\\" + (expected2RootIx == -1 ? expected2Root : expected2Root.Substring(expected2RootIx + 1));
-
                     if (string.Compare(path1, path2, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        _dict[PATH_OK].Add(output);
-                        output = j.Value + " <--> " + expected;
-                        _dict[PATH_OK].Add(output);
+                        output.Details.Add(j.Value + " <--> " + expected);
                     }
                     else
                     {
-                        _dict[PATH_NG].Add(output);
-                        output = j.Value + " ---> " + expected;
-                        _dict[PATH_NG].Add(output);
+                        output.Details.Add(j.Value + " ---> " + expected);
                     }
                 }
+
+                context.WriteOutput(Name, output);
             }
-
-            if (_dict[PATH_OK].Count > 0)
-            {
-                output = new string('-', 80);
-                context.WriteOutput(Name, output);
-
-                output = "Path OK";
-                context.WriteOutput(Name, output);
-
-                foreach (var i in _dict[PATH_OK])
-                {
-                    output = i;
-                    context.WriteOutput(Name, output);
-                }
-            }
-
-            if (_dict[PATH_NG].Count > 0)
-            {
-                output = new string('-', 80);
-                context.WriteOutput(Name, output);
-
-                output = "Path NG";
-                context.WriteOutput(Name, output);
-
-                foreach (var i in _dict[PATH_NG])
-                {
-                    output = i;
-                    context.WriteOutput(Name, output);
-                }
-            }
-
         }
     }
 
@@ -469,14 +436,11 @@ namespace Orc.SolutionTool.Model
 
         public override void Exam(ExamContext context)
         {
-            var output = null as string;
+            var output = null as Output;
 
             if (!IsEnabled)
             {
-                output = "***" + Name + "***";
-                context.WriteOutput(Name, output);
-
-                output = "Scape rule checking since it's not enabled. ";
+                output = new Output { Summary = "Rule [" + Name + "] is disabled. ", };
                 context.WriteOutput(Name, output);
 
                 return;
@@ -484,7 +448,7 @@ namespace Orc.SolutionTool.Model
 
             if (string.IsNullOrWhiteSpace(Path))
             {
-                output = "Need to specify InspectCode executable path. ";
+                output = new Output { Summary = "Need to specify InspectCode executable path. ", };
                 context.WriteOutput(Name, output);
 
                 return;
@@ -492,14 +456,11 @@ namespace Orc.SolutionTool.Model
 
             if (!System.IO.File.Exists(Path))
             {
-                output = "Cannot find InspectCode app at [" + Path + "]. ";
+                output = new Output { Summary = "Cannot find InspectCode app at [" + Path + "]. ", };
                 context.WriteOutput(Name, output);
 
                 return;
             }
-
-            output = "***" + Name + "***";
-            context.WriteOutput(Name, output);
 
             var root = context.Project.Path;
             var uri = new Uri(root);
@@ -544,7 +505,9 @@ namespace Orc.SolutionTool.Model
                 proc.Start();
                 proc.WaitForExit();
 
-                output = ".\\" + (uri2RootIx == -1 ? uri2Root : uri2Root.Substring(uri2RootIx + 1)) + ": " + rpt;
+                var rptPath = ".\\" + (uri2RootIx == -1 ? uri2Root : uri2Root.Substring(uri2RootIx + 1)) + ": " + rpt;
+             
+                output = new Output { Summary = rptPath, };
                 context.WriteOutput(Name, output);
             }
         }

@@ -129,22 +129,22 @@ namespace Orc.SolutionTool.Model
             {
                 IsEnabled = true,
                 Name = "Check File Structure",
-                Description = "Check File Structure with template",
+                Description = "Check file structure with template. ",
                 Template = "default.txt"
             });
             ruleSet.Add(new OutputPathRule()
             {
                 IsEnabled = true,
                 Path = "./output/$(Configuration)/",
-                Name = "Check Output Path",
-                Description = "Check output path for all project file"
+                Name = "Check Build Output Path",
+                Description = "Check output path for all project files (*.csproj). "
             });
 
             ruleSet.Add(new CodeAnalysisRule()
             {
                 IsEnabled = true,
                 Name = "Run Code Analysis",
-                Description = "Run code analysis with StyleCop"
+                Description = "Run code analysis with InspectCode. "
             });
 
             list.Add(ruleSet);

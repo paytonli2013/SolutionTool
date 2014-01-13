@@ -21,13 +21,14 @@ namespace Orc.SolutionTool.Model
         [XmlAttribute("createTime")]
         public DateTime CreateAt { get; set; }
 
-        [XmlElement("items")]
+        [XmlArray("items")]
+        [XmlArrayItem("item")]
         public List<ReportItem> Items { get; set; }
 
         #endregion
 
-        static string templatePath = Environment.CurrentDirectory + "\\Templates\\ReportTemplate.xslt";
-        static string templatePathPlain = Environment.CurrentDirectory + "\\Templates\\ReportTemplate.Plain.xslt";
+        static string templatePath = Environment.CurrentDirectory + "\\Templates\\RptHtml.xslt";
+        static string templatePathPlain = Environment.CurrentDirectory + "\\Templates\\RptTxt.xslt";
 
         public static string GetTextFile(string xmlFile)
         {
@@ -74,19 +75,23 @@ namespace Orc.SolutionTool.Model
         {
             var sb = new StringBuilder();
 
-            foreach (var item in Items)
+            foreach (var i in Items)
             {
-                foreach (var str in item.Outputs)
+                foreach (var j in i.Outputs)
                 {
-                    sb.AppendLine((str));
-                }
+                    sb.AppendLine((j.Summary));
 
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.AppendLine();
+                    if (j.Details != null)
+                    {
+                        foreach (var k in j.Details)
+                        {
+                            sb.AppendLine((k));
+                        }
+                    }
+                }
             }
+
             return sb.ToString();
-            //throw new NotImplementedException();
         }
     }
 
@@ -102,7 +107,18 @@ namespace Orc.SolutionTool.Model
         [XmlElement("violations")]
         public List<Violation> Violations { get; set; }
 
-        [XmlElement("output")]
-        public List<string> Outputs { get; set; }
+        [XmlArray("outputs")]
+        [XmlArrayItem("output")]
+        public List<Output> Outputs { get; set; }
+    }
+
+    [XmlRoot("output")]
+    public class Output
+    {
+        [XmlElement("summary")]
+        public string Summary { get; set; }
+        [XmlArray("details")]
+        [XmlArrayItem("detail")]
+        public List<string> Details { get; set; }
     }
 }

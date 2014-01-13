@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<?xml-stylesheet type="text/xsl" href="..\Templates\ReportTemplate.xslt" ?>
+<?xml-stylesheet type="text/xsl" href="..\Templates\LogHtml.xslt" ?>
 <runlog>
-  <run project="demo4" rules="4" start="2013.12.27 16:18:20.000" end="2013.12.27 16:18:22.000" status="Pass" summary="passed" report="demo_20131227161820000.html"/>
-  <run project="demo1" rules="4" start="2013.12.27 16:20:20.000" end="2013.12.27 16:20:25.000" status="Pass" summary="passed" report="demo_20131227161820000.html"/>
-  <run project="demo2" rules="4" start="2013.12.27 16:22:20.000" end="2013.12.27 16:22:30.000" status="Failed" summary="passed" report="demo_20131227161820000.html"/>
+  <run project="demo4" rules="4" start="2013.12.27 16:18:20.000" end="2013.12.27 16:18:22.000" status="Pass" summary="pass" report="demo_20131227161820000.html"/>
+  <run project="demo1" rules="4" start="2013.12.27 16:20:20.000" end="2013.12.27 16:20:25.000" status="Pass" summary="pass" report="demo_20131227161820000.html"/>
+  <run project="demo2" rules="4" start="2013.12.27 16:22:20.000" end="2013.12.27 16:22:30.000" status="Failed" summary="failed" report="demo_20131227161820000.html"/>
+  <run project="demo2" rules="4" start="2013.12.27 16:22:20.000" end="2013.12.27 16:22:30.000" status="Failed" summary="failed" report="./../Report/SolutionTool_20140113153817.xml"/>
 </runlog>

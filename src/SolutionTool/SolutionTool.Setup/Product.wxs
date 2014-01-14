@@ -37,17 +37,17 @@
             <!--<CreateFolder Directory="Projects" />-->
             <!--<CreateFolder Directory="Reports" />-->
             
-            <File Id="CommandLine.dll" Name="CommandLine.dll" Source="$(var.TargetDir)\CommandLine.dll" />
-            <File Id="Microsoft.Practices.Prism.dll" Name="Microsoft.Practices.Prism.dll" Source="$(var.TargetDir)\Microsoft.Practices.Prism.dll" />
-            <File Id="Microsoft.Practices.Prism.Interactivity.dll" Name="Microsoft.Practices.Prism.Interactivity.dll" Source="$(var.TargetDir)\Microsoft.Practices.Prism.Interactivity.dll" />
-            <File Id="Microsoft.Practices.Prism.UnityExtensions.dll" Name="Microsoft.Practices.Prism.UnityExtensions.dll" Source="$(var.TargetDir)\Microsoft.Practices.Prism.UnityExtensions.dll" />
-            <File Id="Microsoft.Practices.ServiceLocation.dll" Name="Microsoft.Practices.ServiceLocation.dll" Source="$(var.TargetDir)\Microsoft.Practices.ServiceLocation.dll" />
-            <File Id="Microsoft.Practices.Unity.dll" Name="Microsoft.Practices.Unity.dll" Source="$(var.TargetDir)\Microsoft.Practices.Unity.dll" />
-            <File Id="SolutionTool.Infrasturcture.dll" Name="SolutionTool.Infrasturcture.dll" Source="$(var.TargetDir)\SolutionTool.Infrasturcture.dll" />
-            <File Id="System.Windows.Interactivity.dll" Name="System.Windows.Interactivity.dll" Source="$(var.TargetDir)\System.Windows.Interactivity.dll" />
-            <File Id="slntool.exe" Name="slntool.exe" Source="$(var.TargetDir)\slntool.exe" />
-            <File Id="SolutionTool.exe" Name="SolutionTool.exe" Source="$(var.TargetDir)\SolutionTool.exe" />
-            <File Id="SolutionTool.exe.Config" Name="SolutionTool.exe.Config" Source="$(var.TargetDir)\SolutionTool.exe.Config" />
+            <File Id="CommandLine.dll" Name="CommandLine.dll" Source="$(var.SolutionTool.TargetDir)\CommandLine.dll" />
+            <File Id="Microsoft.Practices.Prism.dll" Name="Microsoft.Practices.Prism.dll" Source="$(var.SolutionTool.TargetDir)\Microsoft.Practices.Prism.dll" />
+            <File Id="Microsoft.Practices.Prism.Interactivity.dll" Name="Microsoft.Practices.Prism.Interactivity.dll" Source="$(var.SolutionTool.TargetDir)\Microsoft.Practices.Prism.Interactivity.dll" />
+            <File Id="Microsoft.Practices.Prism.UnityExtensions.dll" Name="Microsoft.Practices.Prism.UnityExtensions.dll" Source="$(var.SolutionTool.TargetDir)\Microsoft.Practices.Prism.UnityExtensions.dll" />
+            <File Id="Microsoft.Practices.ServiceLocation.dll" Name="Microsoft.Practices.ServiceLocation.dll" Source="$(var.SolutionTool.TargetDir)\Microsoft.Practices.ServiceLocation.dll" />
+            <File Id="Microsoft.Practices.Unity.dll" Name="Microsoft.Practices.Unity.dll" Source="$(var.SolutionTool.TargetDir)\Microsoft.Practices.Unity.dll" />
+            <File Id="SolutionTool.Infrasturcture.dll" Name="SolutionTool.Infrasturcture.dll" Source="$(var.SolutionTool.TargetDir)\SolutionTool.Infrasturcture.dll" />
+            <File Id="System.Windows.Interactivity.dll" Name="System.Windows.Interactivity.dll" Source="$(var.SolutionTool.TargetDir)\System.Windows.Interactivity.dll" />
+            <File Id="slntool.exe" Name="slntool.exe" Source="$(var.SolutionTool.TargetDir)\slntool.exe" />
+            <File Id="SolutionTool.exe" Name="SolutionTool.exe" Source="$(var.SolutionTool.TargetDir)\SolutionTool.exe" />
+            <File Id="SolutionTool.exe.Config" Name="SolutionTool.exe.Config" Source="$(var.SolutionTool.TargetDir)\SolutionTool.exe.Config" />
           </Component>
 
           <Directory Id="LogsFolder" Name="Logs">
@@ -57,10 +57,10 @@
 
           <Directory Id="ModulesFolder" Name="Modules">
             <Component Id="ModulesFolder" Guid="{4BD8107F-D9AE-46AD-8DD3-6B9361F8397F}">
-              <File Id="ManageRule.dll" Name="ManageRule.dll" Source="$(var.TargetDir)\.\Modules\ManageRule.dll" />
-              <File Id="ManageTemplate.dll" Name="ManageTemplate.dll" Source="$(var.TargetDir)\.\Modules\ManageTemplate.dll" />
-              <File Id="Options.dll" Name="Options.dll" Source="$(var.TargetDir)\.\Modules\Options.dll" />
-              <File Id="SolutionChecker.dll" Name="SolutionChecker.dll" Source="$(var.TargetDir)\.\Modules\SolutionChecker.dll" />
+              <File Id="ManageRule.dll" Name="ManageRule.dll" Source="$(var.SolutionTool.TargetDir)\Modules\ManageRule.dll" />
+              <File Id="ManageTemplate.dll" Name="ManageTemplate.dll" Source="$(var.SolutionTool.TargetDir)\Modules\ManageTemplate.dll" />
+              <File Id="Options.dll" Name="Options.dll" Source="$(var.SolutionTool.TargetDir)\Modules\Options.dll" />
+              <File Id="SolutionChecker.dll" Name="SolutionChecker.dll" Source="$(var.SolutionTool.TargetDir)\Modules\SolutionChecker.dll" />
             </Component>
           </Directory>
 
@@ -76,16 +76,16 @@
 
           <Directory Id="RulesFolder" Name="Rules">
             <Component Id="RulesFolder" Guid="{5DE93622-7E9A-468B-8606-9026B655DD9A}">
-              <File Id="default.xml" Name="default.xml" Source="$(var.TargetDir)\.\Rules\default.xml" />
+              <File Id="default.xml" Name="default.xml" Source="$(var.SolutionTool.TargetDir)\Rules\default.xml" />
             </Component>
           </Directory>
 
           <Directory Id="TemplatesFolder" Name="Templates">
             <Component Id="TemplatesFolder" Guid="{B184391C-D5B6-49AC-A1FB-0B40A7AB74DA}">
-              <File Id="Default.txt" Name="Default.txt" Source="$(var.TargetDir)\.\Templates\Default.txt" />
-              <File Id="LogHtml.xslt" Name="LogHtml.xslt" Source="$(var.TargetDir)\.\Templates\LogHtml.xslt" />
-              <File Id="RptHtml.xslt" Name="RptHtml.xslt" Source="$(var.TargetDir)\.\Templates\RptHtml.xslt" />
-              <File Id="RptTxt.xslt" Name="RptTxt.xslt" Source="$(var.TargetDir)\.\Templates\RptTxt.xslt" />
+              <File Id="Default.txt" Name="Default.txt" Source="$(var.SolutionTool.TargetDir)\Templates\Default.txt" />
+              <File Id="LogHtml.xslt" Name="LogHtml.xslt" Source="$(var.SolutionTool.TargetDir)\Templates\LogHtml.xslt" />
+              <File Id="RptHtml.xslt" Name="RptHtml.xslt" Source="$(var.SolutionTool.TargetDir)\Templates\RptHtml.xslt" />
+              <File Id="RptTxt.xslt" Name="RptTxt.xslt" Source="$(var.SolutionTool.TargetDir)\Templates\RptTxt.xslt" />
             </Component>
           </Directory>
         </Directory>

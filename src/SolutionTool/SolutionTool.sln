@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionTool.Tests", "Solut
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SolutionTool.Setup", "SolutionTool.Setup\SolutionTool.Setup.wixproj", "{C878340B-3410-4CDC-99B1-AFDD13D42AF5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{A6F9A959-2435-4D49-AFD3-A39AC78DA31A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

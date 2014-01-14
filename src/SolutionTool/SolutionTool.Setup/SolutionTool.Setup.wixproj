@@ -6,18 +6,18 @@
     <ProductVersion>3.7</ProductVersion>
     <ProjectGuid>c878340b-3410-4cdc-99b1-afdd13d42af5</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>SolutionToolSetup</OutputName>
+    <OutputName>SolutionToolSetup_$(Configuration)</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>..\..\..\output\$(Configuration)\</OutputPath>
+    <OutputPath>..\..\..\Deployment\</OutputPath>
     <IntermediateOutputPath>..\..\..\obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>..\..\..\output\$(Configuration)\</OutputPath>
+    <OutputPath>..\..\..\Deployment\</OutputPath>
     <IntermediateOutputPath>..\..\..\obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>

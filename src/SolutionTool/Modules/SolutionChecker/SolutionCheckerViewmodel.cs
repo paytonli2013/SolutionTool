@@ -43,6 +43,7 @@ namespace SolutionChecker
                 _selectedProject = value;
                 RaisePropertyChanged("SelectedProject");
                 RunProjectCommand.RaiseCanExecuteChanged();
+                DeleteProjectCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -68,6 +69,7 @@ namespace SolutionChecker
             {
                 _projects = value;
                 RaisePropertyChanged("Projects");
+                DeleteProjectCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -80,6 +82,7 @@ namespace SolutionChecker
             {
                 _recentRun = value;
                 RaisePropertyChanged("RecentRun");
+                ClearRunLogCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -216,6 +219,87 @@ namespace SolutionChecker
         {
             return SelectedProject != null;
         }
+
+        #region DeleteProject Command
+
+        public DelegateCommand<object> _deleteProjectCommand;
+        public DelegateCommand<object> DeleteProjectCommand
+        {
+            get
+            {
+                return _deleteProjectCommand 
+                    ?? (_deleteProjectCommand = new DelegateCommand<object>(DeleteProject, CanDeleteProject));
+            }
+            set
+            {
+                _deleteProjectCommand = value;
+            }
+        }
+
+        private bool CanDeleteProject(object arg)
+        {
+            return SelectedProject != null && Projects != null && Projects.Count > 0;
+        }
+
+        private void DeleteProject(object arg)
+        {
+            _projectManager.Delete(SelectedProject, OnDeleteProjectComplete);
+        }
+
+        private void OnDeleteProjectComplete(bool ok, Exception exception)
+        {
+            if (exception != null)
+            {
+                _shellService.MessageService.Show(exception.Message);
+            }
+            else if (ok)
+            {
+                Projects.Remove(SelectedProject);
+                SelectedProject = null;
+            }
+        }
+
+        #endregion
+
+        #region ClearRunLog Command
+
+        public DelegateCommand<object> _clearRunLogCommand;
+        public DelegateCommand<object> ClearRunLogCommand
+        {
+            get
+            {
+                return _clearRunLogCommand 
+                    ?? (_clearRunLogCommand = new DelegateCommand<object>(ClearRunLog, CanClearRunLog));
+            }
+            set
+            {
+                _clearRunLogCommand = value;
+            }
+        }
+
+        private bool CanClearRunLog(object arg)
+        {
+            return RecentRun != null && RecentRun.Count > 0;
+        }
+
+        private void ClearRunLog(object arg)
+        {
+            _ruleRunner.ClearLog(OnClearLogComplete);
+        }
+
+        private void OnClearLogComplete(Exception exception)
+        {
+            if (exception != null)
+            {
+                _shellService.MessageService.Show(exception.Message);
+            }
+            else
+            {
+                RecentRun.Clear();
+            }
+        }
+
+        #endregion
 
         #endregion
 

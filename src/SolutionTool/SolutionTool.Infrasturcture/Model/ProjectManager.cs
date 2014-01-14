@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -54,7 +55,9 @@ namespace Orc.SolutionTool
             //        return 1;
             //}));
 
-            return list;
+            var rv = list.OrderByDescending(x => x.CreateTime).ToList();
+
+            return rv;
         }
 
         public void Create(Project project, Action<Project, Exception> onComplete)

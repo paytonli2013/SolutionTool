@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using Microsoft.Practices.Prism.Commands;
 using Orc.SolutionTool;
@@ -68,6 +69,21 @@ namespace SolutionChecker
         {
             try
             {
+                var cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settingOfInspectCodeExePath = cfg.AppSettings.Settings["InspectCodeExePath"];
+
+                if (settingOfInspectCodeExePath != null
+                    && !string.IsNullOrWhiteSpace(settingOfInspectCodeExePath.Value))
+                {
+                    var v = settingOfInspectCodeExePath.Value.Trim().ToLower();
+                    var r = _project.RuleSet.OfType<CodeAnalysisRule>().FirstOrDefault(x => x is CodeAnalysisRule);
+
+                    if (System.IO.File.Exists(v))
+                    {
+                        r.Path = v;
+                    }
+                }
+
                 _projectManager.Create(_project, OnCreateComplete);
             }
             catch (Exception ex)

@@ -32,7 +32,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
 
-    <DataTemplate x:Key="RunLogItemTemplate">
+    <DataTemplate x:Key="RunLogItemTemplate">        
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <TextBlock FontSize="16" HorizontalAlignment="Left" Text="{Binding Project}"/>
             <TextBlock FontSize="12" HorizontalAlignment="Left" Text="{Binding Summary}" />
@@ -55,12 +55,32 @@
         <Setter Property="Foreground" Value="{StaticResource LogItem.Normal.Foreground}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">                    
                     <Border x:Name="Bd" 
                         BorderBrush="{TemplateBinding BorderBrush}" 
                         BorderThickness="{TemplateBinding BorderThickness}" 
                         Background="{TemplateBinding Background}" 
                         Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <Border.ToolTip>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Rules: " FontWeight="Bold" />
+                                <TextBlock Grid.Column="1" Text="{Binding Rules}" />
+                                <TextBlock Grid.Row="1" Text="Start: " FontWeight="Bold" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Start}" />
+                                <TextBlock Grid.Row="2" Text="End: " FontWeight="Bold" />
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding End}" />
+                            </Grid>
+                        </Border.ToolTip>
                         <ContentPresenter 
                             TextElement.Foreground="{TemplateBinding Foreground}" 
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -97,11 +117,12 @@
 
     <ContextMenu x:Key="ProjectItemMenu">
         <MenuItem Header="Run Selected Project" Command="{Binding RunProjectCommand}"/>
+        <MenuItem Header="Delete Selected Project" Command="{Binding DeleteProjectCommand}"/>
     </ContextMenu>
     
     <ContextMenu x:Key="RunLogMenu">
         <MenuItem Header="View Report" Command="{Binding ViewReportCommand}"/>
-        <MenuItem Header="Rerun Project" Command="{Binding RerunProjectCommand}"/>
+        <MenuItem Header="Clear Run Log" Command="{Binding ClearRunLogCommand}"/>
     </ContextMenu>
 
     <DataTemplate x:Key="ProjectItemTemplate">
@@ -133,6 +154,26 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Background="{TemplateBinding Background}" 
                         Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <Border.ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="Created: " FontWeight="Bold" />
+                                <TextBlock Grid.Column="1" Text="{Binding CreateTime}" />
+                                <TextBlock Grid.Row="1" Text="Ruleset: " FontWeight="Bold" />
+                                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding RuleSet}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>
+                                                    <Run Text="{Binding Name}" />
+                                                    <Run Text=" - " />
+                                                    <Run Text="{Binding Description}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border.ToolTip>
                         <ContentPresenter 
                             TextElement.Foreground="{TemplateBinding Foreground}" 
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 

@@ -31,7 +31,12 @@ namespace Orc.SolutionTool
                 return;
             }
 
-            foreach (var i in Directory.GetFiles(_dirLogs))
+            if (!Directory.Exists(_dirReports))
+            {
+                return;
+            }
+
+            foreach (var i in Directory.GetFiles(_dirLogs).Concat(Directory.GetFiles(_dirReports)))
             {
                 try
                 {
@@ -74,6 +79,11 @@ namespace Orc.SolutionTool
 
                 foreach (var run in root.Elements())
                 {
+                    if (run.Name != "run")
+                    {
+                        continue;
+                    }
+
                     var attrProject = run.Attribute("project");
                     var attrRules = run.Attribute("rules");
                     var attrStart = run.Attribute("start");
@@ -101,7 +111,9 @@ namespace Orc.SolutionTool
                 }
             }
 
-            return list;
+            var rv = list.OrderByDescending(x => x.Start).ToList();
+
+            return rv;
         }
 
         public event EventHandler<RunLogEventArgs> RunLogAdded;

@@ -492,8 +492,6 @@ namespace Orc.SolutionTool.Model
             if (!Directory.Exists(rptDir))
             {
                 Directory.CreateDirectory(rptDir);
-
-                return;
             }
 
             var slns = Directory.GetFiles(context.Project.Path, "*.sln", SearchOption.AllDirectories);
@@ -524,11 +522,14 @@ namespace Orc.SolutionTool.Model
                 proc.Start();
                 proc.WaitForExit();
 
-                output = new Output 
+                var ok = System.IO.File.Exists(rptFullName);
+
+                output = new Output
                 {
-                    Summary = "InspectCode", 
-                    Details = new List<string> { rptFullName, },
-                };                
+                    Summary = "InspectCode",
+                    Status = ok ? Output.STATUS_PASS : Output.STATUS_FAILED,
+                    Details = new List<string> { ok ? rptFullName : "No report is generated; the check is aborted.", },
+                };
                 context.WriteOutput(Name, output);
             }
         }

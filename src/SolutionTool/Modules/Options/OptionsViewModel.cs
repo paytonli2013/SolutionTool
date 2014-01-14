@@ -95,10 +95,11 @@ namespace Options
             Settings.Add(new Setting(
                 "InspectCodeExePath",
                 "InspectCode Executable Path", 
-                "x:\\{some_dir}\\inspectcode.exe"
+                string.Empty
                 ));
 
             var cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
             foreach (var i in ConfigurationManager.AppSettings.AllKeys)
             {
                 var setting = Settings.FirstOrDefault(x => x.Key == i);
@@ -108,7 +109,6 @@ namespace Options
                     setting.Value = cfg.AppSettings.Settings[i].Value;
                 }
             }
-
         }
     }
 }

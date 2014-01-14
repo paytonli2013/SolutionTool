@@ -57,7 +57,7 @@
                         <xsl:for-each select="details/detail">
                           <li>
                             <xsl:choose>
-                              <xsl:when test="../../summary = 'InspectCode'">
+                              <xsl:when test="../../summary = 'InspectCode' and ../../@status = 'Pass'">
                                 <a target="_blank">
                                   <xsl:attribute name="href">
                                     <xsl:value-of select="text()" />

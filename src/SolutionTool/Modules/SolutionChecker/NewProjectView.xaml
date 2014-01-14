@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" FontSize="18"
-             d:DesignHeight="480" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,6 +14,9 @@
                 <TextBlock Text="{Binding Name}"/>
             </DataTemplate>
             <DataTemplate x:Key="RuleItemTemplate">
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Name}" />
+                </DataTemplate.Triggers>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -23,13 +26,16 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-                    <CheckBox IsChecked="{Binding IsEnabled}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBlock Text="{Binding Description}" Grid.Row="1" VerticalAlignment="Center" FontSize="12"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Name}"/>
+                    <CheckBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"
+                        IsChecked="{Binding IsEnabled}"/>                    
+                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="12"
+                        Text="{Binding Description}" />
                 </Grid>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="12"/>
@@ -40,22 +46,46 @@
             <RowDefinition Height="44"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Margin="2" Text="Project Name" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1"/>
-        <TextBlock Margin="2" Text="Target Folder" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Row="2"/>
-        <TextBlock Margin="2" Text="Rule Set" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Row="3"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" Margin="2" Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ProjectName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" Margin="2,2,38,2"  VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding TargetPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Content="..." Command="{Binding OpenFolderCommand}" VerticalAlignment="Center" HorizontalAlignment="Right" Width="34" Margin="2,3" Grid.Column="2"  Grid.Row="2"/>
 
-        <ComboBox Style="{StaticResource ComboBoxStyle}" Margin="2" ItemTemplate="{StaticResource ComboBoxItemTemplate}" ItemsSource="{Binding RuleSetTemplates,Mode=OneWay}" SelectedItem="{Binding RuleSet,Mode=TwoWay}" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" />
+        <TextBlock Grid.Row="1" Margin="2" Text="Project Name"
+                   VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBlock Grid.Row="2" Margin="2" Text="Target Folder"
+                   VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBlock Grid.Row="3" Margin="2" Text="Rule Set"
+                   VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                 Margin="2" VerticalAlignment="Center"
+                 Text="{Binding ProjectName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="2,2,38,2" 
+                 VerticalAlignment="Center" Grid.ColumnSpan="2" 
+                 Text="{Binding TargetPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource TextBoxStyle}"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="..." Width="34" Margin="2,3"
+                VerticalAlignment="Center" HorizontalAlignment="Right"
+                Command="{Binding OpenFolderCommand}"/>
 
-        <ListBox HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource RuleItemStyle}" Margin="2" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"  ItemsSource="{Binding RuleSet}" ItemTemplate="{StaticResource RuleItemTemplate}"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="2" 
+                  VerticalAlignment="Center"
+                  ItemTemplate="{StaticResource ComboBoxItemTemplate}" 
+                  ItemsSource="{Binding RuleSetTemplates,Mode=OneWay}" 
+                  SelectedItem="{Binding RuleSet,Mode=TwoWay}" 
+                  Style="{StaticResource ComboBoxStyle}"/>
 
-        <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Right">
+        <ListBox HorizontalContentAlignment="Stretch" 
+                 Margin="2" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                 ItemContainerStyle="{StaticResource RuleItemStyle}"  
+                 ItemsSource="{Binding RuleSet}" 
+                 ItemTemplate="{StaticResource RuleItemTemplate}"/>
+
+        <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" 
+                    VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Command="{Binding CreateCommand}" Height="28" Width="80" Content="Save" Margin="2,4"/>
             <Button Command="{Binding CancelCommand}" Height="28" Width="80" Content="Cancel" Margin="2,4"/>
         </StackPanel>

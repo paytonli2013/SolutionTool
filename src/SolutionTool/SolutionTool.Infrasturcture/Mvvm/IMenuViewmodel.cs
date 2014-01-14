@@ -1,8 +1,5 @@
-﻿using Microsoft.Practices.Prism;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using Microsoft.Practices.Prism;
 
 namespace Orc.SolutionTool.Mvvm
 {

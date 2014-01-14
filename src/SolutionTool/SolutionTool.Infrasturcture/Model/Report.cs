@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
@@ -27,17 +27,17 @@ namespace Orc.SolutionTool.Model
 
         #endregion
 
-        static string templatePath = Environment.CurrentDirectory + "\\Templates\\RptHtml.xslt";
-        static string templatePathPlain = Environment.CurrentDirectory + "\\Templates\\RptTxt.xslt";
+        static string templatePath = AppDomain.CurrentDomain.BaseDirectory + "\\Templates\\RptHtml.xslt";
+        static string templatePathPlain = AppDomain.CurrentDomain.BaseDirectory + "\\Templates\\RptTxt.xslt";
 
         public static string GetTextFile(string xmlFile)
         {
             if (string.IsNullOrEmpty(xmlFile))
                 return "";
             // Generating a temporary HTML file
-            string outfile = System.IO.Path.GetTempFileName().Replace(".tmp", ".html");
+            string outfile = Path.GetTempFileName().Replace(".tmp", ".html");
 
-            //string path = Environment.CurrentDirectory + "\\Logs\\log.xml";
+            //string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\log.xml";
             // Creating the XslCompiledTransform object
             XslCompiledTransform transform = new XslCompiledTransform();
 
@@ -53,7 +53,7 @@ namespace Orc.SolutionTool.Model
             if (string.IsNullOrEmpty(xmlFile))
                 return "";
             // Generating a temporary HTML file
-            string outfile = System.IO.Path.GetTempFileName().Replace(".tmp", ".html");
+            string outfile = Path.GetTempFileName().Replace(".tmp", ".html");
 
             // Creating the XslCompiledTransform object
             XslCompiledTransform transform = new XslCompiledTransform();
@@ -115,6 +115,12 @@ namespace Orc.SolutionTool.Model
     [XmlRoot("output")]
     public class Output
     {
+        public static string STATUS_FAILED = "Failed";
+        public static string STATUS_WARNING = "Warning";
+        public static string STATUS_PASS = "Pass";
+
+        [XmlAttribute("status")]
+        public string Status { get; set; }
         [XmlElement("summary")]
         public string Summary { get; set; }
         [XmlArray("details")]

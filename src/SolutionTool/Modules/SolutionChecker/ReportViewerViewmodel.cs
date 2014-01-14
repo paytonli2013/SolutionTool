@@ -1,14 +1,11 @@
-﻿using Microsoft.Practices.Prism.Commands;
+﻿using System;
+using System.IO;
+using System.Windows;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Win32;
 using Orc.SolutionTool;
 using Orc.SolutionTool.Model;
 using Orc.SolutionTool.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows;
 
 namespace SolutionChecker
 {

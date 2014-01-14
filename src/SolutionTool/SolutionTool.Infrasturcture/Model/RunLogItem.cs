@@ -50,7 +50,11 @@ namespace Orc.SolutionTool.Model
         {
             get
             {
-                return string.Format("{0} rules been checked in {1}s", Rules, 0.1);
+                return string.Format(
+                    "{0} rules been checked in {1}s", 
+                    Rules, 
+                    ((End??DateTime.MinValue) - (Start??DateTime.MinValue)).TotalSeconds
+                    );
             }
         }
     }

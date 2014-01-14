@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using Orc.SolutionTool.Model;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
+using Orc.SolutionTool.Model;
 
 namespace Orc.SolutionTool
 {
     public class RuleRunner : IRuleRunner
     {
-        private static readonly string _dirLogs = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Logs\");
-        private static readonly string _dirReports = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Reports\");
+        private static readonly string _dirLogs = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @".\Logs\");
+        private static readonly string _dirReports = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @".\Reports\");
 
         public void LoadRunLog(Action<IEnumerable<RunLogItem>, Exception> onComplete)
         {
@@ -25,16 +26,16 @@ namespace Orc.SolutionTool
         {
             var xe = null as Exception;
 
-            if (!System.IO.Directory.Exists(_dirLogs))
+            if (!Directory.Exists(_dirLogs))
             {
                 return;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(_dirLogs))
+            foreach (var i in Directory.GetFiles(_dirLogs))
             {
                 try
                 {
-                    System.IO.File.Delete(i);
+                    File.Delete(i);
                 }
                 catch (Exception x)
                 {
@@ -53,12 +54,14 @@ namespace Orc.SolutionTool
 
         private List<RunLogItem> BuildLogs()
         {
-            if (!System.IO.Directory.Exists(_dirLogs))
+            if (!Directory.Exists(_dirLogs))
             {
                 return list;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(_dirLogs, "*.xml"))
+            list.Clear();
+
+            foreach (var i in Directory.GetFiles(_dirLogs, "*.xml"))
             {
                 var xdoc = XDocument.Load(i);
 
@@ -189,15 +192,15 @@ namespace Orc.SolutionTool
         {
             FireRunLogAdded(log);
 
-            if (!System.IO.Directory.Exists(_dirLogs))
+            if (!Directory.Exists(_dirLogs))
             {
-                System.IO.Directory.CreateDirectory(_dirLogs);
+                Directory.CreateDirectory(_dirLogs);
             }
 
-            var path = System.IO.Path.Combine(_dirLogs, log.Project + ".xml");
+            var path = Path.Combine(_dirLogs, log.Project + ".xml");
             var xdoc = null as XDocument;
 
-            if (System.IO.File.Exists(path))
+            if (File.Exists(path))
             {
                 xdoc = XDocument.Load(path);
             }
@@ -228,9 +231,9 @@ namespace Orc.SolutionTool
         {
             try
             {
-                if (!System.IO.Directory.Exists(_dirReports))
+                if (!Directory.Exists(_dirReports))
                 {
-                    System.IO.Directory.CreateDirectory(_dirReports);
+                    Directory.CreateDirectory(_dirReports);
                 }
 
                 var path = string.Format("{0}\\{1}_{2:yyyyMMddHHmmss}.xml",

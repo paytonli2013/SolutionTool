@@ -8,6 +8,11 @@
       <head>
         <style type="text/css">
           .bold { font-weight: bold; }
+          .pass { color: green; }
+          .warning { color: darkorange ; }
+          .failed { color: red; }
+          td { border-left:1px solid black; border-top:1px solid black; padding: 4px, 8px; }
+          table { border-right:1px solid black; border-bottom:1px solid black; }
         </style>
         <title>
           <xsl:text>Report -</xsl:text>
@@ -44,14 +49,26 @@
               <xsl:if test="outputs">
                 <ul>
                   <xsl:for-each select="outputs/output">
-                    <li>
+                    <li class="{@status}">
                       <span class="bold">
                         <xsl:value-of select="summary" />
                       </span>
                       <ul>
                         <xsl:for-each select="details/detail">
                           <li>
-                            <xsl:value-of select="." />
+                            <xsl:choose>
+                              <xsl:when test="../../summary = 'InspectCode'">
+                                <a target="_blank">
+                                  <xsl:attribute name="href">
+                                    <xsl:value-of select="text()" />
+                                  </xsl:attribute>
+                                  <xsl:value-of select="text()" />
+                                </a>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="." />
+                              </xsl:otherwise>
+                            </xsl:choose>
                           </li>
                         </xsl:for-each>
                       </ul>

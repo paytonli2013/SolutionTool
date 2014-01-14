@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CommandLine;
@@ -33,14 +32,14 @@ namespace Orc.SolutionTool
 
             Console.WriteLine("Begin checking " + options.Repository);
 
-            var pathOfRepository = System.IO.Path.GetFullPath(options.Repository);
-            var pathOfTemplate = System.IO.Path.GetFullPath(options.Template);
+            var pathOfRepository = Path.GetFullPath(options.Repository);
+            var pathOfTemplate = Path.GetFullPath(options.Template);
 
-            if (!System.IO.Directory.Exists(pathOfRepository))
+            if (!Directory.Exists(pathOfRepository))
             {
                 Console.WriteLine("Repository directory does not exist: [" + options.Repository + "]");
             }
-            if (!System.IO.File.Exists(pathOfTemplate))
+            if (!File.Exists(pathOfTemplate))
             {
                 Console.WriteLine("Template File does not exist: [" + options.Repository + "]");
             }
@@ -87,9 +86,9 @@ namespace Orc.SolutionTool
 
                     if (!string.IsNullOrWhiteSpace(options.LogFile))
                     {
-                        var logFile = System.IO.Path.GetFullPath(options.LogFile);
+                        var logFile = Path.GetFullPath(options.LogFile);
 
-                        using (var sw = System.IO.File.AppendText(logFile))
+                        using (var sw = File.AppendText(logFile))
                         {
                             sw.Write(report.GetText());
                         }

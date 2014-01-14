@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Orc.SolutionTool.Model;
@@ -8,7 +9,7 @@ namespace Orc.SolutionTool
 {
     public class ProjectManager : IProjectManager
     {
-        private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Projects\");
+        private static readonly string _dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @".\Projects\");
 
         public void Load(Action<IEnumerable<Project>, Exception> onComplete)
         {
@@ -26,12 +27,12 @@ namespace Orc.SolutionTool
             else
                 list = new List<Project>();
 
-            if (!System.IO.Directory.Exists(_dir))
+            if (!Directory.Exists(_dir))
             {
                 return list;
             }
 
-            foreach (var i in System.IO.Directory.GetFiles(_dir, "*.xml"))
+            foreach (var i in Directory.GetFiles(_dir, "*.xml"))
             {
                 var xs = new XmlSerializer(typeof(Project));
 
@@ -118,19 +119,19 @@ namespace Orc.SolutionTool
             if (project.CreateTime == DateTime.MinValue)
                 project.CreateTime = DateTime.Now;
 
-            if (!System.IO.Directory.Exists(_dir))
+            if (!Directory.Exists(_dir))
             {
-                System.IO.Directory.CreateDirectory(_dir);
+                Directory.CreateDirectory(_dir);
             }
 
-            var path = System.IO.Path.Combine(_dir, project.Name + ".xml");
+            var path = Path.Combine(_dir, project.Name + ".xml");
             var exception = null as Exception;
 
-            if (delete && System.IO.File.Exists(path))
+            if (delete && File.Exists(path))
             {
-                System.IO.File.Delete(path);
+                File.Delete(path);
             }
-            else if (System.IO.File.Exists(path) && !overrideExist)
+            else if (File.Exists(path) && !overrideExist)
             {
                 throw new Exception("Project [" + project.Name + "] already exists. ");
             }
@@ -138,7 +139,7 @@ namespace Orc.SolutionTool
             {
                 if (overrideExist)
                 {
-                    System.IO.File.Delete(path);
+                    File.Delete(path);
                 }
 
                 using (var fs = XmlWriter.Create(path))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -114,7 +115,7 @@ namespace Orc.SolutionTool.Model
                 var type = FindType(name);
                 var xs = new XmlSerializer(type);
 
-                using (var sr = new System.IO.StringReader(xml))
+                using (var sr = new StringReader(xml))
                 {
                     var rule = xs.Deserialize(sr) as Rule;
 
@@ -264,7 +265,7 @@ namespace Orc.SolutionTool.Model
 
             if (!IsEnabled)
             {
-                output = new Output { Summary = "Rule [" + Name + "] is disabled. ", };
+                output = new Output { Status = Output.STATUS_FAILED, Summary = "Rule [" + Name + "] is disabled. ", };
                 context.WriteOutput(Name, output);
 
                 return;
@@ -296,6 +297,7 @@ namespace Orc.SolutionTool.Model
 
                     output = new Output
                     {
+                        Status = Output.STATUS_FAILED,
                         Summary = z.Message,
                         Details = new List<string>
                         {
@@ -328,7 +330,12 @@ namespace Orc.SolutionTool.Model
 
                         if (i.Value.Count == 0)
                         {
+                            output.Status = Output.STATUS_PASS;
                             output.Details.Add("Pass");
+                        }
+                        else if (i.Key is FolderDirective || i.Key is FileDirective)
+                        {
+                            output.Status = Output.STATUS_FAILED;
                         }
 
                         context.WriteOutput(Name, output);
@@ -355,16 +362,16 @@ namespace Orc.SolutionTool.Model
 
             if (!IsEnabled)
             {
-                output = new Output { Summary = "Rule [" + Name + "] is disabled. ", };
+                output = new Output { Status = Output.STATUS_WARNING, Summary = "Rule [" + Name + "] is disabled. ", };
                 context.WriteOutput(Name, output);
 
                 return;
             }
 
             var root = System.IO.Path.GetFullPath(context.Project.Path);
-            var csprojs = System.IO.Directory.GetFiles(
+            var csprojs = Directory.GetFiles(
                 root, "*.csproj",
-                System.IO.SearchOption.AllDirectories
+                SearchOption.AllDirectories
                 );
             var ns = (XNamespace)"http://schemas.microsoft.com/developer/msbuild/2003";
             var re = new Regex(@"(?<c>\w+)\|(?<p>\w+)");
@@ -372,7 +379,7 @@ namespace Orc.SolutionTool.Model
 
             foreach (var i in csprojs)
             {
-                var fi = new System.IO.FileInfo(i);
+                var fi = new FileInfo(i);
                 var doc = XDocument.Load(i);
                 //var eleTargetFrameworkVersion = doc.Descendants(ns + "TargetFrameworkVersion").First().Value;
                 var eleOutputPaths = doc.Descendants(ns + "OutputPath").ToList();
@@ -411,10 +418,12 @@ namespace Orc.SolutionTool.Model
 
                     if (string.Compare(path1, path2, StringComparison.OrdinalIgnoreCase) == 0)
                     {
+                        output.Status = Output.STATUS_PASS;
                         output.Details.Add(j.Value + " <--> " + expected);
                     }
                     else
                     {
+                        output.Status = Output.STATUS_FAILED;
                         output.Details.Add(j.Value + " ---> " + expected);
                     }
                 }
@@ -440,7 +449,11 @@ namespace Orc.SolutionTool.Model
 
             if (!IsEnabled)
             {
-                output = new Output { Summary = "Rule [" + Name + "] is disabled. ", };
+                output = new Output
+                {
+                    Status = Output.STATUS_WARNING,
+                    Summary = "Rule [" + Name + "] is disabled. ",
+                };
                 context.WriteOutput(Name, output);
 
                 return;
@@ -448,40 +461,46 @@ namespace Orc.SolutionTool.Model
 
             if (string.IsNullOrWhiteSpace(Path))
             {
-                output = new Output { Summary = "Need to specify InspectCode executable path. ", };
+                output = new Output
+                {
+                    Status = Output.STATUS_WARNING,
+                    Summary = "Need to specify InspectCode executable path. ",
+                };
                 context.WriteOutput(Name, output);
 
                 return;
             }
 
-            if (!System.IO.File.Exists(Path))
+            if (!File.Exists(Path))
             {
-                output = new Output { Summary = "Cannot find InspectCode app at [" + Path + "]. ", };
+                output = new Output
+                {
+                    Status = Output.STATUS_WARNING,
+                    Summary = "Cannot find InspectCode app at [" + Path + "]. ",
+                };
                 context.WriteOutput(Name, output);
 
                 return;
             }
 
-            var root = context.Project.Path;
-            var uri = new Uri(root);
-            var rptFi = new System.IO.FileInfo(System.IO.Path.Combine(root, "Reports"));
+            var rptDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
+            var rptName = string.Format(@"InspectCode_Report_{0:yyyyMMddHHmmssfff}.xml", DateTime.Now);            
+            var rpt = @".\Reports\" + rptName;
+            var cachesHome = @".\Reports\cache";
+            var rptFullName = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, rpt);
 
-            if (!System.IO.Directory.Exists(rptFi.Directory.FullName))
+            if (!Directory.Exists(rptDir))
             {
-                System.IO.Directory.CreateDirectory(rptFi.Directory.FullName);
+                Directory.CreateDirectory(rptDir);
 
                 return;
             }
 
-            var cachesHome = System.IO.Path.Combine(rptFi.Directory.FullName, "cache");
-            var slns = System.IO.Directory.GetFiles(root, "*.sln", System.IO.SearchOption.AllDirectories);
+            var slns = Directory.GetFiles(context.Project.Path, "*.sln", SearchOption.AllDirectories);
 
             foreach (var sln in slns)
             {
                 var uriSln = new Uri(sln);
-                var uri2Root = uri.MakeRelativeUri(uriSln).ToString().Replace("/", "\\");
-                var uri2RootIx = uri2Root.IndexOf('\\');
-                var rpt = string.Format(@".\Reports\InspectCode_Report_{0:yyyyMMddHHmmssfff}.xml", DateTime.Now);
                 var cmdLine = string.Format(@"/o=""{1}"" ""{2}""",
                     cachesHome, rpt, sln);
 
@@ -491,7 +510,7 @@ namespace Orc.SolutionTool.Model
                     {
                         FileName = Path,
                         Arguments = cmdLine,
-                        WorkingDirectory = root,
+                        WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
                         //CreateNoWindow = true,
                         //WindowStyle = ProcessWindowStyle.Hidden,
                         //RedirectStandardInput = true,
@@ -505,9 +524,11 @@ namespace Orc.SolutionTool.Model
                 proc.Start();
                 proc.WaitForExit();
 
-                var rptPath = ".\\" + (uri2RootIx == -1 ? uri2Root : uri2Root.Substring(uri2RootIx + 1)) + ": " + rpt;
-             
-                output = new Output { Summary = rptPath, };
+                output = new Output 
+                {
+                    Summary = "InspectCode", 
+                    Details = new List<string> { rptFullName, },
+                };                
                 context.WriteOutput(Name, output);
             }
         }

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -9,9 +9,9 @@ namespace Orc.SolutionTool.Model
 {
     public class RuleManager : IRuleManager
     {
-        private static readonly string _dir = System.IO.Path.Combine(Environment.CurrentDirectory, @".\Rules\");
+        private static readonly string _dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @".\Rules\");
 
-        System.IO.FileSystemWatcher _fsw = new System.IO.FileSystemWatcher(_dir, "*.xml");
+        FileSystemWatcher _fsw = new FileSystemWatcher(_dir, "*.xml");
 
         public RuleManager()
         {
@@ -52,7 +52,7 @@ namespace Orc.SolutionTool.Model
             throw new NotImplementedException();
         }
 
-        void _fsw_Changed(object sender, System.IO.FileSystemEventArgs e)
+        void _fsw_Changed(object sender, FileSystemEventArgs e)
         {
             LoadRules(e.FullPath);
         }
@@ -65,9 +65,9 @@ namespace Orc.SolutionTool.Model
 
             if (name == null)
             {
-                files = System.IO.Directory.GetFiles(_dir, "*.xml");
+                files = Directory.GetFiles(_dir, "*.xml");
             }
-            else if (System.IO.File.Exists(name))
+            else if (File.Exists(name))
             {
                 files = new string[] { name, };
             }
@@ -79,7 +79,7 @@ namespace Orc.SolutionTool.Model
 
             foreach (var i in files)
             {
-                var fi = new System.IO.FileInfo(i);
+                var fi = new FileInfo(i);
                 var key = fi.Name.ToLower();
 
                 if (_ruleSets.ContainsKey(key))

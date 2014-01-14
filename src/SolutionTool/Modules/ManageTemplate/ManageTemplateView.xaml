@@ -38,11 +38,13 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Margin="2" Text="Templates"/>
+            <TextBlock Margin="2" FontSize="18" Text="Templates"/>
 
             <Border Grid.Row="1" Height="1" Background="#FFABADB3" />
 
-            <ListBox BorderThickness="0" Grid.Row="2" MinWidth="160" ItemContainerStyle="{StaticResource FileTemplateItemStyle}" ItemTemplate="{StaticResource FileTemplateItemTemplate}" HorizontalContentAlignment="Stretch" Margin="0,10,0,0"
+            <ListBox BorderThickness="0" Grid.Row="2" MinWidth="160" Margin="0,10,0,0" 
+                ItemContainerStyle="{StaticResource FileTemplateItemStyle}" 
+                ItemTemplate="{StaticResource FileTemplateItemTemplate}" 
                 ItemsSource="{Binding TemplateFiles}" 
                 SelectedValue="{Binding SelectedTemplateFile}"/>
         </Grid>

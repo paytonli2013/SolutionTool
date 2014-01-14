@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Orc.SolutionTool.Model
 {
@@ -300,7 +299,7 @@ namespace Orc.SolutionTool.Model
             {
                 var segs = relPath.Split('/', '\\');
                 var diMatched = new List<DirectoryInfo>();
-                var diRoot = new System.IO.DirectoryInfo(repository);
+                var diRoot = new DirectoryInfo(repository);
                 var ix = 0;
 
                 foreach (var i in segs)
@@ -310,7 +309,7 @@ namespace Orc.SolutionTool.Model
                         break;
                     }
 
-                    var p = System.IO.Path.Combine(diRoot.FullName, i);
+                    var p = Path.Combine(diRoot.FullName, i);
 
                     diRoot = new DirectoryInfo(p);
                     ix++;
@@ -364,7 +363,7 @@ namespace Orc.SolutionTool.Model
             {
                 var segs = relPath.Split('/', '\\');
                 var diMatched = new List<DirectoryInfo>();
-                var diRoot = new System.IO.DirectoryInfo(repository);
+                var diRoot = new DirectoryInfo(repository);
                 var ix = 0;
 
                 foreach (var i in segs)
@@ -374,7 +373,7 @@ namespace Orc.SolutionTool.Model
                         break;
                     }
 
-                    var p = System.IO.Path.Combine(diRoot.FullName, i);
+                    var p = Path.Combine(diRoot.FullName, i);
 
                     diRoot = new DirectoryInfo(p);
                     ix++;
@@ -450,7 +449,7 @@ namespace Orc.SolutionTool.Model
 
     public static class FsHelper
     {
-        class FileSystemInfoEqualityComparer : IEqualityComparer<System.IO.FileSystemInfo>
+        class FileSystemInfoEqualityComparer : IEqualityComparer<FileSystemInfo>
         {
             public bool Equals(FileSystemInfo x, FileSystemInfo y)
             {

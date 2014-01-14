@@ -12,7 +12,6 @@ xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
           .failed { color: red; }
           td { border-left:1px solid black; border-top:1px solid black; padding: 4px, 8px; }
           table { border-right:1px solid black; border-bottom:1px solid black; }
-          iframe { width: 100%; border: 1px solid red; }
         </style>
         <title>
           <xsl:text>Recent Run</xsl:text>

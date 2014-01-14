@@ -1,10 +1,8 @@
-﻿using Microsoft.Practices.Prism.Regions;
-using Orc.SolutionTool.Mvvm;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Windows;
+using Microsoft.Practices.Prism.Regions;
+using Orc.SolutionTool.Mvvm;
 
 namespace Orc.SolutionTool
 {

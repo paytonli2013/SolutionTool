@@ -52,7 +52,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="readme.tx" />
+    <Content Include="readme.txt" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

@@ -42,7 +42,7 @@ namespace Orc.SolutionTool.Model
             XslCompiledTransform transform = new XslCompiledTransform();
 
             // Loading the stylesheet file from the textbox
-            transform.Load(templatePathPlain);
+            transform.Load(templatePathPlain, new XsltSettings { EnableDocumentFunction = true, }, null);
             transform.Transform(xmlFile, outfile);
 
             return outfile;
@@ -59,7 +59,7 @@ namespace Orc.SolutionTool.Model
             XslCompiledTransform transform = new XslCompiledTransform();
 
             // Loading the stylesheet file from the textbox
-            transform.Load(templatePath);
+            transform.Load(templatePath, new XsltSettings { EnableDocumentFunction = true, }, null);
             transform.Transform(xmlFile, outfile);
 
             return outfile;
